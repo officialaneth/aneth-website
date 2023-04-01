@@ -33,8 +33,66 @@ interface IReferral {
     ) external returns (bool);
 }
 
-interface IPresale {
-    function getPricePerUSD() external view returns (uint256);
+interface IVariables {
+    function presaleContract() external view returns (address);
+
+    function referralContract() external view returns (address);
+
+    function stakingContract() external view returns (address);
+
+    function tokenContract() external view returns (address);
+
+    function anusdContract() external view returns (address);
+
+    function usdtContract() external view returns (address);
+
+    function uniswapV2RouterContract() external view returns (address);
+
+    function tokenContractOwner() external view returns (address);
+
+    function rewardContract() external view returns (address);
+
+    function rewardContractOwner() external view returns (address);
+
+    function adminFees() external view returns (uint256);
+}
+
+interface IUniswapRouter {
+    function swapExactTokensForTokens(
+        uint amountIn,
+        uint amountOutMin,
+        address[] calldata path,
+        address to,
+        uint deadline
+    ) external returns (uint[] memory);
+
+    function quote(
+        uint amountA,
+        uint reserveA,
+        uint reserveB
+    ) external pure returns (uint amountB);
+
+    function getAmountOut(
+        uint amountIn,
+        uint reserveIn,
+        uint reserveOut
+    ) external pure returns (uint amountOut);
+
+    function getAmountIn(
+        uint amountOut,
+        uint reserveIn,
+        uint reserveOut
+    ) external pure returns (uint amountIn);
+
+    function getAmountsOut(
+        uint amountIn,
+        address[] calldata path
+    ) external view returns (uint[] memory amounts);
+
+    function getAmountsIn(
+        uint amountOut,
+        address[] calldata path
+    ) external view returns (uint[] memory amounts);
 }
 
 contract StakingUpgradeable is
@@ -43,20 +101,17 @@ contract StakingUpgradeable is
     OwnableUpgradeable,
     UUPSUpgradeable
 {
-    address private _presaleContract;
-    address private _referralContract;
-
+    address private _variablesContract;
     address[] private _stakers;
     uint256 private _totalValueStaked;
-    uint256 private _totalRewardsDistributed;
+    uint256 private _totalTokenRewards;
+    uint256 private _totalANUSDRewards;
 
-    uint16 private _rewardRateDecimals;
     uint256 private _minStakingValue;
 
-    bool private _isPayReferralOnStaking;
-    uint256 private _rewardClaimTimeLimit;
-
-    uint8 private _maxPackageLength;
+    uint256 private _stakingRewardRate;
+    uint256 private _stakingDuration;
+    uint256 private _stakingRewardClaimTimeLimit;
 
     struct Account {
         uint256[] stakingID;
@@ -72,19 +127,13 @@ contract StakingUpgradeable is
         uint256 startTime;
         uint256 duration;
         uint256 rewardClaimed;
+        uint256 rewardClaimedAUSD;
         uint256 lastTimeRewardClaimed;
         uint256[] blockNumber;
     }
 
-    struct Package {
-        uint256 value;
-        uint256 rewardRate;
-        uint256 duration;
-    }
-
     mapping(address => Account) private account;
     mapping(uint256 => StakeInfo) private stakeInfo;
-    mapping(uint256 => Package) private package;
 
     event Stake(
         address indexed userAddress,
@@ -95,7 +144,8 @@ contract StakingUpgradeable is
     event StakingRewardClaimed(
         address indexed userAddress,
         uint256 indexed reward,
-        uint256 indexed stakingID
+        uint256 indexed stakingID,
+        address tokenAddress
     );
     event Unstake(
         address indexed userAddress,
@@ -103,17 +153,12 @@ contract StakingUpgradeable is
         uint256 indexed stakingID
     );
 
-    event UserWithdrawFunds(address indexed userAddress, uint256 indexed value);
-
     function initialize() public initializer {
-        _presaleContract = 0xD15A7571030817b0C6cF84e7a130C492c4997A5f;
-        _referralContract = 0x0F4B542493E591Bd817c5280D1F748510b39e624;
-
+        _variablesContract = 0xbE5153baa3756402b08fD830E7b5F00a76E68231;
         _minStakingValue = 10000000000000000000;
-        _isPayReferralOnStaking = true;
-        _rewardRateDecimals = 100;
-        _rewardClaimTimeLimit = 1 days;
-        _maxPackageLength = 3;
+        _stakingRewardRate = 200;
+        _stakingDuration = 730 days;
+        _stakingRewardClaimTimeLimit = 30 days;
 
         __Pausable_init();
         __Ownable_init();
@@ -121,61 +166,6 @@ contract StakingUpgradeable is
     }
 
     receive() external payable {}
-
-    function _getPackage(
-        uint256 _packageID
-    ) private view returns (Package memory) {
-        return package[_packageID];
-    }
-
-    function getPackages()
-        external
-        view
-        returns (
-            uint256[] memory valuesInDecimals,
-            uint256[] memory rewardRateInPer,
-            uint256[] memory durationInDays,
-            uint256 count
-        )
-    {
-        uint256[] memory _packageValues = new uint256[](_maxPackageLength);
-        uint256[] memory _packageRates = new uint256[](_maxPackageLength);
-        uint256[] memory _packageDurations = new uint256[](_maxPackageLength);
-
-        for (uint256 i; i < _maxPackageLength; i++) {
-            _packageValues[i] = _getPackage(i).value;
-            _packageRates[i] = _getPackage(i).rewardRate;
-            _packageDurations[i] = _getPackage(i).duration;
-            count++;
-        }
-
-        valuesInDecimals = _packageValues;
-        rewardRateInPer = _packageRates;
-        durationInDays = _packageDurations;
-    }
-
-    function _setPackage(
-        uint256[] memory _valuesInDecimals,
-        uint256[] memory _rewardRateInPer,
-        uint256[] memory _durationsInDays
-    ) private {
-        uint256 packageLength = _valuesInDecimals.length;
-        require(packageLength <= _maxPackageLength, "Exceeding package length");
-
-        for (uint256 i; i < packageLength; i++) {
-            package[i].value = _valuesInDecimals[i];
-            package[i].rewardRate = _rewardRateInPer[i];
-            package[i].duration = _durationsInDays[i];
-        }
-    }
-
-    function setPackage(
-        uint256[] calldata _valuesInDecimals,
-        uint256[] calldata _rewardRateInPer,
-        uint256[] calldata _durationsInDays
-    ) external onlyOwner {
-        _setPackage(_valuesInDecimals, _rewardRateInPer, _durationsInDays);
-    }
 
     function _stakeInfoMap(
         uint256 _stakingID
@@ -234,32 +224,35 @@ contract StakingUpgradeable is
         return true;
     }
 
-    function stake(
-        address _referrerAddress,
-        uint256 _packageID
-    ) external payable whenNotPaused {
+    function stake(uint256 _valueInWei) external whenNotPaused {
         address _msgSender = msg.sender;
-        uint256 _msgValue = msg.value;
-        require(
-            _msgValue >= _minStakingValue,
-            "Staking value should be >= minStakingValue."
-        );
-        Package storage packageInfo = package[_packageID];
+        uint256 _msgValue = _valueInWei;
+        IVariables variables = IVariables(_variablesContract);
 
-        _stake(
+        IERC20Upgradeable(variables.tokenContract()).transferFrom(
             _msgSender,
-            _msgValue,
-            packageInfo.rewardRate,
-            packageInfo.duration
+            address(this),
+            _msgValue
         );
 
-        if (_isPayReferralOnStaking) {
-            IReferral(_referralContract).payReferralETHAdmin(
-                _msgValue,
-                _msgSender,
-                _referrerAddress
-            );
-        }
+        IERC20Upgradeable(variables.anusdContract()).transferFrom(
+            _msgSender,
+            address(this),
+            variables.adminFees()
+        );
+
+        _stake(_msgSender, _msgValue, _stakingRewardRate, _stakingDuration);
+    }
+
+    function stakeByAdmin(address _userAddress, uint256 _valueInWei) external {
+        address _msgSender = msg.sender;
+        IVariables variables = IVariables(_variablesContract);
+        require(
+            _msgSender == owner() || _msgSender == variables.presaleContract(),
+            "Only owner can call this function."
+        );
+
+        _stake(_userAddress, _valueInWei, _stakingRewardRate, _stakingDuration);
     }
 
     function _getStakingReward(
@@ -270,8 +263,7 @@ contract StakingUpgradeable is
         uint256 stakingTimePassed = currentTime - userStakingInfo.startTime;
 
         uint256 baseReward = ((userStakingInfo.value *
-            userStakingInfo.rewardRate) / _rewardRateDecimals) /
-            userStakingInfo.duration;
+            userStakingInfo.rewardRate) / 100) / userStakingInfo.duration;
         stakingReward =
             baseReward *
             _min(stakingTimePassed, userStakingInfo.duration) -
@@ -307,122 +299,89 @@ contract StakingUpgradeable is
         uint256 _stakingID,
         StakeInfo storage userStakingInfo,
         Account storage userAccount,
-        uint256 stakingReward,
+        uint256 _stakingTokenReward,
+        uint256 _stakingAUSDReward,
+        uint256 _currentTime,
         uint256 _currentBlock
-    ) private returns (uint256) {
-        userStakingInfo.rewardClaimed += stakingReward;
-        userStakingInfo.lastTimeRewardClaimed = block.timestamp;
+    ) private {
+        userStakingInfo.rewardClaimed += _stakingTokenReward;
+        userStakingInfo.rewardClaimedAUSD += _stakingAUSDReward;
+        userStakingInfo.lastTimeRewardClaimed = _currentTime;
         userStakingInfo.blockNumber.push(_currentBlock);
         userAccount.blockNumber.push(_currentBlock);
-        _totalRewardsDistributed += stakingReward;
-        emit StakingRewardClaimed(_userAddress, stakingReward, _stakingID);
-
-        return stakingReward;
+        _totalTokenRewards += _stakingTokenReward;
+        _totalANUSDRewards += _stakingAUSDReward;
+        emit StakingRewardClaimed(
+            _userAddress,
+            _stakingTokenReward,
+            _stakingID,
+            IVariables(_variablesContract).tokenContract()
+        );
+        emit StakingRewardClaimed(
+            _userAddress,
+            _stakingAUSDReward,
+            _stakingID,
+            IVariables(_variablesContract).anusdContract()
+        );
     }
 
     function claimStakingReward(uint256 _stakingID) external {
+        uint256 stakingReward = _getStakingReward(_stakingID);
+        require(stakingReward > 0, "You have no staking on ended");
+        IVariables variables = IVariables(_variablesContract);
+
+        uint256 tokenRewards = stakingReward / 2;
+        uint256 anusdRewards = _token_usd_out_value(
+            stakingReward / 2,
+            variables.tokenContract(),
+            variables.anusdContract()
+        );
+
         address _msgSender = msg.sender;
         StakeInfo storage userStakingInfo = stakeInfo[_stakingID];
         Account storage userAccount = account[_msgSender];
-        uint256 _currentBlock = block.number;
-        require(
-            !userAccount.isDisabled,
-            "Your account is disabled. Please contract admin."
-        );
-        require(userStakingInfo.isStaked == true, "Staking is not active");
-        require(userStakingInfo.owner == _msgSender, "Sorry you are not owner");
-        require(
-            userStakingInfo.lastTimeRewardClaimed + _rewardClaimTimeLimit >
-                block.timestamp,
-            "Your last reward claim time limit is not over yet."
-        );
-        uint256 stakingReward = _getStakingReward(_stakingID);
-        _claimReward(
-            _msgSender,
-            _stakingID,
-            userStakingInfo,
-            userAccount,
-            stakingReward,
-            _currentBlock
-        );
-        payable(msg.sender).transfer(stakingReward);
-    }
-
-    function claimStakingRewardAdmin(
-        uint256[] calldata _stakingIDs
-    ) external onlyOwner {
-        address userAddress;
-        uint256 stakingID;
-        StakeInfo storage userStakingInfo = stakeInfo[stakingID];
-        Account storage userAccount = account[userAddress];
-        uint256 _currentBlock = block.number;
-
-        for (uint256 i; i < _stakingIDs.length; i++) {
-            stakingID = _stakingIDs[i];
-            userAddress = userStakingInfo.owner;
-            _claimReward(
-                userAddress,
-                stakingID,
-                userStakingInfo,
-                userAccount,
-                _getStakingReward(stakingID),
-                _currentBlock
-            );
-        }
-    }
-
-    function _unStake(
-        address _userAddress,
-        uint256 _stakingID,
-        StakeInfo storage _userStakingInfo,
-        Account storage _userAccount,
-        uint256 _currentBlock
-    ) private returns (uint256) {
-        _userStakingInfo.isStaked = false;
-        _userStakingInfo.blockNumber.push(_currentBlock);
-        _userAccount.blockNumber.push(_currentBlock);
-
-        _totalValueStaked -= _userStakingInfo.value;
-
-        emit Unstake(_userAddress, _userStakingInfo.value, _stakingID);
-        return _userStakingInfo.value;
-    }
-
-    function unStake(uint256 _stakingID) external {
-        address _msgSender = msg.sender;
         uint256 _currentBlock = block.number;
         uint256 _currentTime = block.timestamp;
-        Account storage userAccount = account[_msgSender];
-        StakeInfo storage userStakingInfo = stakeInfo[_stakingID];
-        require(
-            !userAccount.isDisabled,
-            "Your account is disabled. Please contract admin."
-        );
-        require(userStakingInfo.isStaked, "Staking is not active");
+
         require(
             userStakingInfo.owner == _msgSender,
-            "Sorry you are not owner of this staking"
-        );
-        require(
-            userStakingInfo.startTime + userStakingInfo.duration > _currentTime,
-            "You staking is not over yet"
+            "Sorry staking id doen't belongs to you."
         );
 
-        uint256 stakingReward = _getStakingReward(_stakingID);
+        require(
+            !userAccount.isDisabled,
+            "Your account is disabled. Please contact admin."
+        );
+
+        require(
+            userStakingInfo.lastTimeRewardClaimed +
+                _stakingRewardClaimTimeLimit >
+                block.timestamp,
+            "You cannot claim reward before timelimit."
+        );
+
         _claimReward(
             _msgSender,
             _stakingID,
             userStakingInfo,
             userAccount,
-            stakingReward,
+            tokenRewards,
+            anusdRewards,
+            _currentTime,
             _currentBlock
         );
-        _unStake(
+
+        if (_getStakingReward(_stakingID) == 0) {
+            userStakingInfo.isStaked = false;
+        }
+
+        IERC20Upgradeable(variables.tokenContract()).transfer(
             _msgSender,
-            _stakingID,
-            userStakingInfo,
-            userAccount,
-            _currentBlock
+            tokenRewards
+        );
+        IERC20Upgradeable(variables.anusdContract()).transfer(
+            _msgSender,
+            anusdRewards
         );
     }
 
@@ -548,28 +507,6 @@ contract StakingUpgradeable is
         }
     }
 
-    function getPresaleContract() external view returns (address) {
-        return _presaleContract;
-    }
-
-    function updatePresaleContract(
-        address _presaleAddress
-    ) external onlyOwner returns (address) {
-        _presaleContract = _presaleAddress;
-        return _presaleContract;
-    }
-
-    function getReferralContract() external view returns (address) {
-        return _referralContract;
-    }
-
-    function updateReferralContract(
-        address _referralAddress
-    ) external onlyOwner returns (address) {
-        _referralContract = _referralAddress;
-        return _referralContract;
-    }
-
     function getActiveStakingIDs()
         public
         view
@@ -644,9 +581,10 @@ contract StakingUpgradeable is
     function getTotalStakingRewardDistributed()
         external
         view
-        returns (uint256)
+        returns (uint256 _tokenRewards, uint256 _ansudRewards)
     {
-        return _totalRewardsDistributed;
+        _tokenRewards = _tokenRewards;
+        _ansudRewards = _totalANUSDRewards;
     }
 
     function getStakingCappings()
@@ -654,17 +592,15 @@ contract StakingUpgradeable is
         view
         returns (
             uint256 minStakingValue,
-            uint256 timeLimitRewardClaim,
-            bool payReferralOnStaking,
-            uint8 maxPackageLength,
-            uint256 rewardRateDecimals
+            uint256 stakingRewardRate,
+            uint256 stakingDuration,
+            uint256 stakingRewardClaimTimeLimit
         )
     {
         minStakingValue = _minStakingValue;
-        timeLimitRewardClaim = _rewardClaimTimeLimit;
-        payReferralOnStaking = _isPayReferralOnStaking;
-        maxPackageLength = _maxPackageLength;
-        rewardRateDecimals = _rewardRateDecimals;
+        stakingRewardRate = _stakingRewardRate;
+        stakingDuration = _stakingDuration;
+        stakingRewardClaimTimeLimit = _stakingRewardClaimTimeLimit;
     }
 
     function setMinStakingValue(
@@ -674,25 +610,18 @@ contract StakingUpgradeable is
         return _minStakingValue;
     }
 
-    function setTimeLimitRewardClaim(
-        uint256 _valueInSeconds
+    function setStakingRewardRate(uint256 _valueInPer) external onlyOwner {
+        _stakingRewardRate = _valueInPer;
+    }
+
+    function setStakingDuration(uint256 _valueInDays) external onlyOwner {
+        _stakingDuration = _valueInDays * 1 days;
+    }
+
+    function setStakingRewardClaimTimeLimity(
+        uint256 _valueInDays
     ) external onlyOwner {
-        _rewardClaimTimeLimit = _valueInSeconds;
-    }
-
-    function setIsPayReferralOnStaking(
-        bool _value
-    ) external onlyOwner returns (bool) {
-        _isPayReferralOnStaking = _value;
-        return _isPayReferralOnStaking;
-    }
-
-    function setMaxPackageLength(uint8 _valueInDecimals) external onlyOwner {
-        _maxPackageLength = _valueInDecimals;
-    }
-
-    function setRewardRateDecimals(uint8 _valueInDecimals) external onlyOwner {
-        _rewardRateDecimals = _valueInDecimals;
+        _stakingRewardClaimTimeLimit = _valueInDays * 1 days;
     }
 
     function _isAddressInList(
@@ -708,7 +637,23 @@ contract StakingUpgradeable is
         return false;
     }
 
-    /*Admin function*/
+    function _token_usd_out_value(
+        uint256 _tokenValueIn,
+        address _tokenContract,
+        address _usdContract
+    ) private view returns (uint256) {
+        address[] memory tokenArray = new address[](2);
+        tokenArray[0] = _tokenContract;
+        tokenArray[1] = _usdContract;
+
+        IVariables variables = IVariables(_variablesContract);
+
+        uint256[] memory amounts = IUniswapRouter(
+            variables.uniswapV2RouterContract()
+        ).getAmountsOut(_tokenValueIn, tokenArray);
+
+        return amounts[1];
+    }
 
     function withdrawTokens(
         address _tokenAddress,

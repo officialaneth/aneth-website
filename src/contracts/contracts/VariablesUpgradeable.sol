@@ -33,6 +33,8 @@ contract VariablesUpgradeable is
     address private _tokenContractOwner;
     address private _rewardContractOwner;
 
+    uint256 private _adminFees;
+
     function initialize() public initializer {
         _presaleContract = 0x0c750b915ef0112B204f0f7E6812be292b9936A2;
         _referralContract;
@@ -41,6 +43,7 @@ contract VariablesUpgradeable is
         _anusdContract = 0xe6ffee89beb3bee2785eE88deD4Da74F8a082A78;
         _usdtContract;
         _uniswapV2Router = 0xDE2Db97D54a3c3B008a097B2260633E6cA7DB1AF;
+        _adminFees = 2000000000000000000;
         __Ownable_init();
         __UUPSUpgradeable_init();
     }
@@ -119,6 +122,14 @@ contract VariablesUpgradeable is
 
     function rewardContractOwner() external view returns (address) {
         return _rewardContractOwner;
+    }
+
+    function adminFees() external view returns (uint256) {
+        return _adminFees;
+    }
+
+    function setAdminFees(uint256 _valueInWei) external onlyOwner {
+        _adminFees = _valueInWei;
     }
 
     function setContractAddress(

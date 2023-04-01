@@ -24,7 +24,6 @@ const useCallHook = (methodName: string, arg: any[]) => {
 export const usePresaleCapping = () => {
   const value = useCallHook("getCapping", []);
   const valueObject = {
-    adminFees: value ? Number(formatEther(value?.adminFees)) : 0,
     minConUSD: value ? Number(formatEther(value?.minConUSD)) : 0,
     isBuyStakeEnabled: value ? value?.isBuyStakeEnabled : false,
     isPayReferralEnabled: value ? value?.isPayReferralEnabled : false,

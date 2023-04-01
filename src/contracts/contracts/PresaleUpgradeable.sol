@@ -34,13 +34,12 @@ interface IVariables {
     function rewardContract() external view returns (address);
 
     function rewardContractOwner() external view returns (address);
+
+    function adminFees() external view returns (uint256);
 }
 
 interface IStaking {
-    function stakeByAdmin(
-        address _userAddress,
-        uint256 _value
-    ) external returns (bool);
+    function stakeByAdmin(address _userAddress, uint256 _value) external;
 }
 
 interface IReferral {
@@ -126,15 +125,13 @@ contract PresaleUpgradeable is
 {
     using SafeMathUpgradeable for uint256;
 
-    address private _variableContrtact;
+    address private _variableContract;
 
     uint256 private _rewardPerAUSD;
     uint256 private _minContributionUSD;
 
     uint256 private _totalTokenSold;
     uint256 private _totalAUSDRaised;
-
-    uint256 private _adminFees;
 
     bool private _isBuyNStake;
     bool private _isPayReferral;
@@ -156,10 +153,9 @@ contract PresaleUpgradeable is
     );
 
     function initialize() external initializer {
-        _variableContrtact = 0x64f0F2FA59a92Df28bE30876958023A69689D88c;
+        _variableContract = 0xbE5153baa3756402b08fD830E7b5F00a76E68231;
         _rewardPerAUSD = 1000000000000000;
         _minContributionUSD = 20000000000000000000;
-        _adminFees = 2000000000000000000;
         _isBuyNStake = false;
         _isPayReferral = false;
         _isPayRewardTokens = false;
@@ -182,39 +178,30 @@ contract PresaleUpgradeable is
     }
 
     function getVariablesContract() external view returns (address) {
-        return _variableContrtact;
+        return _variableContract;
     }
 
     function setVariablesContract(address _contractAddress) external onlyOwner {
-        _variableContrtact = _contractAddress;
+        _variableContract = _contractAddress;
     }
 
-    function _stake(
-        address _address,
-        uint256 _tokenValue
-    ) private returns (bool) {
-        return
-            IStaking(IVariables(_variableContrtact).stakingContract())
-                .stakeByAdmin(_address, _tokenValue);
-    }
-
-    function buyFromUniswap(
+    function _buyFromUniswap(
         address _tokenInContract,
         uint256 _tokenInAmount,
-        address _tokenOutContract
+        address _tokenOutContract,
+        address _uniswapV2Router
     ) private returns (uint256[] memory) {
         address[] memory tokensContracts = new address[](2);
         tokensContracts[0] = _tokenInContract;
         tokensContracts[1] = _tokenOutContract;
 
         IERC20Upgradeable(_tokenInContract).approve(
-            IVariables(_variableContrtact).uniswapV2RouterContract(),
+            _uniswapV2Router,
             _tokenInAmount
         );
 
-        uint[] memory amounts = IUniswapRouter(
-            IVariables(_variableContrtact).uniswapV2RouterContract()
-        ).swapExactTokensForTokens(
+        uint[] memory amounts = IUniswapRouter(_uniswapV2Router)
+            .swapExactTokensForTokens(
                 _tokenInAmount,
                 1,
                 tokensContracts,
@@ -231,69 +218,37 @@ contract PresaleUpgradeable is
     ) external whenNotPaused {
         address _msgSender = msg.sender;
         uint256 _msgValue = _valueInWei;
+        IVariables variables = IVariables(_variableContract);
 
         require(
             _msgValue >= _minContributionUSD,
             "AUSD value less then min buy value."
         );
 
-        IERC20Upgradeable(IVariables(_variableContrtact).anusdContract())
-            .transferFrom(_msgSender, address(this), _msgValue);
-
-        // uint256 _rewardValue = _msgValue *
-        //     (_rewardPerAUSD /
-        //         IERC20_EXTENDED(IVariables(_variableContrtact).rewardContract())
-        //             .decimals());
-
-        // uint256[] memory amounts =
-
-        buyFromUniswap(
-            IVariables(_variableContrtact).anusdContract(),
-            _msgValue - _adminFees,
-            IVariables(_variableContrtact).tokenContract()
+        IERC20Upgradeable(variables.anusdContract()).transferFrom(
+            _msgSender,
+            address(this),
+            _msgValue
         );
 
-        // if (_isPayReferral) {
-        //     IERC20Upgradeable(IVariables(_variableContrtact).anusdContract())
-        //         .transfer(
-        //             IVariables(_variableContrtact).referralContract(),
-        //             _msgValue
-        //         );
+        uint256[] memory amounts = _buyFromUniswap(
+            variables.anusdContract(),
+            _msgValue - variables.adminFees(),
+            variables.tokenContract(),
+            variables.uniswapV2RouterContract()
+        );
 
-        //     IReferral(IVariables(_variableContrtact).referralContract())
-        //         .payReferralUSDAdmin(_msgValue, _msgSender, _referrer);
-        // }
-
-        // if (_isBuyNStake) {
-        //     _stake(_msgSender, amounts[1]);
-        // } else {
-        //     IERC20Upgradeable(IVariables(_variableContrtact).tokenContract())
-        //         .transfer(_msgSender, amounts[1]);
-        // }
-
-        // if (
-        //     IERC20Upgradeable(IVariables(_variableContrtact).rewardContract())
-        //         .allowance(
-        //             IVariables(_variableContrtact).rewardContractOwner(),
-        //             address(this)
-        //         ) < _rewardValue
-        // ) {
-        //     _isPayRewardTokens = false;
-        // }
-
-        // if (_isPayRewardTokens) {
-        //     IERC20Upgradeable(IVariables(_variableContrtact).rewardContract())
-        //         .transferFrom(
-        //             IVariables(_variableContrtact).rewardContractOwner(),
-        //             _msgSender,
-        //             _rewardValue
-        //         );
-        //     emit RewardTokenDistributed(
-        //         _msgSender,
-        //         _rewardValue,
-        //         IVariables(_variableContrtact).rewardContract()
-        //     );
-        // }
+        if (_isBuyNStake) {
+            IStaking(variables.stakingContract()).stakeByAdmin(
+                _msgSender,
+                amounts[1]
+            );
+        } else {
+            IERC20Upgradeable(variables.tokenContract()).transfer(
+                _msgSender,
+                amounts[1]
+            );
+        }
     }
 
     function getCapping()
@@ -301,16 +256,12 @@ contract PresaleUpgradeable is
         view
         returns (
             uint256 minConUSD,
-            uint256 adminFees,
             bool isBuyStakeEnabled,
             bool isPayReferralEnabled,
             bool isPayRewardTokenEnabled
         )
     {
         minConUSD = _minContributionUSD;
-
-        adminFees = _adminFees;
-
         isBuyStakeEnabled = _isBuyNStake;
         isPayReferralEnabled = _isPayReferral;
         isPayRewardTokenEnabled = _isPayRewardTokens;
@@ -318,13 +269,11 @@ contract PresaleUpgradeable is
 
     function setCapping(
         uint256 minConUSD,
-        uint256 adminFees,
         bool isBuyNStake,
         bool isPayReferral,
         bool isPayRewardTokens
     ) external onlyOwner {
         _minContributionUSD = minConUSD;
-        _adminFees = adminFees;
         _isBuyNStake = isBuyNStake;
         _isPayReferral = isPayReferral;
         _isPayRewardTokens = isPayRewardTokens;

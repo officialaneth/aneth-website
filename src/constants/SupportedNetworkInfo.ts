@@ -34,20 +34,20 @@ export const DeepLinks = {
 
 export const useSupportedNetworkInfo = {
   [BSCTestnet.chainId]: {
-    variablesContract: "0xa0144428Fdb582b7681cb3f9e246bab4753a6AD0",
+    variablesContract: "0xbE5153baa3756402b08fD830E7b5F00a76E68231",
     uniswapV2RouterContract: "0xDE2Db97D54a3c3B008a097B2260633E6cA7DB1AF",
     uniswapV2RouterContractInterface: new Contract(
       "0xDE2Db97D54a3c3B008a097B2260633E6cA7DB1AF",
       UniswapV2RouterInterface?.abi
     ),
-    presaleContract: "0x0c750b915ef0112B204f0f7E6812be292b9936A2",
+    presaleContract: "0xf7B74347b4dF59589d14BFB4cb0d2c547f3F79E5",
     presaleContractInterface: new Contract(
-      "0x0c750b915ef0112B204f0f7E6812be292b9936A2",
+      "0xf7B74347b4dF59589d14BFB4cb0d2c547f3F79E5",
       PresaleInterface?.abi
     ),
-    stakingContractAddress: "0x08eFdc513580DD7C7183916c833e98ff143dF43c",
+    stakingContractAddress: "0xe6f3eF32E28DC071e33c36be943e824A347F2f33",
     stakingContractInterface: new Contract(
-      "0x08eFdc513580DD7C7183916c833e98ff143dF43c",
+      "0xe6f3eF32E28DC071e33c36be943e824A347F2f33",
       StakingInterface?.abi
     ),
     Token: {
