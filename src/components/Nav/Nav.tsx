@@ -1,6 +1,7 @@
 import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   Button,
+  Container,
   Hide,
   HStack,
   IconButton,
@@ -18,7 +19,14 @@ import { NavMenu } from "./NavMenu/NavMenu";
 
 export const Nav = () => {
   return (
-    <HStack w="full" p={5} bg={useColorModeValue("gray.50", "gray.900")}>
+    <HStack
+      w="full"
+      p={5}
+      bg={useColorModeValue("gray.50", "gray.900")}
+      position="sticky"
+      top={0}
+      zIndex={11111}
+    >
       <Logo />
       <Spacer></Spacer>
       <Hide below="sm">
@@ -26,8 +34,16 @@ export const Nav = () => {
       </Hide>
       <ConnectWalletButton />
       <Menu>
-        <MenuButton as={IconButton} icon={<HamburgerIcon />}></MenuButton>
-
+        <MenuButton
+          as={IconButton}
+          icon={<HamburgerIcon />}
+          colorScheme="twitter"
+          bg="twitter.500"
+          _hover={{
+            bg: "twitter.600",
+          }}
+          borderRadius="xl"
+        ></MenuButton>
         <NavMenu />
       </Menu>
     </HStack>

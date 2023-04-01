@@ -31,14 +31,12 @@ transform: scale(0.7)
 export const ModalConfirmTransactionStake = ({
   currencySymbol,
   value,
-  isLoading,
   onConfirm,
   onClose,
   children,
 }: {
   currencySymbol: string;
-  value: string;
-  isLoading: boolean;
+  value: number;
   onConfirm: () => void;
   onClose: () => void;
   children?: React.ReactNode;
@@ -47,7 +45,7 @@ export const ModalConfirmTransactionStake = ({
     <VStack w="full">
       <VStack w={300}>
         <ModalHeader textAlign="center" fontSize="md">
-          You are about to stake {currencySymbol}
+          You are about to swap {currencySymbol}
           <Center w={200}>
             <Divider></Divider>
           </Center>
@@ -75,8 +73,6 @@ export const ModalConfirmTransactionStake = ({
             onClick={onConfirm}
             borderRadius="xl"
             w="full"
-            isLoading={isLoading}
-            loadingText="Confirm from metamask."
           >
             Confirm
           </Button>

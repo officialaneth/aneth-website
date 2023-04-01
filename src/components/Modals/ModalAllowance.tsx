@@ -1,23 +1,23 @@
-import { ChevronRightIcon, InfoIcon, WarningIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon, WarningIcon } from "@chakra-ui/icons";
 import {
+  Button,
   Center,
   Divider,
   Heading,
   HStack,
+  Icon,
   Image,
   ModalBody,
   ModalFooter,
   ModalHeader,
-  Text,
-  VStack,
-  Button,
-  Icon,
   Spacer,
+  Text,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { useContractFunction, useEthers } from "@usedapp/core";
-import { Contract, utils } from "ethers";
-import React, { useEffect, useState } from "react";
+import { utils } from "ethers";
+import { useEffect, useState } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { useSupportedNetworkInfo } from "../../constants";
 
@@ -29,7 +29,7 @@ export const ModalAllowance = ({
 }: {
   tokenName: string;
   spenderAddress: string;
-  valueToApprove: number;
+  valueToApprove: string;
   onClose?: () => void;
 }) => {
   const toast = useToast();
@@ -47,13 +47,9 @@ export const ModalAllowance = ({
   const handleApprove = async () => {
     try {
       setTransactionStatus("Loading");
-      await send(
-        spenderAddress,
-        utils.parseUnits(
-          valueToApprove.toString(), // @ts-ignore
-          currentNetwork?.[tokenName]?.Decimals
-        )
-      );
+      await send(spenderAddress, utils.parseEther(valueToApprove), {
+        value: 0,
+      });
       toast({
         title: "Transaction Approved.",
         description: "",
@@ -82,7 +78,7 @@ export const ModalAllowance = ({
       setTransactionStatus("No");
       resetState();
     }
-  }, [state]);
+  }, [state, resetState]);
 
   return (
     <VStack spacing={0}>

@@ -9,14 +9,25 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { shortenAddress, useEthers } from "@usedapp/core";
+import { motion, MotionConfig } from "framer-motion";
 import { ConnectWalletModal, WalletModal } from "../Modals";
+
+const MotionModalContent = motion(ModalContent);
 
 export const ConnectWalletButton = () => {
   const { account } = useEthers();
   const { onOpen, isOpen, onClose } = useDisclosure();
   return (
     <>
-      <Button onClick={onOpen}>
+      <Button
+        onClick={onOpen}
+        colorScheme="twitter"
+        bg="twitter.500"
+        _hover={{
+          bg: "twitter.600",
+        }}
+        borderRadius="xl"
+      >
         <Text fontSize="sm">
           {account ? (
             shortenAddress(account)
@@ -29,14 +40,28 @@ export const ConnectWalletButton = () => {
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent w="95%" borderRadius="3xl">
-          <ModalCloseButton />
-          {account ? (
-            <WalletModal onClose={onClose}></WalletModal>
-          ) : (
-            <ConnectWalletModal onClose={onClose} />
-          )}
-        </ModalContent>
+        <MotionConfig
+          transition={{
+            duration: 0.25,
+          }}
+        >
+          <MotionModalContent
+            w="95%"
+            borderRadius="3xl"
+            animate={{
+              opacity: [0, 1],
+              scale: [0, 1],
+              y: ["100%", "0%"],
+            }}
+          >
+            <ModalCloseButton />
+            {account ? (
+              <WalletModal onClose={onClose}></WalletModal>
+            ) : (
+              <ConnectWalletModal onClose={onClose} />
+            )}
+          </MotionModalContent>
+        </MotionConfig>
       </Modal>
     </>
   );

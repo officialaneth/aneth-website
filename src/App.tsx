@@ -6,7 +6,7 @@ export const App = () => (
   <VStack
     w="full"
     minH="100vh"
-    bgColor={useColorModeValue("pink.100", "gray.700")}
+    bgColor={useColorModeValue("gray.200", "gray.800")}
   >
     <Nav />
     <Outlet />

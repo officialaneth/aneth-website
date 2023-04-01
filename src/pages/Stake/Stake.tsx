@@ -4,7 +4,7 @@ import { StakingUI } from "../../components";
 
 export const Stake = () => {
   return (
-    <VStack flex={1} py={20}>
+    <VStack minH="100vh" w="full">
       <StakingUI />
     </VStack>
   );

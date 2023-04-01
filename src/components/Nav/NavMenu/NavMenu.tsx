@@ -11,10 +11,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { FaChartBar, FaMoon, FaPiggyBank, FaSun } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { ConnectWalletButton } from "../../ConnectWalletButton/ConnectWalletButton";
 
 export const NavMenu = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const navigate = useNavigate();
   return (
     <MenuList borderRadius="3xl" overflow="hidden" fontSize="sm" p={5}>
       <VStack w="full">
@@ -24,8 +26,13 @@ export const NavMenu = () => {
             <MenuItem icon={<FaChartBar />} iconSpacing={5} borderRadius="xl">
               Dashboard
             </MenuItem>
-            <MenuItem icon={<FaPiggyBank />} iconSpacing={5} borderRadius="xl">
-              Stake
+            <MenuItem
+              icon={<FaPiggyBank />}
+              iconSpacing={5}
+              borderRadius="xl"
+              onClick={() => navigate("swap")}
+            >
+              Swap
             </MenuItem>
           </VStack>
         </VStack>

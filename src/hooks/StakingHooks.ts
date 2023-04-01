@@ -19,8 +19,3 @@ const useCallHook = (methodName: string, arg: any[]) => {
   }
   return value;
 };
-
-export const useGetStakingReward = (stakingID: number) => {
-  const value = useCallHook("getStakingReward", [stakingID]);
-  return value;
-};

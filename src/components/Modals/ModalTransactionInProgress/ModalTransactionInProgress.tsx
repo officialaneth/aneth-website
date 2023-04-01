@@ -1,33 +1,14 @@
 import {
   Center,
   Divider,
-  Heading,
-  HStack,
-  Image,
   ModalBody,
   ModalFooter,
   ModalHeader,
-  Text,
-  VStack,
-  Button,
   Spinner,
+  VStack,
 } from "@chakra-ui/react";
-import { useEthers } from "@usedapp/core";
-import React from "react";
-import { useSupportedNetworkInfo } from "../../../constants";
 
-export const ModalTransactionInProgress = ({
-  onClickNative,
-  onClickUSDT,
-  onClose,
-}: {
-  onClickNative?: () => void;
-  onClickUSDT?: () => void;
-  onClose?: () => void;
-}) => {
-  const { chainId } = useEthers();
-  const currentNetwork = useSupportedNetworkInfo[chainId!];
-
+export const ModalTransactionInProgress = () => {
   return (
     <VStack spacing={0}>
       <ModalHeader textAlign="center" fontSize="md">

@@ -14,11 +14,6 @@
           "internalType": "uint256",
           "name": "_value",
           "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_duration",
-          "type": "uint256"
         }
       ],
       "name": "stakeByAdmin",

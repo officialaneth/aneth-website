@@ -14,7 +14,7 @@ async function main() {
 
   const TokenV2 = await ethers.getContractFactory("StakingV2Upgradable");
   const mc = await upgrades.upgradeProxy(
-    "0xD021F0c34C02Ec2Bf6D80905c23bafad0482d1ea",
+    "0x64f0F2FA59a92Df28bE30876958023A69689D88c",
     TokenV2,
     { gasPrice: gas }
   );

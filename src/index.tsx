@@ -4,32 +4,10 @@ import { WalletConnectConnector } from "@usedapp/wallet-connect-connector";
 import { getDefaultProvider } from "ethers";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import {
-  createBrowserRouter,
-  createHashRouter,
-  RouterProvider,
-} from "react-router-dom";
-import { App } from "./App";
-import { Stake } from "./pages";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./navigation/Routes";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorker";
-
-const router = createHashRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        index: true,
-        element: <Stake />,
-      },
-      {
-        path: "/:referrerAddress",
-        element: <Stake />,
-      },
-    ],
-  },
-]);
 
 const dappConfig: Config = {
   notifications: {
@@ -38,7 +16,7 @@ const dappConfig: Config = {
   readOnlyChainId: BSCTestnet?.chainId,
   readOnlyUrls: {
     [BSCTestnet?.chainId]: getDefaultProvider(
-      "https://bsc-testnet.public.blastapi.io"
+      "https://data-seed-prebsc-1-s1.binance.org:8545/"
     ),
     [Polygon.chainId]: "https://polygon-rpc.com",
   },
@@ -46,7 +24,7 @@ const dappConfig: Config = {
   connectors: {
     walletConnect: new WalletConnectConnector({
       rpc: {
-        97: "https://bsc-testnet.public.blastapi.io",
+        97: "https://data-seed-prebsc-1-s1.binance.org:8545/",
         [Polygon.chainId]: "https://polygon-rpc.com",
       },
       qrcodeModalOptions: {

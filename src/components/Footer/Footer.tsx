@@ -15,6 +15,7 @@ import { ReactNode } from "react";
 import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import { BiMailSend } from "react-icons/bi";
 import { Logo } from "../Logo/Logo";
+import { ProjectName } from "../../constants";
 
 const SocialButton = ({
   children,
@@ -71,7 +72,7 @@ export function Footer() {
           <Stack spacing={6}>
             <Logo />
             <Text fontSize={"sm"}>
-              © 2022-2023 MyVee Cryptech Ltd, UK. All rights reserved
+              © 2022-2023 {ProjectName}. All rights reserved
             </Text>
             <Stack direction={"row"} spacing={6}>
               <SocialButton label={"Twitter"} href={"#"}>

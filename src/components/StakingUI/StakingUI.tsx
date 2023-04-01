@@ -270,8 +270,7 @@ export const StakingUI = () => {
             <ModalConfirmTransactionStake
               currencySymbol={currentNetwork?.Native?.Symbol}
               onClose={onClose}
-              isLoading={transactionStatus === "Loading"}
-              value={Number(input?.value).toFixed(3)}
+              value={Number(input?.value)}
               onConfirm={proceedSwap}
               children={
                 <StakingStats
