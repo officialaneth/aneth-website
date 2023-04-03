@@ -11,17 +11,20 @@ import {
   VStack,
   Icon,
   Text,
+  Spacer,
 } from "@chakra-ui/react";
 import { shortenAddress, useEthers } from "@usedapp/core";
-import { motion } from "framer-motion";
+import { motion, MotionProps } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { navUser } from "./NavMenuItems";
+import { AiOutlineLogout } from "react-icons/ai";
+import { IconType } from "react-icons";
 
 const MotionTag = motion(Tag);
 
 export const NavUser = () => {
-  const { account } = useEthers();
+  const { account, deactivate } = useEthers();
   const navigate = useNavigate();
 
   return (
@@ -38,7 +41,7 @@ export const NavUser = () => {
       top={0}
     >
       <HStack w="full">
-        <Avatar size="sm">
+        <Avatar>
           <AvatarBadge bgColor="green" boxSize={5}></AvatarBadge>
         </Avatar>
 
@@ -83,7 +86,17 @@ export const NavUser = () => {
           );
         })}
       </Flex>
-      <ColorModeSwitcher />
+      <HStack>
+        <ColorModeSwitcher />
+        <Spacer />
+        <Icon
+          as={AiOutlineLogout}
+          boxSize={7}
+          color="red"
+          onClick={deactivate}
+          cursor="pointer"
+        ></Icon>
+      </HStack>
     </Flex>
   );
 };

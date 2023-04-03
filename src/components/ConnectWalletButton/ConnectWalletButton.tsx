@@ -39,7 +39,7 @@ export const ConnectWalletButton = () => {
         </Text>
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
+        <ModalOverlay backdropFilter="blur(5px)" />
         <MotionConfig
           transition={{
             duration: 0.25,

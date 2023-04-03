@@ -1,4 +1,4 @@
-import { ChakraProvider, ColorModeScript, theme } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import { DAppProvider } from "@usedapp/core";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
@@ -14,8 +14,8 @@ const root = ReactDOM.createRoot(container);
 root.render(
   <React.StrictMode>
     <DAppProvider config={DappConfig}>
-      <ChakraProvider theme={theme}>
-        <ColorModeScript />
+      <ColorModeScript />
+      <ChakraProvider>
         <RouterProvider router={router}></RouterProvider>
       </ChakraProvider>
     </DAppProvider>
