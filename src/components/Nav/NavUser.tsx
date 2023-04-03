@@ -20,6 +20,7 @@ import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { navUser } from "./NavMenuItems";
 import { AiOutlineLogout } from "react-icons/ai";
 import { IconType } from "react-icons";
+import { UserAddressActionButton } from "../UI/UserAddressActionButton";
 
 const MotionTag = motion(Tag);
 
@@ -44,10 +45,19 @@ export const NavUser = () => {
         <Avatar>
           <AvatarBadge bgColor="green" boxSize={5}></AvatarBadge>
         </Avatar>
-
-        <Badge borderRadius="xl" colorScheme="twitter">
-          {shortenAddress(account ?? "")}
-        </Badge>
+        <VStack pt={3}>
+          <Badge borderRadius="lg" colorScheme="twitter">
+            {shortenAddress(account ?? "")}
+          </Badge>
+          <UserAddressActionButton
+            address={account}
+            style={{
+              size: "xs",
+              borderRadius: "lg",
+              colorScheme: "twitter",
+            }}
+          />
+        </VStack>
       </HStack>
 
       <Divider />
@@ -62,8 +72,8 @@ export const NavUser = () => {
               borderRadius="xl"
               key={key}
               onClick={() => navigate(items?.link)}
-              colorScheme={
-                window.location.hash === items?.active ? "pink" : "gray"
+              color={
+                window.location.hash === items?.active ? "twitter.500" : ""
               }
               bgColor="transparent"
               cursor="pointer"
@@ -76,7 +86,7 @@ export const NavUser = () => {
             >
               <HStack
                 _hover={{
-                  color: "twitter.500",
+                  color: "twitter.400",
                 }}
               >
                 <Icon as={items.icon}></Icon>

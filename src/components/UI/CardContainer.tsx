@@ -11,7 +11,7 @@ export const CardContainer = ({ children }: { children: ReactNode }) => {
       p={[2, 5]}
       py={5}
       minW={200}
-      colorScheme="twitter"
+      bgColor={useColorModeValue("twitter.100", "whiteAlpha.50")}
       boxShadow="base"
       whileHover={{
         borderRadius: "75px",

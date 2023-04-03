@@ -13,7 +13,7 @@ export const Dashboard = () => {
   const currentNetwork = useSupportedNetworkInfo;
   return (
     <VStack w="full" spacing={10}>
-      <Wrap w="full" spacing={10} justify="center">
+      <Wrap w="full" spacing={10} justify="center" p={2}>
         <UserBalances
           account={account!}
           chainId={chainId!}
@@ -30,7 +30,7 @@ export const Dashboard = () => {
           currentNetwork={currentNetwork}
         />
       </Wrap>
-      <Wrap w="full" spacing={10} justify="center">
+      <Wrap w="full" spacing={10} justify="center" p={2}>
         <UserIncome
           account={account!}
           chainId={chainId!}
