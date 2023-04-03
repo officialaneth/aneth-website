@@ -23,7 +23,12 @@ export const NavMenu = () => {
         <ConnectWalletButton />
         <VStack align="center" h="50vh" justify="center">
           <VStack>
-            <MenuItem icon={<FaChartBar />} iconSpacing={5} borderRadius="xl">
+            <MenuItem
+              icon={<FaChartBar />}
+              iconSpacing={5}
+              borderRadius="xl"
+              onClick={() => navigate("user")}
+            >
               Dashboard
             </MenuItem>
             <MenuItem

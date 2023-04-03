@@ -50,14 +50,6 @@ export const ModalAllowance = ({
       await send(spenderAddress, utils.parseEther(valueToApprove), {
         value: 0,
       });
-      toast({
-        title: "Transaction Approved.",
-        description: "",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-      setTransactionStatus("No");
     } catch (err: any) {
       console.log(err);
       setTransactionStatus("No");
@@ -72,13 +64,30 @@ export const ModalAllowance = ({
   };
 
   useEffect(() => {
-    if (state.status === "Mining") {
+    if (state.status === "Exception") {
+      toast({
+        title: state.errorMessage,
+        description: "",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      onClose!();
+      resetState();
+    } else if (state.status === "Mining") {
       setTransactionStatus("Loading");
     } else if (state.status === "Success") {
+      toast({
+        title: "Transaction Approved.",
+        description: "",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
       setTransactionStatus("No");
       resetState();
     }
-  }, [state, resetState]);
+  }, [state.status, resetState]);
 
   return (
     <VStack spacing={0}>

@@ -152,6 +152,8 @@ contract PresaleUpgradeable is
         address indexed rewardTokenContract
     );
 
+    event RegistrationFees(uint256 amount);
+
     function initialize() external initializer {
         _variableContract = 0xbE5153baa3756402b08fD830E7b5F00a76E68231;
         _rewardPerAUSD = 1000000000000000;
@@ -249,6 +251,8 @@ contract PresaleUpgradeable is
                 amounts[1]
             );
         }
+
+        emit RegistrationFees(variables.adminFees());
     }
 
     function getCapping()

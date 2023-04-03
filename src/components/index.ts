@@ -1,5 +1,6 @@
 export * from "./ColorModeSwitcher";
 export * from "./Nav/Nav";
+export * from "./Nav/NavUser";
 export * from "./ConnectWalletButton/ConnectWalletButton";
 export * from "./Footer/Footer";
 export * from "./Logo/Logo";

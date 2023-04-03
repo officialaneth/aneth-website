@@ -17,8 +17,10 @@ import {
 import {
   useContractFunction,
   useEthers,
+  useNotifications,
   useTokenAllowance,
   useTokenBalance,
+  useTransactions,
 } from "@usedapp/core";
 import { utils } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
@@ -45,6 +47,7 @@ export const SwapUI = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { account, chainId } = useEthers();
   const currentNetwork = useSupportedNetworkInfo[chainId!];
+
   const tokenPrice = useUniswapTokenOut(
     1,
     currentNetwork?.Token?.ContractAddress,
@@ -126,13 +129,24 @@ export const SwapUI = () => {
       await send(parseEther(`${userInput?.anusd!}`), {
         value: 0,
       });
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
-    if (state.status === "Success") {
-      setUserInput((prev) => ({
-        ...prev,
+    if (state.status === "Exception") {
+      toast({
+        title: state.errorMessage,
+        description: "",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      onClose();
+      resetState();
+    } else if (state.status === "Success") {
+      setUserInput(() => ({
         anusd: undefined,
         token: undefined,
         referrer: "",
@@ -204,6 +218,7 @@ export const SwapUI = () => {
               borderRadius: "2xl",
               colorScheme: "twitter",
               opacity: 0.75,
+              isDisabled: !account,
             }}
             onClick25={() =>
               HandleanusdInput(

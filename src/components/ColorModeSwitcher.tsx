@@ -10,12 +10,10 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import * as React from "react";
-import { FaMoon, FaSun } from "react-icons/fa";
 
 type ColorModeSwitcherProps = Omit<IconButtonProps, "aria-label">;
 
 const MotionCenter = motion(Center);
-const MotionIconButton = motion(IconButton);
 
 export const ColorModeSwitcher: React.FC<ColorModeSwitcherProps> = (props) => {
   const { toggleColorMode } = useColorMode();
