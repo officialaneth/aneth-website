@@ -21,10 +21,10 @@ export const navUser = [
     active: "#/user/team",
     icon: FaUsers,
   },
-  {
-    name: "Transactions",
-    link: "transactions",
-    active: "#/user/transactions",
-    icon: TbArrowsDoubleNeSw,
-  },
+  // {
+  //   name: "Transactions",
+  //   link: "transactions",
+  //   active: "#/user/transactions",
+  //   icon: TbArrowsDoubleNeSw,
+  // },
 ];

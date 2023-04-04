@@ -46,7 +46,6 @@ export const BalancesCard = ({
         borderRadius="3xl"
         w="full"
         p={3}
-        bgColor={useColorModeValue("gray.50", "whiteAlpha.200")}
         whileHover={{
           rotate: -10,
           scale: [1.05, 1.1, 1.05],

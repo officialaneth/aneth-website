@@ -20,6 +20,7 @@ import { useSupportedNetworkInfo } from "../../../../constants";
 
 const MotionIcon = motion(Icon);
 const MotionHeading = motion(Heading);
+const MotionCard = motion(Card);
 
 export const UserTeam = ({
   account,
@@ -33,11 +34,23 @@ export const UserTeam = ({
   return (
     <CardContainer>
       <Heading size="sm">Your Team</Heading>
-      <Card
+      <MotionCard
         w="full"
         bgColor={useColorModeValue("gray.50", "whiteAlpha.200")}
-        borderRadius="3xl"
+        borderRadius="50px"
         p={3}
+        whileHover={{
+          borderRadius: "75px",
+          scale: 0.99,
+        }}
+        whileTap={{
+          borderRadius: "75px",
+          scale: 0.99,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 700,
+        }}
       >
         <VStack w="full" spacing={3}>
           <Center p={5} borderWidth="thick" borderRadius="full">
@@ -92,7 +105,7 @@ export const UserTeam = ({
             <UserRefereeCard address={account}></UserRefereeCard>
           </Wrap>
         </VStack>
-      </Card>
+      </MotionCard>
     </CardContainer>
   );
 };

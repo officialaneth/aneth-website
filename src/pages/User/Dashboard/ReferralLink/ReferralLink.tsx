@@ -1,5 +1,6 @@
 import {
   Button,
+  Card,
   Heading,
   HStack,
   Icon,
@@ -20,11 +21,17 @@ export const ReferralLink = ({ account }: { account: string }) => {
     <CardContainer>
       <Icon as={FaUser} boxSize={10}></Icon>
       <Heading size="sm">Your referral link</Heading>
+      {/* <Card p={3} borderRadius="xl">
+        <Text w="full" maxW={[300, 400, 400, 500, 700]} textOverflow="ellipsis">
+          {referralLink}
+        </Text>
+      </Card> */}
       <Input
         variant="filled"
         borderRadius="xl"
         minW={300}
         value={referralLink}
+        color="pink.500"
         isReadOnly
       ></Input>
       <Button w="full" colorScheme="twitter" borderRadius="xl" onClick={onCopy}>

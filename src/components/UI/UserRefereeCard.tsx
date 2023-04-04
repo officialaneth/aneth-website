@@ -1,6 +1,7 @@
 import { CheckIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   ButtonProps,
+  Card,
   HStack,
   Icon,
   IconButton,
@@ -15,7 +16,7 @@ import { motion } from "framer-motion";
 import { FaUser } from "react-icons/fa";
 import { UserAddressActionButton } from "./UserAddressActionButton";
 
-const MotionVStack = motion(VStack);
+const MotionCard = motion(Card);
 
 export const UserRefereeCard = ({
   address,
@@ -28,9 +29,8 @@ export const UserRefereeCard = ({
 }) => {
   const { onCopy, hasCopied } = useClipboard(address!);
   return (
-    <MotionVStack
+    <MotionCard
       p={5}
-      bgColor={useColorModeValue("white", "whiteAlpha.200")}
       borderRadius="25px"
       boxShadow="base"
       whileHover={{
@@ -40,9 +40,11 @@ export const UserRefereeCard = ({
         rotate: -10,
       }}
     >
-      <Icon as={FaUser} boxSize={7} onClick={onClick}></Icon>
-      <Text fontSize="sm">{shortenAddress(address!)}</Text>
-      <UserAddressActionButton address={address} style={style} />
-    </MotionVStack>
+      <VStack w="full">
+        <Icon as={FaUser} boxSize={7} onClick={onClick}></Icon>
+        <Text fontSize="sm">{shortenAddress(address!)}</Text>
+        <UserAddressActionButton address={address} style={style} />
+      </VStack>
+    </MotionCard>
   );
 };
