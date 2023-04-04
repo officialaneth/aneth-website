@@ -2,6 +2,7 @@ import { VStack, Wrap } from "@chakra-ui/react";
 import { useEthers } from "@usedapp/core";
 import React from "react";
 import { useSupportedNetworkInfo } from "../../../constants";
+import { ReferralLink } from "./ReferralLink/ReferralLink";
 import { UserBalances } from "./UserBalances/UserBalances";
 import { UserBusiness } from "./UserBusiness/UserBusiness";
 import { UserIncome } from "./UserIncome/UserIncome";
@@ -24,13 +25,6 @@ export const Dashboard = () => {
           chainId={chainId!}
           currentNetwork={currentNetwork}
         />
-        <UserTeam
-          account={account!}
-          chainId={chainId!}
-          currentNetwork={currentNetwork}
-        />
-      </Wrap>
-      <Wrap w="full" spacing={10} justify="center" p={2}>
         <UserIncome
           account={account!}
           chainId={chainId!}
@@ -41,12 +35,13 @@ export const Dashboard = () => {
           chainId={chainId!}
           currentNetwork={currentNetwork}
         />
-        {/* <UserTeam
-          account={account!}
-          chainId={chainId!}
-          currentNetwork={currentNetwork}
-        /> */}
       </Wrap>
+      <UserTeam
+        account={account!}
+        chainId={chainId!}
+        currentNetwork={currentNetwork}
+      />
+      <ReferralLink account={account!} />
     </VStack>
   );
 };

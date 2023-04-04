@@ -101,7 +101,7 @@ export const NavUser = () => {
         <Spacer />
         <Icon
           as={AiOutlineLogout}
-          boxSize={7}
+          boxSize={6}
           color="red"
           onClick={deactivate}
           cursor="pointer"

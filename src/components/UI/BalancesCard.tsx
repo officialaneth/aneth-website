@@ -10,8 +10,10 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
+import { useEthers, useTokenBalance } from "@usedapp/core";
 import { motion } from "framer-motion";
 import { IconType } from "react-icons";
+import { useSupportedNetworkInfo } from "../../constants";
 
 const MotionCard = motion(Card);
 
@@ -28,8 +30,18 @@ export const BalancesCard = ({
   icon?: IconType;
   isLoaded: boolean;
 }) => {
+  const { account, chainId } = useEthers();
+  const currentNetwork = useSupportedNetworkInfo[chainId!];
+  const userTokenBalanceInWei = useTokenBalance(
+    currentNetwork?.Token?.ContractAddress,
+    account
+  );
   return (
-    <Skeleton borderRadius="50px" isLoaded={isLoaded} w="full">
+    <Skeleton
+      borderRadius="50px"
+      isLoaded={userTokenBalanceInWei ? true : false}
+      w="full"
+    >
       <MotionCard
         borderRadius="3xl"
         w="full"
@@ -37,6 +49,12 @@ export const BalancesCard = ({
         bgColor={useColorModeValue("gray.50", "whiteAlpha.200")}
         whileHover={{
           rotate: -10,
+          scale: [1.05, 1.1, 1.05],
+          // transition: {
+          //   repeat: Infinity,
+          //   type: "spring",
+          //   stiffness: 700,
+          // },
         }}
         whileTap={{
           rotate: -10,
