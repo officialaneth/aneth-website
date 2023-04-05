@@ -1,9 +1,19 @@
-import { Box, Center, Heading, HStack, Text, VStack } from "@chakra-ui/react";
+import {
+  Center,
+  Heading,
+  HStack,
+  Image,
+  Text,
+  VStack,
+  Wrap,
+} from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { MetaverseVRHero } from "../../../assets";
 import { TokenomicsTSX } from "../../../assets/Tokenomics";
 
 const MotionCenter = motion(Center);
+const MotionImage = motion(Image);
 
 export const Tokenomics = () => {
   const tokenomicsText = [
@@ -65,47 +75,51 @@ export const Tokenomics = () => {
   return (
     <VStack minH={`${"100vh"}-${20}`} py={20} spacing={10}>
       <Heading>Tokenomics</Heading>
-      <Center boxSize={imageSize} overflow="hidden">
-        <MotionCenter
-          boxSize={[300, 500]}
-          zIndex={1111}
-          position="absolute"
-          borderWidth="10px"
-          borderRadius="full"
-          borderStyle="dashed"
+      <Wrap w="full" spacing={10} justify="center" overflow="hidden">
+        <Center boxSize={imageSize}>
+          <Center boxSize={[250, 300]} zIndex={1111} position="absolute">
+            <VStack>
+              <HStack>
+                <Text
+                  fontSize={headingSize}
+                  fontWeight={900}
+                  color="twitter.500"
+                >
+                  {tokenomicsText[tokenomicsTextIndex]?.value}
+                </Text>
+                <Heading size="md">%</Heading>
+              </HStack>
+              <Heading>{tokenomicsText[tokenomicsTextIndex]?.heading}</Heading>
+              <Text maxW={250}>
+                {tokenomicsText[tokenomicsTextIndex]?.text}
+              </Text>
+            </VStack>
+          </Center>
+          <TokenomicsTSX
+            onClickIO={() => setTokenomicsTextIndex(0)}
+            onClickCommunity={() => setTokenomicsTextIndex(1)}
+            onClickEcosystem={() => setTokenomicsTextIndex(2)}
+            onClickExchangeListing={() => setTokenomicsTextIndex(3)}
+            onClickRewards={() => setTokenomicsTextIndex(4)}
+            onClickMetaverse={() => setTokenomicsTextIndex(5)}
+            onClickWeb3={() => setTokenomicsTextIndex(6)}
+            onClickDeveloper={() => setTokenomicsTextIndex(7)}
+            onClickFuture={() => setTokenomicsTextIndex(8)}
+            onClickPublic={() => setTokenomicsTextIndex(9)}
+          />
+        </Center>
+        <MotionImage
+          src={MetaverseVRHero}
+          boxSize={[400, 500]}
           animate={{
-            rotate: [0, 360],
+            y: [0, 10, 0],
           }}
           transition={{
-            duration: 3,
             repeat: Infinity,
+            duration: 2,
           }}
-        ></MotionCenter>
-        <Center boxSize={[250, 300]} zIndex={1111} position="absolute">
-          <VStack>
-            <HStack>
-              <Text fontSize={headingSize} fontWeight={900} color="twitter.500">
-                {tokenomicsText[tokenomicsTextIndex]?.value}
-              </Text>
-              <Heading size="md">%</Heading>
-            </HStack>
-            <Heading>{tokenomicsText[tokenomicsTextIndex]?.heading}</Heading>
-            <Text maxW={250}>{tokenomicsText[tokenomicsTextIndex]?.text}</Text>
-          </VStack>
-        </Center>
-        <TokenomicsTSX
-          onClickIO={() => setTokenomicsTextIndex(0)}
-          onClickCommunity={() => setTokenomicsTextIndex(1)}
-          onClickEcosystem={() => setTokenomicsTextIndex(2)}
-          onClickExchangeListing={() => setTokenomicsTextIndex(3)}
-          onClickRewards={() => setTokenomicsTextIndex(4)}
-          onClickMetaverse={() => setTokenomicsTextIndex(5)}
-          onClickWeb3={() => setTokenomicsTextIndex(6)}
-          onClickDeveloper={() => setTokenomicsTextIndex(7)}
-          onClickFuture={() => setTokenomicsTextIndex(8)}
-          onClickPublic={() => setTokenomicsTextIndex(9)}
-        />
-      </Center>
+        ></MotionImage>
+      </Wrap>
     </VStack>
   );
 };

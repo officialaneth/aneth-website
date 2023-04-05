@@ -4,7 +4,7 @@ import { Footer, Nav } from "./components";
 
 export const App = () => (
   <Flex
-    bgColor={useColorModeValue("gray.200", "gray.800")}
+    bgColor={useColorModeValue("white", "gray.800")}
     direction="column"
     minH="100dvh"
     gap={5}
