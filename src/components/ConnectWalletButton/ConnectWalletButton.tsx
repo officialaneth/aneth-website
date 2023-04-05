@@ -47,12 +47,12 @@ export const ConnectWalletButton = () => {
         >
           <MotionModalContent
             w="95%"
-            borderRadius="3xl"
             animate={{
               opacity: [0, 1],
               scale: [0, 1],
               y: ["100%", "0%"],
             }}
+            borderRadius="3xl"
           >
             <ModalCloseButton />
             {account ? (

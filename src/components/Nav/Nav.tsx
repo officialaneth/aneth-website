@@ -22,10 +22,10 @@ export const Nav = () => {
     <HStack
       w="full"
       p={5}
-      bg={useColorModeValue("gray.50", "gray.900")}
-      position="sticky"
+      position="fixed"
       top={0}
       zIndex={11111}
+      backdropFilter="blur(20px)"
     >
       <Logo />
       <Spacer></Spacer>

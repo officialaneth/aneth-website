@@ -8,10 +8,10 @@ export const CardContainer = ({ children }: { children: ReactNode }) => {
   return (
     <MotionTag
       borderRadius={["50px"]}
-      px={[2, 5]}
       py={10}
-      minW={200}
-      bgColor={useColorModeValue("twitter.100", "whiteAlpha.50")}
+      px={5}
+      minW={[300, 200]}
+      bgColor={useColorModeValue("twitter.50", "whiteAlpha.50")}
       boxShadow="base"
       whileHover={{
         borderRadius: "75px",

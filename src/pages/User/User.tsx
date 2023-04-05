@@ -1,10 +1,10 @@
-import { Flex, Hide, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Hide, useColorModeValue, VStack } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import { NavUser } from "../../components";
 
 export const User = () => {
   return (
-    <Flex w="full" py={10} gap={10} p={5}>
+    <Flex w="full" px={5} gap={5} pt={100}>
       <Hide below="md">
         <NavUser />
       </Hide>
@@ -12,7 +12,9 @@ export const User = () => {
         flex={1}
         bgColor={useColorModeValue("gray.50", "gray.900")}
         borderRadius="50px"
-        p={5}
+        py={10}
+        px={5}
+        w="full"
       >
         <Outlet></Outlet>
       </Flex>

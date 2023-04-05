@@ -53,7 +53,7 @@ export const UserTeam = ({
         }}
       >
         <VStack w="full" spacing={3}>
-          <Center p={5} borderWidth="thick" borderRadius="full">
+          <Center borderWidth="thick" borderRadius="full">
             <MotionIcon
               as={FaUserAstronaut}
               boxSize={7}

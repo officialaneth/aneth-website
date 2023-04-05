@@ -3,6 +3,7 @@ import {
   Divider,
   Heading,
   HStack,
+  Input,
   Modal,
   ModalCloseButton,
   ModalContent,
@@ -17,10 +18,8 @@ import {
 import {
   useContractFunction,
   useEthers,
-  useNotifications,
   useTokenAllowance,
   useTokenBalance,
-  useTransactions,
 } from "@usedapp/core";
 import { utils } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
@@ -178,6 +177,20 @@ export const SwapUI = () => {
 
       <VStack w="full" py={5} spacing={5}>
         <VStack w="full">
+          {referrerAddress && (
+            <VStack w="full">
+              <Heading size="sm">Referrer Address</Heading>
+              <Input
+                borderRadius="3xl"
+                h={20}
+                borderBottomWidth={5}
+                value={userInput?.referrer}
+                isReadOnly
+                isDisabled={!account}
+              ></Input>
+            </VStack>
+          )}
+
           <CurrencyInput
             symbol={currentNetwork?.ANUSD.Symbol}
             balance={Number(

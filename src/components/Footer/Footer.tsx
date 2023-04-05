@@ -10,6 +10,7 @@ import {
   Input,
   IconButton,
   useColorModeValue,
+  Flex,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
@@ -59,10 +60,10 @@ const ListHeader = ({ children }: { children: ReactNode }) => {
 
 export function Footer() {
   return (
-    <Box
+    <Flex
       bg={useColorModeValue("gray.50", "gray.900")}
       color={useColorModeValue("gray.700", "gray.200")}
-      w="full"
+      flex={1}
     >
       <Container as={Stack} maxW={"6xl"} py={10}>
         <SimpleGrid
@@ -126,6 +127,6 @@ export function Footer() {
           </Stack>
         </SimpleGrid>
       </Container>
-    </Box>
+    </Flex>
   );
 }

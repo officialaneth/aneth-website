@@ -30,7 +30,7 @@ export const Team = () => {
   const { account, chainId } = useEthers();
   return (
     <VStack w="full" p={10} spacing={5}>
-      <Wrap spacing={10}>
+      <Wrap spacing={10} p={2} justify="center">
         <CardContainer>
           <Icon as={FaUserFriends} boxSize={10}></Icon>
           <Heading color="pink.500">5</Heading>

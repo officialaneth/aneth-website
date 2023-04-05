@@ -24,7 +24,7 @@ export const StakingInfo = {
   packages: [0],
 };
 
-export const website = window.location.origin;
+export const website = `${window.location.origin}/#/swap`;
 
 export const DeepLinks = {
   trustwallet: `https://link.trustwallet.com/open_url?coin_id=966&url=${website}`,

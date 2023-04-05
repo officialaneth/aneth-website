@@ -47,13 +47,8 @@ export const BalancesCard = ({
         w="full"
         p={3}
         whileHover={{
-          rotate: -10,
+          rotate: -5,
           scale: [1.05, 1.1, 1.05],
-          // transition: {
-          //   repeat: Infinity,
-          //   type: "spring",
-          //   stiffness: 700,
-          // },
         }}
         whileTap={{
           rotate: -10,
@@ -61,7 +56,7 @@ export const BalancesCard = ({
       >
         <HStack justify="space-around" w="full">
           <VStack w="full">
-            <HStack w="full">
+            <HStack w="full" justify="center">
               <Heading size="sm" color="pink.500" fontWeight="semibold">
                 {currencyName}
               </Heading>
