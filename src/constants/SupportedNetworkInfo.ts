@@ -1,6 +1,7 @@
 import { BSCTestnet, ERC20Interface } from "@usedapp/core";
 import { Contract } from "ethers";
 import {
+  ANUSDLogoSVG,
   BNBLogoSVG,
   BSCScanLogoCircleLight,
   tokenLogoSVG,
@@ -15,7 +16,12 @@ export const TokenName = "an.eth";
 export const TokenSymbol = "an.eth";
 export const ProjectName = "Aneth Technologies Limited";
 export const TokenLogo = tokenLogoSVG;
+export const ANUSDLogo = ANUSDLogoSVG;
 export const DefaultReferrer = "0x49066990635F9AEA7706dD73183177a463352445";
+
+export const PresaleEndsIn = "1 July, 2023";
+
+export const DefaultChainId = 97;
 
 export const StakingInfo = {
   rewardRate: 100,
@@ -70,7 +76,7 @@ export const useSupportedNetworkInfo = {
       Name: "ANUSD",
       Symbol: "ANUSD",
       Decimals: 18,
-      Logo: TokenLogo,
+      Logo: ANUSDLogo,
     },
     USDT: {
       ContractAddress: "0xbfA0e2F4b2676c62885B1033670C71cdefd975fB",

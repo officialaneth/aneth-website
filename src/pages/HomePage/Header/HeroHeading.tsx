@@ -1,26 +1,22 @@
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import {
+  Button,
   Center,
+  Heading,
   HStack,
+  Icon,
   Image,
+  Stack,
   Text,
   VStack,
-  Icon,
-  Hide,
-  Divider,
-  Stack,
-  Heading,
-  Button,
-  Highlight,
-  Tag,
 } from "@chakra-ui/react";
-import React from "react";
 import { VscVerifiedFilled } from "react-icons/vsc";
+import { useNavigate } from "react-router-dom";
 import { TypeAnimation } from "react-type-animation";
-import { Logo } from "../../../components";
 import { TokenLogo, TokenName } from "../../../constants";
 
 export const HeroHeading = () => {
+  const navigate = useNavigate();
   const fontSize = ["4xl", "5xl"];
   return (
     <VStack align={["center", "center", "flex-start"]} spacing={5}>
@@ -64,11 +60,15 @@ export const HeroHeading = () => {
         opacity={0.75}
         textAlign={["center", "center", "left"]}
       >
-        an.eth protocol is working for #<Text></Text>blockchain , #web3,
+        an.eth is a #decentralized protocol & working for #blockchain, #web3,
         #metaverse & #ai.
       </Heading>
       <HStack>
-        <Button size="lg" colorScheme="twitter">
+        <Button
+          size="lg"
+          colorScheme="twitter"
+          onClick={() => navigate("swap")}
+        >
           Presale
         </Button>
         <Button size="lg" rightIcon={<ChevronRightIcon />} variant="ghost">

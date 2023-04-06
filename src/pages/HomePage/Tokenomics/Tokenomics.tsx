@@ -14,58 +14,59 @@ import { TokenomicsTSX } from "../../../assets/Tokenomics";
 
 const MotionCenter = motion(Center);
 const MotionImage = motion(Image);
+const MotionWrap = motion(Wrap);
 
 export const Tokenomics = () => {
   const tokenomicsText = [
     {
       value: "2.38",
       heading: "Initial Offer",
-      text: "This is the initial offer for public.",
+      text: "As like every startup, we are offering our some of the supply as Initial Offers. This is the best time to invest in any start up project.",
     },
     {
       value: "4.76",
-      heading: "Initial Offer",
-      text: "This is the initial offer for public.",
+      heading: "Community Development",
+      text: "Various referral programs, contests, advertisement on social media, seminars, gatherings & many other activities to buildup community. As community is an integral part of any startup working for decentralization.",
     },
     {
       value: "4.76",
-      heading: "Initial Offer",
-      text: "This is the initial offer for public.",
+      heading: "Eco Syetem Development",
+      text: "We have dedicated this supply to build, setup & develop the Eco System for decentralized world.",
     },
     {
       value: "4.76",
-      heading: "Initial Offer",
-      text: "This is the initial offer for public.",
+      heading: "Exchange Listings",
+      text: "To increase the acceptability & usecase, this supply is dedicated for listing on various exchanges. As already discussion is going on some of the renowned exchanges.",
     },
     {
       value: "1.90",
-      heading: "Initial Offer",
-      text: "This is the initial offer for public.",
+      heading: "Rewards",
+      text: "This supply is dedicated for rewards like staking.",
     },
     {
       value: "10",
-      heading: "Initial Offer",
-      text: "This is the initial offer for public.",
+      heading: "Metaverse Locked Supply",
+      text: "This supply is locked untill we launch our virtual world. On launch of metaverse this supply will be unlocked and used as the payment gateways to virtial reality world.",
     },
     {
       value: "14.77",
-      heading: "Initial Offer",
-      text: "This is the initial offer for public.",
+      heading: "Web3 Infrastructure",
+      text: "We are working on Web3 & decentralized network. This supply is dedicated to build the infrastructure to setup the decentralized network.",
     },
     {
       value: "5.23",
-      heading: "Initial Offer",
-      text: "This is the initial offer for public.",
+      heading: "Developer",
+      text: "This supply is reserved for developers, core team members and the main pillars of our organization. Most of the supply is put into the vests.",
     },
     {
       value: "10",
-      heading: "Initial Offer",
-      text: "This is the initial offer for public.",
+      heading: "Future Expension",
+      text: "As like all other organizations, we have setup and planned the things for future developments too. This supply is reserved for future development and will be used only after DAO votings.",
     },
     {
       value: "41.44",
-      heading: "Initial Offer",
-      text: "This is the initial offer for public.",
+      heading: "Public Offerings",
+      text: "This supply will be used for public offerings on different exchanges, dexs and other mediums for providing liquidity.",
     },
   ];
 
@@ -75,10 +76,26 @@ export const Tokenomics = () => {
   return (
     <VStack minH={`${"100vh"}-${20}`} py={20} spacing={10}>
       <Heading>Tokenomics</Heading>
-      <Wrap w="full" spacing={10} justify="center" overflow="hidden">
+      <MotionWrap
+        w="full"
+        spacing={10}
+        justify="center"
+        align="center"
+        overflow="hidden"
+        animate={{}}
+        transition={{
+          type: "spring",
+          stiffness: 700,
+        }}
+      >
         <Center boxSize={imageSize}>
-          <Center boxSize={[250, 300]} zIndex={1111} position="absolute">
-            <VStack>
+          <Center
+            boxSize={[250, 300]}
+            zIndex={1111}
+            position="absolute"
+            borderRadius="full"
+          >
+            <VStack spacing={0}>
               <HStack>
                 <Text
                   fontSize={headingSize}
@@ -89,10 +106,6 @@ export const Tokenomics = () => {
                 </Text>
                 <Heading size="md">%</Heading>
               </HStack>
-              <Heading>{tokenomicsText[tokenomicsTextIndex]?.heading}</Heading>
-              <Text maxW={250}>
-                {tokenomicsText[tokenomicsTextIndex]?.text}
-              </Text>
             </VStack>
           </Center>
           <TokenomicsTSX
@@ -108,18 +121,15 @@ export const Tokenomics = () => {
             onClickPublic={() => setTokenomicsTextIndex(9)}
           />
         </Center>
-        <MotionImage
-          src={MetaverseVRHero}
-          boxSize={[400, 500]}
-          animate={{
-            y: [0, 10, 0],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 2,
-          }}
-        ></MotionImage>
-      </Wrap>
+        <VStack>
+          <Heading textAlign="center" color="pink.500">
+            {tokenomicsText[tokenomicsTextIndex]?.heading}
+          </Heading>
+          <Heading size="md" textAlign="center" maxW={500} w="95%">
+            {tokenomicsText[tokenomicsTextIndex]?.text}
+          </Heading>
+        </VStack>
+      </MotionWrap>
     </VStack>
   );
 };

@@ -14,18 +14,13 @@ import { CardContainer } from "../../../../components/UI";
 import { website } from "../../../../constants";
 
 export const ReferralLink = ({ account }: { account: string }) => {
-  const referralLink = `${website}/#/${account}`;
+  const referralLink = `${website}/${account}`;
 
   const { onCopy, hasCopied } = useClipboard(referralLink);
   return (
     <CardContainer>
       <Icon as={FaUser} boxSize={10}></Icon>
       <Heading size="sm">Your referral link</Heading>
-      {/* <Card p={3} borderRadius="xl">
-        <Text w="full" maxW={[300, 400, 400, 500, 700]} textOverflow="ellipsis">
-          {referralLink}
-        </Text>
-      </Card> */}
       <Input
         variant="filled"
         borderRadius="xl"

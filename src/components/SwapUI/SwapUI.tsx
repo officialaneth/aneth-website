@@ -50,7 +50,8 @@ export const SwapUI = () => {
   const tokenPrice = useUniswapTokenOut(
     1,
     currentNetwork?.Token?.ContractAddress,
-    currentNetwork?.ANUSD?.ContractAddress
+    currentNetwork?.ANUSD?.ContractAddress,
+    chainId
   );
 
   const presaleCapping = usePresaleCapping();
