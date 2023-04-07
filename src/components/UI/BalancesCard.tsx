@@ -22,13 +22,11 @@ export const BalancesCard = ({
   currencyValue,
   logo,
   icon,
-  isLoaded,
 }: {
   currencyName: string;
   currencyValue: string;
   logo?: string;
   icon?: IconType;
-  isLoaded: boolean;
 }) => {
   const { account, chainId } = useEthers();
   const currentNetwork = useSupportedNetworkInfo[chainId!];
@@ -47,12 +45,12 @@ export const BalancesCard = ({
         w="full"
         p={3}
         whileHover={{
-          rotate: -5,
-          scale: [1.05, 1.1, 1.05],
+          scale: 1.2,
         }}
         whileTap={{
-          rotate: -10,
+          scale: 0.98,
         }}
+        bgColor={useColorModeValue("gray.50", "gray.900")}
       >
         <HStack justify="space-around" w="full">
           <VStack w="full">
@@ -64,6 +62,12 @@ export const BalancesCard = ({
                 <>
                   <Spacer />
                   <Image src={logo} boxSize={7}></Image>
+                </>
+              )}
+              {icon && (
+                <>
+                  <Spacer />
+                  <Icon as={icon} boxSize={7} color="pink.500"></Icon>
                 </>
               )}
             </HStack>

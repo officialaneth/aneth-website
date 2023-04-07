@@ -18,12 +18,10 @@ export const UserIncome = ({
       <BalancesCard
         currencyName={"Referral Income"}
         currencyValue={`1000 ${currentNetwork[chainId]?.ANUSD?.Symbol}`}
-        isLoaded={true}
       ></BalancesCard>
       <BalancesCard
         currencyName={"Global Income"}
         currencyValue={`1000 ${currentNetwork[chainId]?.ANUSD?.Symbol}`}
-        isLoaded={true}
       ></BalancesCard>
     </CardContainer>
   );

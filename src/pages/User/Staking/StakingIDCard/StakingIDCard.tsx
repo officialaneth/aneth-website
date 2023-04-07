@@ -1,20 +1,25 @@
-import { Wrap } from "@chakra-ui/react";
+import { ChevronRightIcon } from "@chakra-ui/icons";
+import { Button, Heading, Text, VStack, Wrap } from "@chakra-ui/react";
+import { BigNumber } from "ethers";
+import { useNavigate } from "react-router-dom";
 import { StakingInfoContainer } from "../../../../components/StakingUI/StakingInfoContainer";
+import { TokenSymbol } from "../../../../constants";
 
 export const StakingIDCard = ({
   tokenSymbol,
   anusdSymbol,
+  stakingIDs,
 }: {
   tokenSymbol: string;
   anusdSymbol: string;
+  stakingIDs: BigNumber[] | [];
 }) => {
-  const stakings = ["1", "2", "3", "4"];
   return (
     <Wrap w="full" p={2} spacing={10} align="center" justify="center">
-      {stakings?.map((stakingID: string, key: number) => {
+      {stakingIDs.map((stakingID: BigNumber, key: number) => {
         return (
           <StakingInfoContainer
-            stakingID={stakingID}
+            stakingID={stakingID?.toString()}
             tokenSymbol={tokenSymbol}
             anusdSymbol={anusdSymbol}
             key={key}

@@ -12,7 +12,7 @@ export const Header = () => {
   return (
     <VStack
       w="full"
-      py="100px"
+      py="60px"
       px={5}
       userSelect="none"
       bgGradient={useColorModeValue(

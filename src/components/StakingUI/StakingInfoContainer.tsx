@@ -7,6 +7,7 @@ import {
   Spacer,
   VStack,
 } from "@chakra-ui/react";
+import { useGetStakingReward, useStakeInfoMap } from "../../hooks/StakingHooks";
 import { Counter } from "../Counter";
 import { CardContainer } from "../UI";
 
@@ -19,6 +20,8 @@ export const StakingInfoContainer = ({
   tokenSymbol: string;
   anusdSymbol: string;
 }) => {
+  const stakeInfoMap = useStakeInfoMap(stakingID);
+  const getStakingRewardByID = useGetStakingReward(stakingID);
   return (
     <CardContainer>
       <HStack w="full">
@@ -32,13 +35,16 @@ export const StakingInfoContainer = ({
       <VStack w="full">
         <Heading size="sm">Value Staked</Heading>
         <Card w="full" p={2} borderRadius="xl" align="center">
-          1000 {tokenSymbol}
+          {stakeInfoMap?.value} {tokenSymbol}
         </Card>
       </VStack>
       <Divider></Divider>
       <VStack w="full">
         <Heading size="sm">Staking Ends In</Heading>
-        <Counter timeinseconds={1712213509} size="sm"></Counter>
+        <Counter
+          timeinseconds={stakeInfoMap?.startTime + stakeInfoMap?.duration}
+          size="sm"
+        ></Counter>
       </VStack>
       <Divider></Divider>
       <VStack w="full">
@@ -50,17 +56,17 @@ export const StakingInfoContainer = ({
           align="center"
           color="yellow.500"
         >
-          0.00000111111 {tokenSymbol}
+          {getStakingRewardByID} {tokenSymbol}
         </Card>
       </VStack>
       <Divider></Divider>
       <VStack w="full">
         <Heading size="sm">Reward Claimed</Heading>
         <Card w="full" p={2} borderRadius="xl" align="center" color="green.300">
-          0.267776625 {tokenSymbol}
+          {stakeInfoMap?.rewardClaimed} {tokenSymbol}
         </Card>
         <Card w="full" p={2} borderRadius="xl" align="center" color="green.300">
-          0.267776625 {anusdSymbol}
+          {stakeInfoMap?.rewardClaimedANUSD} {anusdSymbol}
         </Card>
         <Divider></Divider>
         <Button w="full" h={14} borderRadius="xl" colorScheme="twitter">

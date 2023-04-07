@@ -19,7 +19,6 @@ export const UserBusiness = ({
         currencyName={currentNetwork[chainId]?.ANUSD?.Symbol}
         currencyValue="1000"
         logo={currentNetwork[chainId]?.ANUSD?.Logo}
-        isLoaded={true}
       ></BalancesCard>
     </CardContainer>
   );

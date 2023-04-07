@@ -12,7 +12,6 @@ export const HomePage = () => {
       <Header />
       <PresaleStatus />
       <Tokenomics />
-
       <Roadmap />
       <ReferAndEarn></ReferAndEarn>
     </VStack>

@@ -32,15 +32,13 @@ export const UserBalances = ({
           formatEther(userNativeValueInWei ?? 0)
         ).toPrecision(3)}
         logo={currentNetwork[chainId]?.Native?.Logo}
-        isLoaded={userNativeValueInWei ? true : false}
       ></BalancesCard>
       <BalancesCard
         currencyName={`${currentNetwork[chainId]?.ANUSD?.Symbol}`}
         currencyValue={Number(
           formatEther(userANUSDBalanceInWei ?? 0)
         ).toPrecision(5)}
-        isLoaded={userNativeValueInWei ? true : false}
-        logo={currentNetwork[chainId]?.Token?.Logo}
+        logo={currentNetwork[chainId]?.ANUSD?.Logo}
       ></BalancesCard>
       <BalancesCard
         currencyName={`${currentNetwork[chainId]?.Token?.Symbol}`}
@@ -48,7 +46,6 @@ export const UserBalances = ({
           formatEther(userTokenBalanceInWei ?? 0)
         ).toPrecision(5)}
         logo={currentNetwork[chainId]?.Token?.Logo}
-        isLoaded={userNativeValueInWei ? true : false}
       ></BalancesCard>
     </CardContainer>
   );

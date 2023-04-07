@@ -1,4 +1,4 @@
-import { CheckIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { CheckIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Heading,
   HStack,
@@ -7,12 +7,10 @@ import {
   Spacer,
   useClipboard,
   useColorModeValue,
-  VStack,
   Wrap,
 } from "@chakra-ui/react";
 import { shortenAddress, useEthers } from "@usedapp/core";
-import React from "react";
-import { FaClipboard, FaCopy, FaPaste } from "react-icons/fa";
+import { FaCopy } from "react-icons/fa";
 import { useSupportedNetworkInfo } from "../../../../constants";
 
 export const NetworkInfoCard = () => {
@@ -27,7 +25,7 @@ export const NetworkInfoCard = () => {
       align="center"
       justify="center"
       boxShadow="md"
-      bgColor={useColorModeValue("green.100", "whiteAlpha.200")}
+      bgColor={useColorModeValue("twitter.100", "whiteAlpha.200")}
     >
       <Wrap align="center" justify="center">
         <Heading fontSize="sm">{shortenAddress(account!)}</Heading>

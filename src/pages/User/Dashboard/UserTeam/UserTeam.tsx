@@ -1,20 +1,18 @@
 import {
-  Heading,
-  useColorModeValue,
-  VStack,
-  Icon,
   Card,
   Center,
-  HStack,
-  Text,
   Divider,
+  Heading,
+  HStack,
+  Icon,
+  Text,
+  useColorModeValue,
+  VStack,
   Wrap,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import React from "react";
-import { FaArrowDown, FaUser, FaUserAstronaut } from "react-icons/fa";
+import { FaArrowDown, FaUserAstronaut } from "react-icons/fa";
 import { CardContainer } from "../../../../components/UI";
-import { UserCardTeam } from "../../../../components/UI/UserCardTeam";
 import { UserRefereeCard } from "../../../../components/UI/UserRefereeCard";
 import { useSupportedNetworkInfo } from "../../../../constants";
 

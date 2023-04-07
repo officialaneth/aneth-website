@@ -10,8 +10,8 @@ export const UserBalances = () => {
   const currentNetwork = useSupportedNetworkInfo[chainId!];
   const userNativeBalanceWei = useEtherBalance(account);
 
-  const userUSDTBalance = useTokenBalance(
-    currentNetwork?.USDT?.ContractAddress,
+  const userANUSDBalance = useTokenBalance(
+    currentNetwork?.ANUSD?.ContractAddress,
     account
   );
   return (
@@ -22,18 +22,16 @@ export const UserBalances = () => {
           userNativeBalanceWei ?? 0,
           currentNetwork?.Native?.Decimals
         )}
-        isLoaded={userNativeBalanceWei ? true : false}
         logo={currentNetwork?.Native?.Logo}
       ></BalancesCard>
-      {/* <BalancesCard
-        currencyName={currentNetwork?.USDT?.Symbol}
+      <BalancesCard
+        currencyName={currentNetwork?.ANUSD?.Symbol}
         currencyValue={utils.formatUnits(
-          userUSDTBalance ?? 0,
+          userANUSDBalance ?? 0,
           currentNetwork?.USDT?.Decimals
         )}
-        isLoaded={userNativeBalanceWei ? true : false}
-        logo={currentNetwork?.USDT?.Logo}
-      ></BalancesCard> */}
+        logo={currentNetwork?.ANUSD?.Logo}
+      ></BalancesCard>
     </VStack>
   );
 };

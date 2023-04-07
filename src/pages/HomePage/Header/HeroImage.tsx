@@ -24,7 +24,7 @@ export const HeroImage = () => {
       <MotionImage
         src={MetaETH}
         animate={{
-          y: [0, 5, 0],
+          y: [0, 10, 0],
         }}
         transition={{
           duration: 2,
@@ -33,6 +33,10 @@ export const HeroImage = () => {
           repeat: Infinity,
         }}
         boxSize={[300, 300, 300, 400, 500]}
+        filter={`drop-shadow(20px 10px 20px ${useColorModeValue(
+          "#A0AEC0",
+          "#1A202C"
+        )})`}
       ></MotionImage>
     </VStack>
   );

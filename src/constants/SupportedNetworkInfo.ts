@@ -23,6 +23,8 @@ export const PresaleEndsIn = "1 July, 2023";
 
 export const DefaultChainId = 97;
 
+export const AddressZero = "0x0000000000000000000000000000000000000000";
+
 export const StakingInfo = {
   rewardRate: 100,
   duration: 10,

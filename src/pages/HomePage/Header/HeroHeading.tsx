@@ -1,12 +1,13 @@
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import {
+  Badge,
   Button,
   Center,
-  Heading,
   HStack,
   Icon,
   Image,
   Stack,
+  Tag,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -22,7 +23,7 @@ export const HeroHeading = () => {
     <VStack align={["center", "center", "flex-start"]} spacing={5}>
       <HStack cursor="pointer">
         <Center h={7}>
-          <Image src={TokenLogo} boxSize={[50, 75]} borderWidth="thick"></Image>
+          <Image src={TokenLogo} boxSize={[50, 75]}></Image>
         </Center>
         <Text fontSize={["5xl", "6xl"]} fontWeight={900}>
           {TokenName} <Icon as={VscVerifiedFilled} color={"twitter.500"}></Icon>
@@ -55,14 +56,42 @@ export const HeroHeading = () => {
           </Text>
         </HStack>
       </Stack>
-      <Heading
+      <Text
         maxW={700}
-        opacity={0.75}
         textAlign={["center", "center", "left"]}
+        fontFamily="sans-serif"
+        fontSize="2xl"
       >
-        an.eth is a #decentralized protocol & working for #blockchain, #web3,
-        #metaverse & #ai.
-      </Heading>
+        an.eth is a #decentralized protocol & working for{" "}
+        <Text as="span" color="twitter.500" fontWeight={900}>
+          #
+        </Text>
+        <Text as="span" color="pink.500" fontWeight={900}>
+          blockchain
+        </Text>
+        ,{" "}
+        <Text as="span" color="twitter.500" fontWeight={900}>
+          #
+        </Text>
+        <Text as="span" color="pink.500" fontWeight={900}>
+          web3
+        </Text>
+        ,{" "}
+        <Text as="span" color="twitter.500" fontWeight={900}>
+          #
+        </Text>
+        <Text as="span" color="pink.500" fontWeight={900}>
+          metaverse
+        </Text>{" "}
+        &{" "}
+        <Text as="span" color="twitter.500" fontWeight={900}>
+          #
+        </Text>
+        <Text as="span" color="pink.500" fontWeight={900}>
+          AI
+        </Text>
+        .
+      </Text>
       <HStack>
         <Button
           size="lg"

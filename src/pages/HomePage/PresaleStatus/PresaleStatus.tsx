@@ -1,16 +1,20 @@
+import { ChevronRightIcon } from "@chakra-ui/icons";
 import {
   Button,
   Heading,
   HStack,
-  VStack,
   Icon,
-  Text,
   Image,
+  Text,
+  VStack,
   Wrap,
 } from "@chakra-ui/react";
-import { Counter } from "../../../components";
+import { AiFillSchedule } from "react-icons/ai";
+import { FcAreaChart } from "react-icons/fc";
 import { IoIosFlame } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { Counter } from "../../../components";
+import { CardContainer } from "../../../components/UI";
 import {
   ANUSDLogo,
   DefaultChainId,
@@ -19,12 +23,7 @@ import {
   TokenName,
   useSupportedNetworkInfo,
 } from "../../../constants";
-import { CardContainer } from "../../../components/UI";
-import { AiFillSchedule } from "react-icons/ai";
-import { FcAreaChart } from "react-icons/fc";
 import { useUniswapTokenOut } from "../../../hooks/UniswapV2Hooks";
-import { useEthers } from "@usedapp/core";
-import { ChevronRightIcon } from "@chakra-ui/icons";
 
 export const PresaleStatus = () => {
   const currentNetwork = useSupportedNetworkInfo[DefaultChainId];
@@ -35,9 +34,6 @@ export const PresaleStatus = () => {
     currentNetwork?.ANUSD?.ContractAddress,
     DefaultChainId
   );
-
-  const secondsToDate = new Date(1000);
-  console.log(secondsToDate);
 
   return (
     <VStack py={20} w="full" spacing={10} boxShadow="sm">
