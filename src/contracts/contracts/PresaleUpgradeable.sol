@@ -43,40 +43,11 @@ interface IStaking {
 }
 
 interface IReferral {
-    function hasReferrer(address _address) external view returns (bool);
-
-    function addReferrerAdmin(
-        address _userAddress,
-        address _referrerAddress
-    ) external returns (bool);
-
-    function payReferralETHAdmin(
+    function payReferralANUSDAdmin(
         uint256 _value,
         address _userAddress,
         address _referrerAddress
-    ) external returns (bool);
-
-    function payReferralUSDAdmin(
-        uint256 _value,
-        address _userAddress,
-        address _referrerAddress
-    ) external returns (bool);
-
-    function getLevelDecimals() external view returns (uint256);
-
-    function getLevelRates()
-        external
-        view
-        returns (
-            uint256[] memory presale,
-            uint256 totalRatePresale,
-            uint256[] memory staking,
-            uint256 totalRateStaking
-        );
-
-    function getUserReferrerAddress(
-        address _address
-    ) external view returns (address referrer);
+    ) external;
 }
 
 interface IUniswapRouter {
@@ -215,7 +186,7 @@ contract PresaleUpgradeable is
     }
 
     function BuyWithANUSD(
-        // address _referrer,
+        address _referrerAddress,
         uint256 _valueInWei
     ) external whenNotPaused {
         address _msgSender = msg.sender;
@@ -249,6 +220,14 @@ contract PresaleUpgradeable is
             IERC20Upgradeable(variables.tokenContract()).transfer(
                 _msgSender,
                 amounts[1]
+            );
+        }
+
+        if (_isPayReferral) {
+            IReferral(variables.referralContract()).payReferralANUSDAdmin(
+                _msgValue,
+                _msgSender,
+                _referrerAddress
             );
         }
 

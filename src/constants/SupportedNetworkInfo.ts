@@ -9,6 +9,7 @@ import {
 } from "../assets";
 
 import PresaleInterface from "../contracts/artifacts/contracts/PresaleUpgradeable.sol/PresaleUpgradeable.json";
+import ReferralInterface from "../contracts/artifacts/contracts/ReferralUpgradeable.sol/ReferralUpgradeable.json";
 import StakingInterface from "../contracts/artifacts/contracts/StakingUpgradeable.sol/StakingUpgradeable.json";
 import UniswapV2RouterInterface from "../contracts/artifacts/contracts/PresaleUpgradeable.sol/IUniswapRouter.json";
 
@@ -52,6 +53,11 @@ export const useSupportedNetworkInfo = {
     presaleContractInterface: new Contract(
       "0xf7B74347b4dF59589d14BFB4cb0d2c547f3F79E5",
       PresaleInterface?.abi
+    ),
+    referralContract: "0xCCD2C4257e0D44019C4a7bA14df74A4E2A6F982E",
+    referralContractInterface: new Contract(
+      "0xCCD2C4257e0D44019C4a7bA14df74A4E2A6F982E",
+      ReferralInterface.abi
     ),
     stakingContractAddress: "0xe6f3eF32E28DC071e33c36be943e824A347F2f33",
     stakingContractInterface: new Contract(
