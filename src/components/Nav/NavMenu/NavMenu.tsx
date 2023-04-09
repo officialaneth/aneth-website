@@ -1,5 +1,7 @@
 import {
+  Center,
   Divider,
+  Heading,
   HStack,
   Icon,
   MenuItem,
@@ -10,36 +12,47 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
+import { useEthers } from "@usedapp/core";
 import { FaChartBar, FaMoon, FaPiggyBank, FaSun } from "react-icons/fa";
+import { GiFlame, GiFlameClaws } from "react-icons/gi";
+import { IoIosFlame } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { TokenSymbol } from "../../../constants";
 import { ConnectWalletButton } from "../../ConnectWalletButton/ConnectWalletButton";
+import { navUser } from "../NavMenuItems";
 
 export const NavMenu = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const navigate = useNavigate();
+  const { account } = useEthers();
   return (
     <MenuList borderRadius="3xl" overflow="hidden" fontSize="sm" p={5}>
       <VStack w="full">
         <ConnectWalletButton />
-        <VStack align="center" h="50vh" justify="center">
-          <VStack>
-            <MenuItem
-              icon={<FaChartBar />}
-              iconSpacing={5}
-              borderRadius="xl"
-              onClick={() => navigate("user")}
-            >
-              Dashboard
-            </MenuItem>
-            <MenuItem
-              icon={<FaPiggyBank />}
-              iconSpacing={5}
-              borderRadius="xl"
-              onClick={() => navigate("swap")}
-            >
-              Swap
-            </MenuItem>
-          </VStack>
+        <VStack justify="center" w="full">
+          {account && (
+            <VStack w="full" py={20}>
+              {navUser.map((navObject, key) => {
+                return (
+                  <MenuItem
+                    borderRadius="xl"
+                    onClick={() => navigate(navObject?.link)}
+                  >
+                    <HStack w={100} spacing={5}>
+                      <Icon as={navObject?.icon} />
+                      <Text>{navObject.name}</Text>
+                    </HStack>
+                  </MenuItem>
+                );
+              })}
+            </VStack>
+          )}
+          <MenuItem borderRadius="xl" onClick={() => navigate("/swap")} py={2}>
+            <HStack w={100} spacing={5}>
+              <Icon as={IoIosFlame} boxSize={7} color="pink.500" />
+              <Heading size="sm">Swap</Heading>
+            </HStack>
+          </MenuItem>
         </VStack>
         <Divider></Divider>
         <HStack w="full" pt={2} cursor="pointer" onClick={toggleColorMode}>

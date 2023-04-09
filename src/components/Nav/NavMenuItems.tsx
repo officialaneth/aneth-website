@@ -1,23 +1,21 @@
-import { FaChartArea, FaPiggyBank, FaUser, FaUsers } from "react-icons/fa";
-import { TbArrowsDoubleNeSw } from "react-icons/tb";
+import { FaChartArea, FaPiggyBank, FaUsers } from "react-icons/fa";
 
-export const navNoAuth = [{}];
 export const navUser = [
   {
     name: "Dashboard",
-    link: "",
+    link: "/user",
     active: "#/user",
     icon: FaChartArea,
   },
   {
     name: "Staking",
-    link: "staking",
+    link: "/user/staking",
     active: "#/user/staking",
     icon: FaPiggyBank,
   },
   {
     name: "Team",
-    link: "team",
+    link: "/user/team",
     active: "#/user/team",
     icon: FaUsers,
   },
