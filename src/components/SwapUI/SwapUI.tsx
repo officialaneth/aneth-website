@@ -132,7 +132,7 @@ export const SwapUI = () => {
   };
   const proceedSwap = async () => {
     try {
-      await send(referrerAddress, parseEther(`${userInput?.anusd!}`), {
+      await send(userInput?.referrer, parseEther(`${userInput?.anusd!}`), {
         value: 0,
       });
     } catch (err) {
