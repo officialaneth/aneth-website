@@ -26,11 +26,13 @@ import { formatEther, parseEther } from "ethers/lib/utils";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
+  AddressZero,
   DefaultReferrer,
   TokenSymbol,
   useSupportedNetworkInfo,
 } from "../../constants";
 import { usePresaleCapping } from "../../hooks/PresaleHooks";
+import { useReferralUserAccount } from "../../hooks/ReferralHooks";
 import { useUniswapTokenOut } from "../../hooks/UniswapV2Hooks";
 import { Logo } from "../Logo/Logo";
 import { ModalAllowance } from "../Modals/ModalAllowance";
@@ -46,6 +48,7 @@ export const SwapUI = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { account, chainId } = useEthers();
   const currentNetwork = useSupportedNetworkInfo[chainId!];
+  const userReferrerAddress = useReferralUserAccount(account ?? AddressZero);
 
   const tokenPrice = useUniswapTokenOut(
     1,
@@ -83,7 +86,10 @@ export const SwapUI = () => {
   }>({
     anusd: undefined,
     token: undefined,
-    referrer: referrerAddress ?? DefaultReferrer,
+    referrer:
+      referrerAddress ?? userReferrerAddress?.referrer !== AddressZero
+        ? userReferrerAddress?.referrer
+        : DefaultReferrer,
   });
 
   const HandleanusdInput = (e: number) => {
