@@ -13,7 +13,7 @@ export const DappConfig: Config = {
     ),
     [Polygon.chainId]: "https://polygon-rpc.com",
   },
-  networks: [Polygon, BSCTestnet],
+  networks: [BSCTestnet],
   connectors: {
     walletConnect: new WalletConnectConnector({
       rpc: {
