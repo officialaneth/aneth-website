@@ -82,15 +82,20 @@ export const SwapUI = () => {
   const [userInput, setUserInput] = useState<{
     anusd: number | undefined;
     token: number | undefined;
-    referrer: string;
   }>({
     anusd: undefined,
     token: undefined,
-    referrer:
-      referrerAddress ?? userReferrerAddress?.referrer !== AddressZero
-        ? userReferrerAddress?.referrer
-        : DefaultReferrer,
   });
+
+  const getUserReferrerAddress = () => {
+    if (userReferrerAddress?.referrer !== AddressZero) {
+      return userReferrerAddress?.referrer;
+    } else if (referrerAddress) {
+      return referrerAddress;
+    }
+
+    return AddressZero;
+  };
 
   const HandleanusdInput = (e: number) => {
     setUserInput((prev) => ({
@@ -132,7 +137,7 @@ export const SwapUI = () => {
   };
   const proceedSwap = async () => {
     try {
-      await send(userInput?.referrer, parseEther(`${userInput?.anusd!}`), {
+      await send(getUserReferrerAddress(), parseEther(`${userInput?.anusd!}`), {
         value: 0,
       });
     } catch (err) {
@@ -191,7 +196,7 @@ export const SwapUI = () => {
                 borderRadius="3xl"
                 h={20}
                 borderBottomWidth={5}
-                value={userInput?.referrer}
+                value={getUserReferrerAddress()}
                 isReadOnly
                 isDisabled={!account}
               ></Input>

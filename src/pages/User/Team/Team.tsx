@@ -15,6 +15,7 @@ import { AiTwotoneShop } from "react-icons/ai";
 import { BsEmojiSunglassesFill } from "react-icons/bs";
 import {
   FaArrowDown,
+  FaCartArrowDown,
   FaUserAstronaut,
   FaUserFriends,
   FaUsers,
@@ -38,22 +39,37 @@ export const Team = () => {
     <VStack w="full" p={10} spacing={5}>
       <Wrap spacing={10} p={2} justify="center">
         <CardContainer>
-          <Icon as={AiTwotoneShop} boxSize={10}></Icon>
-          <Heading color="pink.500">{userTotalBusiness?.totalBusiness}</Heading>
+          <Icon as={FaUserFriends} boxSize={10}></Icon>
+          <Heading color="pink.500">{userAccount?.referee?.length}</Heading>
+          <VStack spacing={0}>
+            {/* <Heading size="md">Direct</Heading> */}
+            <Heading size="md">Referee</Heading>
+          </VStack>
+        </CardContainer>
+
+        <CardContainer>
+          <Icon as={FaUsers} boxSize={10}></Icon>
+          <Heading color="pink.500">{userAccount?.team?.length}</Heading>
+          <VStack spacing={0}>
+            {/* <Heading size="md">Total</Heading> */}
+            <Heading size="md">Team</Heading>
+          </VStack>
+        </CardContainer>
+      </Wrap>
+      <Wrap spacing={10} p={2} justify="center">
+        <CardContainer>
+          <HStack spacing={10}>
+            <Icon as={FaCartArrowDown} boxSize={10}></Icon>
+          </HStack>
+          <Heading color="pink.500">
+            {userAccount?.selfBusiness?.toFixed(3)}
+          </Heading>
           <Heading size="sm" color="twitter.500">
             ANUSD
           </Heading>
           <VStack spacing={0}>
-            <Heading size="md">Total</Heading>
+            <Heading size="md">Self</Heading>
             <Heading size="md">Business</Heading>
-          </VStack>
-        </CardContainer>
-        <CardContainer>
-          <Icon as={FaUserFriends} boxSize={10}></Icon>
-          <Heading color="pink.500">{userAccount?.referee?.length}</Heading>
-          <VStack spacing={0}>
-            <Heading size="md">Direct</Heading>
-            <Heading size="md">Referee</Heading>
           </VStack>
         </CardContainer>
         <CardContainer>
@@ -73,24 +89,13 @@ export const Team = () => {
           </VStack>
         </CardContainer>
         <CardContainer>
-          <Icon as={FaUsers} boxSize={10}></Icon>
-          <Heading color="pink.500">{userAccount?.team?.length}</Heading>
-          <VStack spacing={0}>
-            <Heading size="md">Total</Heading>
-            <Heading size="md">Team</Heading>
-          </VStack>
-        </CardContainer>
-        <CardContainer>
-          <HStack spacing={10}>
-            <Icon as={FaUserFriends} boxSize={10}></Icon>
-            <Icon as={GiReceiveMoney} boxSize={10}></Icon>
-          </HStack>
-          <Heading color="pink.500">{userTotalBusiness?.teamBusiness}</Heading>
+          <Icon as={AiTwotoneShop} boxSize={10}></Icon>
+          <Heading color="pink.500">{userTotalBusiness?.totalBusiness}</Heading>
           <Heading size="sm" color="twitter.500">
             ANUSD
           </Heading>
           <VStack spacing={0}>
-            <Heading size="md">Team</Heading>
+            <Heading size="md">Total</Heading>
             <Heading size="md">Business</Heading>
           </VStack>
         </CardContainer>

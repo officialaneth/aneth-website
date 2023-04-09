@@ -2,7 +2,10 @@ import { Heading } from "@chakra-ui/react";
 import React from "react";
 import { BalancesCard, CardContainer } from "../../../../components/UI";
 import { useSupportedNetworkInfo } from "../../../../constants";
-import { useUserTotalBusiness } from "../../../../hooks/ReferralHooks";
+import {
+  useReferralUserAccount,
+  useUserTotalBusiness,
+} from "../../../../hooks/ReferralHooks";
 
 export const UserBusiness = ({
   account,
@@ -14,6 +17,7 @@ export const UserBusiness = ({
   currentNetwork: typeof useSupportedNetworkInfo;
 }) => {
   const userTotalBusiness = useUserTotalBusiness(account!);
+  const referralAccountMap = useReferralUserAccount(account!);
   return (
     <CardContainer>
       <Heading size="sm">Your Business</Heading>
@@ -28,8 +32,8 @@ export const UserBusiness = ({
         logo={currentNetwork[chainId]?.ANUSD?.Logo}
       ></BalancesCard>
       <BalancesCard
-        currencyName={"Referee Business"}
-        currencyValue={userTotalBusiness?.refereeTeamBusiness.toFixed(3)}
+        currencyName={"Self Business"}
+        currencyValue={referralAccountMap?.selfBusiness?.toFixed(3)}
         logo={currentNetwork[chainId]?.ANUSD?.Logo}
       ></BalancesCard>
     </CardContainer>

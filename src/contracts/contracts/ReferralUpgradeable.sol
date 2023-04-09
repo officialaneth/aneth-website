@@ -338,7 +338,8 @@ contract ReferralUpgradeable is
 
         uint256[] memory levelRates = _levelRates;
 
-        Account memory userAccount = accounts[_userAddress];
+        Account storage userAccount = accounts[_userAddress];
+        userAccount.selfBusiness += _valueInWei;
 
         address[] memory passiveIncomeAddress = new address[](
             _passiveIncomeLevels
@@ -381,7 +382,7 @@ contract ReferralUpgradeable is
                 if (!referrerAccount.isInGlobalID) {
                     if (
                         _userDirectBusinessIsAbove(
-                            referrer,
+                            referrerAccount.referee,
                             _globalBusinessValue
                         )
                     ) {
@@ -392,7 +393,12 @@ contract ReferralUpgradeable is
                 }
             }
 
-            if (_userDirectBusinessIsAbove(referrer, _passiveBusinessValue)) {
+            if (
+                _userDirectBusinessIsAbove(
+                    referrerAccount.referee,
+                    _passiveBusinessValue
+                )
+            ) {
                 passiveIncomeAddress[passiveIncomeAddressCount] = referrer;
                 passiveIncomeAddressCount++;
             }
@@ -487,15 +493,14 @@ contract ReferralUpgradeable is
     }
 
     function _userDirectBusinessIsAbove(
-        address _userAddress,
+        address[] memory _userReferee,
         uint256 _valueToCompare
     ) public view returns (bool) {
-        address[] memory userRefereeList = accounts[_userAddress].referee;
-        uint256 userRefereeCount = userRefereeList.length;
+        uint256 userRefereeCount = _userReferee.length;
         uint256 userRefereeTotalSelfBusiness;
 
         for (uint256 i; i < userRefereeCount; i++) {
-            userRefereeTotalSelfBusiness += accounts[userRefereeList[i]]
+            userRefereeTotalSelfBusiness += accounts[_userReferee[i]]
                 .selfBusiness;
         }
 

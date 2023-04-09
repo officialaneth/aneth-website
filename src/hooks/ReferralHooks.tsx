@@ -41,7 +41,7 @@ export const useReferralUserAccount = (
     referrer: value ? value?.[0]?.referrer : AddressZero,
     referee: value ? value?.[0]?.referee : [],
     team: value ? value?.[0]?.team : [],
-    selfBusiness: value ? value?.[0]?.selfBusiness : 0,
+    selfBusiness: value ? Number(formatEther(value?.[0]?.selfBusiness)) : 0,
     totalBusiness: value ? Number(formatEther(value?.[0]?.totalBusiness)) : 0,
     rewardsPaidReferral: value ? value?.[0]?.rewardsPaidReferral : [],
     rewardsPaidGlobal: value ? value?.[0]?.rewardsPaidGlobal : [],
