@@ -54,9 +54,9 @@ export const useSupportedNetworkInfo = {
       "0xf7B74347b4dF59589d14BFB4cb0d2c547f3F79E5",
       PresaleInterface?.abi
     ),
-    referralContract: "0xCCD2C4257e0D44019C4a7bA14df74A4E2A6F982E",
+    referralContract: "0x18d13F2fa0081221912a1C271560239cf70FFdc1",
     referralContractInterface: new Contract(
-      "0xCCD2C4257e0D44019C4a7bA14df74A4E2A6F982E",
+      "0x18d13F2fa0081221912a1C271560239cf70FFdc1",
       ReferralInterface.abi
     ),
     stakingContractAddress: "0xe6f3eF32E28DC071e33c36be943e824A347F2f33",

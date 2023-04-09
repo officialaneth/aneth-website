@@ -18,8 +18,18 @@ export const UserBusiness = ({
     <CardContainer>
       <Heading size="sm">Your Business</Heading>
       <BalancesCard
-        currencyName={currentNetwork[chainId]?.ANUSD?.Symbol}
+        currencyName={"Total Business"}
         currencyValue={userTotalBusiness?.totalBusiness.toFixed(3)}
+        logo={currentNetwork[chainId]?.ANUSD?.Logo}
+      ></BalancesCard>
+      <BalancesCard
+        currencyName={"Direct Business"}
+        currencyValue={userTotalBusiness?.directBusiness.toFixed(3)}
+        logo={currentNetwork[chainId]?.ANUSD?.Logo}
+      ></BalancesCard>
+      <BalancesCard
+        currencyName={"Referee Business"}
+        currencyValue={userTotalBusiness?.refereeTeamBusiness.toFixed(3)}
         logo={currentNetwork[chainId]?.ANUSD?.Logo}
       ></BalancesCard>
     </CardContainer>

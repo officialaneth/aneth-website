@@ -25,27 +25,29 @@ const useCallHook = (methodName: string, arg: any[]) => {
 export const useReferralUserAccount = (
   address: string
 ): {
-  blockNumbers: BigNumber[] | [];
-  isInGlobalID: boolean;
-  referee: string[] | [];
   referrer: string;
-  rewardsPaidANUSD: BigNumber[] | [];
-  rewardsPaidGlobal: BigNumber[] | [];
+  referee: string[] | [];
   team: string[] | [];
-  totalBusinessANUSD: number;
+  selfBusiness: number;
+  totalBusiness: number;
+  rewardsPaidReferral: BigNumber[] | [];
+  rewardsPaidGlobal: BigNumber[] | [];
+  rewardPaidPassive: BigNumber[] | [];
+  isInGlobalID: boolean;
+  blockNumbers: BigNumber[] | [];
 } => {
   const value = useCallHook("getUserAccount", [address]);
   const valueObject = {
-    blockNumbers: value ? value?.[0]?.blockNumbers : [],
-    isInGlobalID: value ? value?.[0]?.isInGlobalID : false,
-    referee: value ? value?.[0]?.referee : [],
     referrer: value ? value?.[0]?.referrer : AddressZero,
-    rewardsPaidANUSD: value ? value?.[0]?.rewardsPaidANUSD : [],
-    rewardsPaidGlobal: value ? value?.[0]?.rewardsPaidGlobal : [],
+    referee: value ? value?.[0]?.referee : [],
     team: value ? value?.[0]?.team : [],
-    totalBusinessANUSD: value
-      ? Number(formatEther(value?.[0]?.totalBusinessANUSD))
-      : 0,
+    selfBusiness: value ? value?.[0]?.selfBusiness : 0,
+    totalBusiness: value ? Number(formatEther(value?.[0]?.totalBusiness)) : 0,
+    rewardsPaidReferral: value ? value?.[0]?.rewardsPaidReferral : [],
+    rewardsPaidGlobal: value ? value?.[0]?.rewardsPaidGlobal : [],
+    rewardPaidPassive: value ? value?.[0]?.rewardPaidPassive : [],
+    isInGlobalID: value ? value?.[0]?.isInGlobalID : false,
+    blockNumbers: value ? value?.[0]?.blockNumbers : [],
   };
 
   return valueObject;
@@ -56,6 +58,7 @@ export const useTotalRewardPaid = (address: string) => {
   const valueObject = {
     rewardsAUSD: value ? Number(formatEther(value?.rewardsAUSD)) : 0,
     rewardsGlobal: value ? Number(formatEther(value?.rewardsGlobal)) : 0,
+    rewardsPassive: value ? Number(formatEther(value?.rewardsPassive)) : 0,
   };
   return valueObject;
 };
@@ -65,6 +68,9 @@ export const useUserTotalBusiness = (address: string) => {
   const valueobject = {
     totalBusiness: value ? Number(formatEther(value?.totalBusiness)) : 0,
     directBusiness: value ? Number(formatEther(value?.directBusiness)) : 0,
+    refereeTeamBusiness: value
+      ? Number(formatEther(value?.refereeTeamBusiness))
+      : 0,
     teamBusiness: value ? Number(formatEther(value?.teamBusiness)) : 0,
   };
 

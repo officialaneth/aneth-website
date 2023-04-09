@@ -29,6 +29,12 @@ export const UserIncome = ({
           currentNetwork[chainId]?.ANUSD?.Symbol
         }`}
       ></BalancesCard>
+      <BalancesCard
+        currencyName={"Passive Income"}
+        currencyValue={`${userTotalRewardPaid.rewardsPassive.toFixed(3)} ${
+          currentNetwork[chainId]?.ANUSD?.Symbol
+        }`}
+      ></BalancesCard>
     </CardContainer>
   );
 };
