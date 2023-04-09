@@ -28,7 +28,7 @@ export const UserBalances = () => {
         currencyName={currentNetwork?.ANUSD?.Symbol}
         currencyValue={utils.formatUnits(
           userANUSDBalance ?? 0,
-          currentNetwork?.USDT?.Decimals
+          currentNetwork?.ANUSD?.Decimals
         )}
         logo={currentNetwork?.ANUSD?.Logo}
       ></BalancesCard>
