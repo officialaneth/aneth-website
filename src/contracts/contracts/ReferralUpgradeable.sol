@@ -231,9 +231,30 @@ contract ReferralUpgradeable is
 
     function getUserTotalBusiness(
         address _address
-    ) external view returns (uint256) {
+    )
+        external
+        view
+        returns (
+            uint256 totalBusiness,
+            uint256 directBusiness,
+            uint256 teamBusiness
+        )
+    {
         Account storage userAccount = accounts[_address];
-        return userAccount.totalBusinessANUSD;
+        uint256 refereeLength = userAccount.referee.length;
+        uint256 teamLength = userAccount.team.length;
+
+        totalBusiness = userAccount.totalBusinessANUSD;
+
+        for (uint256 i; i < refereeLength; i++) {
+            Account memory refereeAccount = accounts[userAccount.referee[i]];
+            directBusiness += refereeAccount.totalBusinessANUSD;
+        }
+
+        for (uint256 i; i < teamLength; i++) {
+            Account memory teamAccount = accounts[userAccount.team[i]];
+            teamBusiness += teamAccount.totalBusinessANUSD;
+        }
     }
 
     function _hasReferrer(address _address) private view returns (bool) {

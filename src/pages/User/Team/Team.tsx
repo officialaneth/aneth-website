@@ -5,13 +5,14 @@ import {
   Heading,
   HStack,
   Icon,
-  Text,
   useColorModeValue,
   VStack,
   Wrap,
 } from "@chakra-ui/react";
 import { useEthers } from "@usedapp/core";
 import { motion } from "framer-motion";
+import { AiTwotoneShop } from "react-icons/ai";
+import { BsEmojiSunglassesFill } from "react-icons/bs";
 import {
   FaArrowDown,
   FaUserAstronaut,
@@ -21,19 +22,35 @@ import {
 import { GiPayMoney, GiReceiveMoney } from "react-icons/gi";
 import { CardContainer } from "../../../components/UI";
 import { UserRefereeCard } from "../../../components/UI/UserRefereeCard";
+import {
+  useReferralUserAccount,
+  useUserTotalBusiness,
+} from "../../../hooks/ReferralHooks";
 
 const MotionIcon = motion(Icon);
-const MotionHeading = motion(Heading);
 const MotionCard = motion(Card);
 
 export const Team = () => {
   const { account, chainId } = useEthers();
+  const userAccount = useReferralUserAccount(account!);
+  const userTotalBusiness = useUserTotalBusiness(account!);
   return (
     <VStack w="full" p={10} spacing={5}>
       <Wrap spacing={10} p={2} justify="center">
         <CardContainer>
+          <Icon as={AiTwotoneShop} boxSize={10}></Icon>
+          <Heading color="pink.500">{userTotalBusiness?.totalBusiness}</Heading>
+          <Heading size="sm" color="twitter.500">
+            ANUSD
+          </Heading>
+          <VStack spacing={0}>
+            <Heading size="md">Total</Heading>
+            <Heading size="md">Business</Heading>
+          </VStack>
+        </CardContainer>
+        <CardContainer>
           <Icon as={FaUserFriends} boxSize={10}></Icon>
-          <Heading color="pink.500">5</Heading>
+          <Heading color="pink.500">{userAccount?.referee?.length}</Heading>
           <VStack spacing={0}>
             <Heading size="md">Direct</Heading>
             <Heading size="md">Referee</Heading>
@@ -44,7 +61,9 @@ export const Team = () => {
             <Icon as={FaUserFriends} boxSize={10}></Icon>
             <Icon as={GiPayMoney} boxSize={10}></Icon>
           </HStack>
-          <Heading color="pink.500">1000</Heading>
+          <Heading color="pink.500">
+            {userTotalBusiness?.directBusiness}
+          </Heading>
           <Heading size="sm" color="twitter.500">
             ANUSD
           </Heading>
@@ -55,7 +74,7 @@ export const Team = () => {
         </CardContainer>
         <CardContainer>
           <Icon as={FaUsers} boxSize={10}></Icon>
-          <Heading color="pink.500">10</Heading>
+          <Heading color="pink.500">{userAccount?.team?.length}</Heading>
           <VStack spacing={0}>
             <Heading size="md">Total</Heading>
             <Heading size="md">Team</Heading>
@@ -66,7 +85,7 @@ export const Team = () => {
             <Icon as={FaUserFriends} boxSize={10}></Icon>
             <Icon as={GiReceiveMoney} boxSize={10}></Icon>
           </HStack>
-          <Heading color="pink.500">10000</Heading>
+          <Heading color="pink.500">{userTotalBusiness?.teamBusiness}</Heading>
           <Heading size="sm" color="twitter.500">
             ANUSD
           </Heading>
@@ -109,10 +128,19 @@ export const Team = () => {
             <Divider />
             <Icon as={FaArrowDown}></Icon>
             <Wrap w="full" align="center" justify="center" p={2}>
-              <UserRefereeCard address={account}></UserRefereeCard>
-              <UserRefereeCard address={account}></UserRefereeCard>
-              <UserRefereeCard address={account}></UserRefereeCard>
-              <UserRefereeCard address={account}></UserRefereeCard>
+              {userAccount?.referee.length > 0 ? (
+                userAccount.referee.map((address: string, key: number) => {
+                  return <UserRefereeCard address={address}></UserRefereeCard>;
+                })
+              ) : (
+                <VStack p={5}>
+                  <Icon as={BsEmojiSunglassesFill} boxSize={10}></Icon>
+                  <Heading size="sm" maxW={300} textAlign="center">
+                    * You have no team. Please share your referral link and earn
+                    the rewards.
+                  </Heading>
+                </VStack>
+              )}
             </Wrap>
           </VStack>
         </MotionCard>
@@ -150,10 +178,19 @@ export const Team = () => {
             <Divider />
             <Icon as={FaArrowDown}></Icon>
             <Wrap w="full" align="center" justify="center" p={2}>
-              <UserRefereeCard address={account}></UserRefereeCard>
-              <UserRefereeCard address={account}></UserRefereeCard>
-              <UserRefereeCard address={account}></UserRefereeCard>
-              <UserRefereeCard address={account}></UserRefereeCard>
+              {userAccount?.team.length > 0 ? (
+                userAccount.team.map((address: string, key: number) => {
+                  return <UserRefereeCard address={address}></UserRefereeCard>;
+                })
+              ) : (
+                <VStack p={5}>
+                  <Icon as={BsEmojiSunglassesFill} boxSize={10}></Icon>
+                  <Heading size="sm" maxW={300} textAlign="center">
+                    * You have no team. Please share your referral link and earn
+                    the rewards.
+                  </Heading>
+                </VStack>
+              )}
             </Wrap>
           </VStack>
         </MotionCard>
