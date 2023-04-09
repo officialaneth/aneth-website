@@ -94,7 +94,7 @@ export const SwapUI = () => {
       return referrerAddress;
     }
 
-    return AddressZero;
+    return DefaultReferrer;
   };
 
   const HandleanusdInput = (e: number) => {

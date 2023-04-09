@@ -63,6 +63,7 @@ contract ReferralUpgradeable is
         address[] referee;
         address[] team;
         uint256 selfBusiness;
+        uint256 directBusiness;
         uint256 totalBusiness;
         uint256[] rewardsPaidReferral;
         uint256[] rewardsPaidGlobal;
@@ -231,17 +232,16 @@ contract ReferralUpgradeable is
         external
         view
         returns (
-            uint256 totalBusiness,
+            uint256 selfBusiness,
             uint256 directBusiness,
             uint256 refereeTeamBusiness,
-            uint256 teamBusiness
+            uint256 totalBusiness
         )
     {
         Account storage userAccount = accounts[_address];
         uint256 refereeLength = userAccount.referee.length;
-        uint256 teamLength = userAccount.team.length;
 
-        totalBusiness = userAccount.totalBusiness;
+        selfBusiness = userAccount.selfBusiness;
 
         for (uint256 i; i < refereeLength; i++) {
             Account memory refereeAccount = accounts[userAccount.referee[i]];
@@ -253,10 +253,7 @@ contract ReferralUpgradeable is
             refereeTeamBusiness += refereeAccount.totalBusiness;
         }
 
-        for (uint256 i; i < teamLength; i++) {
-            Account memory teamAccount = accounts[userAccount.team[i]];
-            teamBusiness += teamAccount.totalBusiness;
-        }
+        totalBusiness = userAccount.totalBusiness;
     }
 
     function userTransactionsBlocks(
@@ -354,13 +351,16 @@ contract ReferralUpgradeable is
 
         for (uint256 i; i < _passiveIncomeLevels; i++) {
             address referrer = userAccount.referrer;
-            Account storage referrerAccount = accounts[userAccount.referrer];
+            Account storage referrerAccount = accounts[referrer];
             if (referrer == address(0)) {
                 break;
             }
 
             if (i < levelRates.length) {
                 uint256 c = (_valueInWei * levelRates[i]) / 100;
+                if (i == 0) {
+                    referrerAccount.directBusiness += _valueInWei;
+                }
                 referrerAccount.totalBusiness += _valueInWei;
                 referrerAccount.rewardsPaidReferral.push(c);
                 referrerAccount.blockNumbers.push(block.number);
@@ -380,12 +380,7 @@ contract ReferralUpgradeable is
                 );
 
                 if (!referrerAccount.isInGlobalID) {
-                    if (
-                        _userDirectBusinessIsAbove(
-                            referrerAccount.referee,
-                            _globalBusinessValue
-                        )
-                    ) {
+                    if (referrerAccount.directBusiness > _globalBusinessValue) {
                         _globalAddress.push(referrer);
                         referrerAccount.isInGlobalID = true;
                         emit GlobalAddressAdded(referrer);
@@ -393,12 +388,7 @@ contract ReferralUpgradeable is
                 }
             }
 
-            if (
-                _userDirectBusinessIsAbove(
-                    referrerAccount.referee,
-                    _passiveBusinessValue
-                )
-            ) {
+            if (referrerAccount.directBusiness > _passiveBusinessValue) {
                 passiveIncomeAddress[passiveIncomeAddressCount] = referrer;
                 passiveIncomeAddressCount++;
             }
@@ -490,21 +480,6 @@ contract ReferralUpgradeable is
         }
 
         _payReferralInANUSD(_value, _userAddress);
-    }
-
-    function _userDirectBusinessIsAbove(
-        address[] memory _userReferee,
-        uint256 _valueToCompare
-    ) public view returns (bool) {
-        uint256 userRefereeCount = _userReferee.length;
-        uint256 userRefereeTotalSelfBusiness;
-
-        for (uint256 i; i < userRefereeCount; i++) {
-            userRefereeTotalSelfBusiness += accounts[_userReferee[i]]
-                .selfBusiness;
-        }
-
-        return userRefereeTotalSelfBusiness > _valueToCompare ? true : false;
     }
 
     function pause() public onlyOwner {

@@ -29,6 +29,7 @@ export const useReferralUserAccount = (
   referee: string[] | [];
   team: string[] | [];
   selfBusiness: number;
+  directBusiness: number;
   totalBusiness: number;
   rewardsPaidReferral: BigNumber[] | [];
   rewardsPaidGlobal: BigNumber[] | [];
@@ -42,6 +43,7 @@ export const useReferralUserAccount = (
     referee: value ? value?.[0]?.referee : [],
     team: value ? value?.[0]?.team : [],
     selfBusiness: value ? Number(formatEther(value?.[0]?.selfBusiness)) : 0,
+    directBusiness: value ? Number(formatEther(value?.[0]?.directBusiness)) : 0,
     totalBusiness: value ? Number(formatEther(value?.[0]?.totalBusiness)) : 0,
     rewardsPaidReferral: value ? value?.[0]?.rewardsPaidReferral : [],
     rewardsPaidGlobal: value ? value?.[0]?.rewardsPaidGlobal : [],
@@ -71,7 +73,7 @@ export const useUserTotalBusiness = (address: string) => {
     refereeTeamBusiness: value
       ? Number(formatEther(value?.refereeTeamBusiness))
       : 0,
-    teamBusiness: value ? Number(formatEther(value?.teamBusiness)) : 0,
+    selfBusiness: value ? Number(formatEther(value?.selfBusiness)) : 0,
   };
 
   return valueobject;
