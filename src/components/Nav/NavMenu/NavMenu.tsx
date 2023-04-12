@@ -37,6 +37,7 @@ export const NavMenu = () => {
                   <MenuItem
                     borderRadius="xl"
                     onClick={() => navigate(navObject?.link)}
+                    key={key}
                   >
                     <HStack w={100} spacing={5}>
                       <Icon as={navObject?.icon} />

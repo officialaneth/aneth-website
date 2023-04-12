@@ -17,37 +17,112 @@ import {
   Text,
   useColorModeValue,
   useDisclosure,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import {
   useContractFunction,
+  useEtherBalance,
   useEthers,
   useSendTransaction,
   useTokenBalance,
 } from "@usedapp/core";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, parseEther } from "ethers/lib/utils";
 import React, { useState } from "react";
 import { TbArrowsDoubleNeSw } from "react-icons/tb";
 import { TokenLogo, useSupportedNetworkInfo } from "../../constants";
 import { CardContainer } from "../UI";
 
 export const TransferFundsUI = () => {
+  const toast = useToast();
   const { account, chainId } = useEthers();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const currentNetwork = useSupportedNetworkInfo[chainId!];
-  const [selectedToken, setSelectedToken] = useState(currentNetwork?.ANUSD);
+  const [selectedCoin, setSelectedCoin] = useState(currentNetwork?.ANUSD);
   const userTokenBalance = useTokenBalance(
-    selectedToken?.ContractAddress,
+    selectedCoin?.ContractAddress,
     account
   );
+
+  const userNativeBalance = useEtherBalance(account);
+
+  const [userInput, setUserInput] = useState({
+    senderAddressInput: "",
+    valueInput: "",
+  });
+
+  const selectedCoinBalance = () => {
+    // @ts-ignore
+    if (selectedCoin !== currentNetwork?.Native) {
+      return userTokenBalance;
+    } else {
+      return userNativeBalance;
+    }
+  };
+
+  const handleUserInput = (e: any) => {
+    setUserInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleTransfer = () => {
+    if (userInput?.valueInput > formatEther(selectedCoinBalance() ?? 0)) {
+      toast({
+        title: "Error: Value greater then your balance.",
+        description: "Please enter value less than your balance.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } else if (userInput.valueInput.length === 0) {
+      toast({
+        title: "Error: Value Empty.",
+        description: "Please enter the value to send.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } else if (userInput.senderAddressInput.length === 0) {
+      toast({
+        title: "Error: No address selected.",
+        description: "Please enter the address to send value.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } else {
+      proceedSwap();
+    }
+  };
+
+  const proceedSwap = async () => {
+    // @ts-ignore
+    if (selectedCoin === currentNetwork?.Native) {
+      sendTransaction({
+        to: userInput?.senderAddressInput,
+        value: parseEther(userInput?.valueInput),
+      });
+    } else {
+      sendToken(
+        userInput.senderAddressInput,
+        parseEther(userInput.valueInput),
+        {
+          value: 0,
+        }
+      );
+    }
+  };
 
   const {
     send: sendToken,
     state: stateToken,
     resetState: resetStateToken,
-  } = useContractFunction(selectedToken?.ContractInterface, "transfer");
+  } = useContractFunction(selectedCoin?.ContractInterface, "transfer");
 
-  const {} = useSendTransaction();
+  const {
+    sendTransaction,
+    state: stateNative,
+    resetState: resetNative,
+  } = useSendTransaction();
 
   return (
     <CardContainer>
@@ -62,20 +137,31 @@ export const TransferFundsUI = () => {
           h={20}
           borderRadius="3xl"
           placeholder="Please enter the sender address."
+          value={userInput.senderAddressInput}
+          onChange={handleUserInput}
+          name="senderAddressInput"
         ></Input>
         <VStack w="full">
           <HStack w="full">
             <Text>Balance:</Text>
             <Spacer />
-            <Text>{Number(formatEther(userTokenBalance ?? 0)).toFixed(3)}</Text>
+            <Text>
+              {/* @ts-ignore */}
+              {selectedCoin === currentNetwork?.Native
+                ? Number(formatEther(userNativeBalance ?? 0)).toFixed(3)
+                : Number(formatEther(userTokenBalance ?? 0)).toFixed(3)}
+            </Text>
             <Button rightIcon={<ChevronDownIcon />} p={2} onClick={onOpen}>
-              <Image src={selectedToken?.Logo} boxSize={7}></Image>
+              <Image src={selectedCoin?.Logo} boxSize={7}></Image>
             </Button>
           </HStack>
           <Input
             h={20}
             borderRadius="3xl"
             placeholder="Please enter the value."
+            value={userInput.valueInput}
+            onChange={handleUserInput}
+            name="valueInput"
           ></Input>
         </VStack>
 
@@ -85,6 +171,13 @@ export const TransferFundsUI = () => {
           colorScheme="twitter"
           borderRadius="3xl"
           rightIcon={<TbArrowsDoubleNeSw />}
+          onClick={handleTransfer}
+          isLoading={
+            stateToken.status === "Mining" ||
+            stateToken.status === "PendingSignature" ||
+            stateNative.status === "Mining" ||
+            stateNative.status === "PendingSignature"
+          }
         >
           Transfer
         </Button>
@@ -103,7 +196,23 @@ export const TransferFundsUI = () => {
                 borderRadius="3xl"
                 cursor="pointer"
                 onClick={() => {
-                  setSelectedToken(currentNetwork?.Token);
+                  // @ts-ignore
+                  setSelectedCoin(currentNetwork?.Native);
+                  onClose();
+                }}
+              >
+                <Heading size="md">{currentNetwork?.Native?.Symbol}</Heading>
+                <Spacer />
+                <Image src={currentNetwork?.Native?.Logo} boxSize={10}></Image>
+              </HStack>
+              <HStack
+                w="full"
+                bgColor={useColorModeValue("gray.50", "gray.900")}
+                p={5}
+                borderRadius="3xl"
+                cursor="pointer"
+                onClick={() => {
+                  setSelectedCoin(currentNetwork?.Token);
                   onClose();
                 }}
               >
@@ -118,7 +227,7 @@ export const TransferFundsUI = () => {
                 borderRadius="3xl"
                 cursor="pointer"
                 onClick={() => {
-                  setSelectedToken(currentNetwork?.ANUSD);
+                  setSelectedCoin(currentNetwork?.ANUSD);
                   onClose();
                 }}
               >
