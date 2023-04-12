@@ -14,6 +14,11 @@ export const UserBalances = () => {
     currentNetwork?.ANUSD?.ContractAddress,
     account
   );
+
+  const userTokenBalance = useTokenBalance(
+    currentNetwork?.Token?.ContractAddress,
+    account
+  );
   return (
     <VStack w="full">
       <BalancesCard
@@ -31,6 +36,14 @@ export const UserBalances = () => {
           currentNetwork?.ANUSD?.Decimals
         )}
         logo={currentNetwork?.ANUSD?.Logo}
+      ></BalancesCard>
+      <BalancesCard
+        currencyName={currentNetwork?.Token?.Symbol}
+        currencyValue={utils.formatUnits(
+          userTokenBalance ?? 0,
+          currentNetwork?.Token?.Decimals
+        )}
+        logo={currentNetwork?.Token?.Logo}
       ></BalancesCard>
     </VStack>
   );

@@ -1,7 +1,14 @@
 import { createHashRouter } from "react-router-dom";
 import { App } from "../App";
 import { HomePage, SwapPage } from "../pages";
-import { Dashboard, Staking, Team, Transactions, User } from "../pages/User";
+import {
+  Dashboard,
+  Staking,
+  Team,
+  Transactions,
+  TransferFunds,
+  User,
+} from "../pages/User";
 import { ProtectedRoutes } from "./ProtectedRoutes";
 
 export const router = createHashRouter([
@@ -44,6 +51,10 @@ export const router = createHashRouter([
           {
             path: "transactions",
             element: <Transactions />,
+          },
+          {
+            path: "transferFunds",
+            element: <TransferFunds />,
           },
         ],
       },

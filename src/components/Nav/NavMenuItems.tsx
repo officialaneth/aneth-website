@@ -1,4 +1,5 @@
 import { FaChartArea, FaPiggyBank, FaUsers } from "react-icons/fa";
+import { TbArrowsDoubleNeSw } from "react-icons/tb";
 
 export const navUser = [
   {
@@ -19,10 +20,10 @@ export const navUser = [
     active: "#/user/team",
     icon: FaUsers,
   },
-  // {
-  //   name: "Transactions",
-  //   link: "transactions",
-  //   active: "#/user/transactions",
-  //   icon: TbArrowsDoubleNeSw,
-  // },
+  {
+    name: "Transfer Funds",
+    link: "/user/transferFunds",
+    active: "#/user/TransferFunds",
+    icon: TbArrowsDoubleNeSw,
+  },
 ];
