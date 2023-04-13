@@ -22,11 +22,6 @@ export const UserBusiness = ({
     <CardContainer>
       <Heading size="sm">Your Business</Heading>
       <BalancesCard
-        currencyName={"Total Business"}
-        currencyValue={userTotalBusiness?.totalBusiness.toFixed(3)}
-        logo={currentNetwork[chainId]?.ANUSD?.Logo}
-      ></BalancesCard>
-      <BalancesCard
         currencyName={"Direct Business"}
         currencyValue={userTotalBusiness?.directBusiness.toFixed(3)}
         logo={currentNetwork[chainId]?.ANUSD?.Logo}
@@ -34,6 +29,11 @@ export const UserBusiness = ({
       <BalancesCard
         currencyName={"Self Business"}
         currencyValue={referralAccountMap?.selfBusiness?.toFixed(3)}
+        logo={currentNetwork[chainId]?.ANUSD?.Logo}
+      ></BalancesCard>
+      <BalancesCard
+        currencyName={"Team Business"}
+        currencyValue={userTotalBusiness?.totalBusiness.toFixed(3)}
         logo={currentNetwork[chainId]?.ANUSD?.Logo}
       ></BalancesCard>
     </CardContainer>

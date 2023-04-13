@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/PresaleUpgradeable.sol": {
-      "lastModificationDate": 1680874197496,
-      "contentHash": "84e6f5ad309f9b459db7e86b92604e27",
+      "lastModificationDate": 1681367670094,
+      "contentHash": "f1f1733264d08c46a4ea57c8c959b71c",
       "sourceName": "contracts/PresaleUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",

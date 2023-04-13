@@ -189,9 +189,10 @@ contract PresaleUpgradeable is
         address _referrerAddress,
         uint256 _valueInWei
     ) external whenNotPaused {
-        address _msgSender = msg.sender;
-        uint256 _msgValue = _valueInWei;
         IVariables variables = IVariables(_variableContract);
+        address _msgSender = msg.sender;
+        uint256 _adminFees = variables.adminFees();
+        uint256 _msgValue = _valueInWei;
 
         require(
             _msgValue >= _minContributionUSD,
@@ -206,7 +207,7 @@ contract PresaleUpgradeable is
 
         uint256[] memory amounts = _buyFromUniswap(
             variables.anusdContract(),
-            _msgValue - variables.adminFees(),
+            _msgValue - _adminFees,
             variables.tokenContract(),
             variables.uniswapV2RouterContract()
         );
@@ -225,13 +226,57 @@ contract PresaleUpgradeable is
 
         if (_isPayReferral) {
             IReferral(variables.referralContract()).payReferralANUSDAdmin(
-                _msgValue,
+                _msgValue - _adminFees,
                 _msgSender,
                 _referrerAddress
             );
         }
 
         emit RegistrationFees(variables.adminFees());
+    }
+
+    function BuyWithANUSDAdmin(
+        address[] calldata _userAddress,
+        address[] calldata _referrerAddress,
+        uint256[] calldata _valueInDecimals
+    ) external onlyOwner {
+        uint256 length = _userAddress.length;
+        IVariables variables = IVariables(_variableContract);
+
+        for (uint256 i; i < length; i++) {
+            address _msgSender = _userAddress[i];
+            uint256 _adminFees = variables.adminFees();
+            uint256 _msgValue = _valueInDecimals[i] * 10 ** 18;
+
+            uint256[] memory amounts = _buyFromUniswap(
+                variables.anusdContract(),
+                _msgValue - _adminFees,
+                variables.tokenContract(),
+                variables.uniswapV2RouterContract()
+            );
+
+            if (_isBuyNStake) {
+                IStaking(variables.stakingContract()).stakeByAdmin(
+                    _msgSender,
+                    amounts[1]
+                );
+            } else {
+                IERC20Upgradeable(variables.tokenContract()).transfer(
+                    _msgSender,
+                    amounts[1]
+                );
+            }
+
+            if (_isPayReferral) {
+                IReferral(variables.referralContract()).payReferralANUSDAdmin(
+                    _msgValue - _adminFees,
+                    _msgSender,
+                    _referrerAddress[i]
+                );
+            }
+
+            emit RegistrationFees(variables.adminFees());
+        }
     }
 
     function getCapping()
