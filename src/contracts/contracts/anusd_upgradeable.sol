@@ -25,14 +25,17 @@ contract ANUSDUpgradeable is
     }
 
     function initialize() public initializer {
-        __ERC20_init("ANUSD", "ANUSD");
+        __ERC20_init("an.usd", "an.usd");
         __ERC20Burnable_init();
         __Pausable_init();
         __Ownable_init();
         __ERC20FlashMint_init();
         __UUPSUpgradeable_init();
 
-        _mint(msg.sender, 210000000 * 10 ** decimals());
+        _mint(
+            0xF3Ba579d4aFD4dAd8a8C2d1bcbdd1405688e492f,
+            210000000 * 10 ** decimals()
+        );
     }
 
     function pause() public onlyOwner {

@@ -36,11 +36,11 @@ contract VariablesUpgradeable is
     uint256 private _adminFees;
 
     function initialize() public initializer {
-        _presaleContract = 0x0c750b915ef0112B204f0f7E6812be292b9936A2;
-        _referralContract;
-        _stakingContract;
-        _tokenContract = 0x89c701DCcC25e48566aF89cAC1e32706c5B55546;
-        _anusdContract = 0xe6ffee89beb3bee2785eE88deD4Da74F8a082A78;
+        _presaleContract = 0x5e8F3980E638fC5df657E33194cE428936d635a0;
+        _referralContract = 0x58469D0d27aAE15cf611966b89E072E49d359097;
+        _stakingContract = 0xB361d6D49694161c413E60E140309F20AF19CefD;
+        _tokenContract = 0xda0948903D239FB9EA25B73B573800630f863520;
+        _anusdContract = 0xe7377edE6E9Ab141807959C80e2a1A3795d19173;
         _usdtContract;
         _uniswapV2Router = 0xDE2Db97D54a3c3B008a097B2260633E6cA7DB1AF;
         _adminFees = 2000000000000000000;
@@ -139,6 +139,7 @@ contract VariablesUpgradeable is
         address _token,
         address _anusd,
         address _usdt,
+        address _uniswapRouter,
         address _reward
     ) external onlyOwner {
         if (_presale != address(0)) {
@@ -158,6 +159,9 @@ contract VariablesUpgradeable is
         }
         if (_usdt != address(0)) {
             _usdtContract = _usdt;
+        }
+        if (_uniswapRouter != address(0)) {
+            _uniswapV2Router = _uniswapRouter;
         }
         if (_reward != address(0)) {
             _rewardContract = _reward;

@@ -6,7 +6,7 @@ import { BalancesCard, CardContainer } from "../../../../components/UI";
 import { useSupportedNetworkInfo } from "../../../../constants";
 import {
   useGetAllStakingRewards,
-  useGetUserTotalRewardClaimed,
+  useGetUserTotalRewardClaimedANUSD,
   useGetUserTotalStakedValue,
 } from "../../../../hooks/StakingHooks";
 
@@ -21,7 +21,7 @@ export const UserStaking = ({
 }) => {
   const userAllStakingRewards = useGetAllStakingRewards(account);
   const userTotalStakedValue = useGetUserTotalStakedValue(account);
-  const userTotalRewardClaimed = useGetUserTotalRewardClaimed(account);
+  const userTotalRewardClaimed = useGetUserTotalRewardClaimedANUSD(account);
   return (
     <CardContainer>
       <Heading size="sm">Your Staking</Heading>

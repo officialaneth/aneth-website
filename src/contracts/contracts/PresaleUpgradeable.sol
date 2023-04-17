@@ -39,7 +39,11 @@ interface IVariables {
 }
 
 interface IStaking {
-    function stakeByAdmin(address _userAddress, uint256 _value) external;
+    function stakeByAdmin(
+        address _userAddress,
+        uint256 _valueInToken,
+        uint256 _valueInANUSD
+    ) external;
 }
 
 interface IReferral {
@@ -108,6 +112,8 @@ contract PresaleUpgradeable is
     bool private _isPayReferral;
     bool private _isPayRewardTokens;
 
+    uint256 private _maxBuyLimitANUSD;
+
     receive() external payable {}
 
     event TokenPurchased(
@@ -126,12 +132,15 @@ contract PresaleUpgradeable is
     event RegistrationFees(uint256 amount);
 
     function initialize() external initializer {
-        _variableContract = 0xbE5153baa3756402b08fD830E7b5F00a76E68231;
+        _variableContract = 0x64f0F2FA59a92Df28bE30876958023A69689D88c;
         _rewardPerAUSD = 1000000000000000;
         _minContributionUSD = 20000000000000000000;
-        _isBuyNStake = false;
-        _isPayReferral = false;
+        _isBuyNStake = true;
+        _isPayReferral = true;
         _isPayRewardTokens = false;
+
+        _maxBuyLimitANUSD = 510000000000000000000;
+
         __Pausable_init();
         __Ownable_init();
         __UUPSUpgradeable_init();
@@ -199,6 +208,8 @@ contract PresaleUpgradeable is
             "AUSD value less then min buy value."
         );
 
+        require(_msgValue <= _maxBuyLimitANUSD, "Max buy limit reached");
+
         IERC20Upgradeable(variables.anusdContract()).transferFrom(
             _msgSender,
             address(this),
@@ -215,7 +226,8 @@ contract PresaleUpgradeable is
         if (_isBuyNStake) {
             IStaking(variables.stakingContract()).stakeByAdmin(
                 _msgSender,
-                amounts[1]
+                amounts[1],
+                amounts[0]
             );
         } else {
             IERC20Upgradeable(variables.tokenContract()).transfer(
@@ -226,7 +238,7 @@ contract PresaleUpgradeable is
 
         if (_isPayReferral) {
             IReferral(variables.referralContract()).payReferralANUSDAdmin(
-                _msgValue - _adminFees,
+                amounts[0],
                 _msgSender,
                 _referrerAddress
             );
@@ -258,7 +270,8 @@ contract PresaleUpgradeable is
             if (_isBuyNStake) {
                 IStaking(variables.stakingContract()).stakeByAdmin(
                     _msgSender,
-                    amounts[1]
+                    amounts[1],
+                    amounts[0]
                 );
             } else {
                 IERC20Upgradeable(variables.tokenContract()).transfer(
@@ -269,7 +282,7 @@ contract PresaleUpgradeable is
 
             if (_isPayReferral) {
                 IReferral(variables.referralContract()).payReferralANUSDAdmin(
-                    _msgValue - _adminFees,
+                    amounts[1],
                     _msgSender,
                     _referrerAddress[i]
                 );
@@ -286,25 +299,29 @@ contract PresaleUpgradeable is
             uint256 minConUSD,
             bool isBuyStakeEnabled,
             bool isPayReferralEnabled,
-            bool isPayRewardTokenEnabled
+            bool isPayRewardTokenEnabled,
+            uint256 maxBuyLimitANUSD
         )
     {
         minConUSD = _minContributionUSD;
         isBuyStakeEnabled = _isBuyNStake;
         isPayReferralEnabled = _isPayReferral;
         isPayRewardTokenEnabled = _isPayRewardTokens;
+        maxBuyLimitANUSD = _maxBuyLimitANUSD;
     }
 
     function setCapping(
         uint256 minConUSD,
         bool isBuyNStake,
         bool isPayReferral,
-        bool isPayRewardTokens
+        bool isPayRewardTokens,
+        uint256 maxBuyLimitANUSD
     ) external onlyOwner {
         _minContributionUSD = minConUSD;
         _isBuyNStake = isBuyNStake;
         _isPayReferral = isPayReferral;
         _isPayRewardTokens = isPayRewardTokens;
+        _maxBuyLimitANUSD = maxBuyLimitANUSD;
     }
 
     function pauseAdmin() external onlyOwner {

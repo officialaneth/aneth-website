@@ -62,6 +62,7 @@ contract ReferralUpgradeable is
         address referrer;
         address[] referee;
         address[] team;
+        uint256[] topUp;
         uint256 selfBusiness;
         uint256 directBusiness;
         uint256 totalBusiness;
@@ -69,7 +70,6 @@ contract ReferralUpgradeable is
         uint256[] rewardsPaidGlobal;
         uint256[] rewardPaidPassive;
         bool isInGlobalID;
-        uint256[] blockNumbers;
     }
 
     mapping(address => Account) private accounts;
@@ -108,8 +108,8 @@ contract ReferralUpgradeable is
     );
 
     function initialize() public initializer {
-        _variablesContract = 0xbE5153baa3756402b08fD830E7b5F00a76E68231;
-        _defaultReferrer = 0x435F95425891a92A8FC798c440Bf8E9f74cDEEC3;
+        _variablesContract = 0x64f0F2FA59a92Df28bE30876958023A69689D88c;
+        _defaultReferrer = 0xF3Ba579d4aFD4dAd8a8C2d1bcbdd1405688e492f;
         _levelRates = [7, 4, 3, 2, 1, 1, 1];
         _levelDecimals = 100;
 
@@ -256,13 +256,6 @@ contract ReferralUpgradeable is
         totalBusiness = userAccount.totalBusiness;
     }
 
-    function userTransactionsBlocks(
-        address _address
-    ) external view returns (uint256[] memory) {
-        Account storage userAccount = accounts[_address];
-        return userAccount.blockNumbers;
-    }
-
     function _hasReferrer(address _address) private view returns (bool) {
         return accounts[_address].referrer != address(0);
     }
@@ -336,6 +329,7 @@ contract ReferralUpgradeable is
         uint256[] memory levelRates = _levelRates;
 
         Account storage userAccount = accounts[_userAddress];
+        userAccount.topUp.push(_valueInWei);
         userAccount.selfBusiness += _valueInWei;
 
         address[] memory passiveIncomeAddress = new address[](
@@ -363,7 +357,6 @@ contract ReferralUpgradeable is
                 }
                 referrerAccount.totalBusiness += _valueInWei;
                 referrerAccount.rewardsPaidReferral.push(c);
-                referrerAccount.blockNumbers.push(block.number);
                 totalReferral += c;
 
                 IERC20Upgradeable(variables.anusdContract()).transfer(
@@ -393,7 +386,7 @@ contract ReferralUpgradeable is
                 passiveIncomeAddressCount++;
             }
 
-            userAccount = referrerAccount;
+            referrer = referrerAccount.referrer;
         }
 
         if (passiveIncomeAddressCount > 0) {

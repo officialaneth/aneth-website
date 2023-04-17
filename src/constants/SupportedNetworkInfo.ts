@@ -1,9 +1,10 @@
-import { BSCTestnet, ERC20Interface } from "@usedapp/core";
+import { BSCTestnet, ERC20Interface, Polygon } from "@usedapp/core";
 import { Contract } from "ethers";
 import {
   ANUSDLogoSVG,
   BNBLogoSVG,
   BSCScanLogoCircleLight,
+  PolygonLogoSVG,
   tokenLogoSVG,
   USDTLogoSVG,
 } from "../assets";
@@ -49,19 +50,19 @@ export const useSupportedNetworkInfo = {
       "0xDE2Db97D54a3c3B008a097B2260633E6cA7DB1AF",
       UniswapV2RouterInterface?.abi
     ),
-    presaleContract: "0xf7B74347b4dF59589d14BFB4cb0d2c547f3F79E5",
+    presaleContract: "0x44F679149AE9f634Dee493bbe9375b685ac212e9",
     presaleContractInterface: new Contract(
-      "0xf7B74347b4dF59589d14BFB4cb0d2c547f3F79E5",
+      "0x44F679149AE9f634Dee493bbe9375b685ac212e9",
       PresaleInterface?.abi
     ),
-    referralContract: "0xcb8216b83e33E7848E48aeDa97cc08d246d377f5",
+    referralContract: "0xC736DE76a309DD0EF2DbdA9b593f30C5b97f65f7",
     referralContractInterface: new Contract(
-      "0xcb8216b83e33E7848E48aeDa97cc08d246d377f5",
+      "0xC736DE76a309DD0EF2DbdA9b593f30C5b97f65f7",
       ReferralInterface.abi
     ),
-    stakingContractAddress: "0xe6f3eF32E28DC071e33c36be943e824A347F2f33",
+    stakingContractAddress: "0xb2734c69156Caa3C50eD0B56E6686dCF005D1379",
     stakingContractInterface: new Contract(
-      "0xe6f3eF32E28DC071e33c36be943e824A347F2f33",
+      "0xb2734c69156Caa3C50eD0B56E6686dCF005D1379",
       StakingInterface?.abi
     ),
     Token: {
@@ -81,8 +82,8 @@ export const useSupportedNetworkInfo = {
         "0xe6ffee89beb3bee2785eE88deD4Da74F8a082A78",
         ERC20Interface
       ),
-      Name: "ANUSD",
-      Symbol: "ANUSD",
+      Name: "an.usd",
+      Symbol: "an.usd",
       Decimals: 18,
       Logo: ANUSDLogo,
     },
@@ -111,5 +112,75 @@ export const useSupportedNetworkInfo = {
     NetworkExplorerLink: BSCTestnet.blockExplorerUrl,
     NetworkExplorerName: "BscScanTestnet",
     NetworkExplorerLogo: BSCScanLogoCircleLight,
+  },
+  [Polygon.chainId]: {
+    variablesContract: "0x64f0F2FA59a92Df28bE30876958023A69689D88c",
+    uniswapV2RouterContract: "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",
+    uniswapV2RouterContractInterface: new Contract(
+      "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",
+      UniswapV2RouterInterface?.abi
+    ),
+    presaleContract: "0x0c750b915ef0112B204f0f7E6812be292b9936A2",
+    presaleContractInterface: new Contract(
+      "0x0c750b915ef0112B204f0f7E6812be292b9936A2",
+      PresaleInterface?.abi
+    ),
+    referralContract: "0x4b6610F521c33cFa6E2d055B563108650B732155",
+    referralContractInterface: new Contract(
+      "0x4b6610F521c33cFa6E2d055B563108650B732155",
+      ReferralInterface.abi
+    ),
+    stakingContractAddress: "0xFcE5456E731932dF6d4D9A6Ce3782C08BD2e5Efc",
+    stakingContractInterface: new Contract(
+      "0xFcE5456E731932dF6d4D9A6Ce3782C08BD2e5Efc",
+      StakingInterface?.abi
+    ),
+    Token: {
+      ContractAddress: "0x89c701DCcC25e48566aF89cAC1e32706c5B55546",
+      ContractInterface: new Contract(
+        "0x89c701DCcC25e48566aF89cAC1e32706c5B55546",
+        ERC20Interface
+      ),
+      Name: "an.eth",
+      Symbol: "an.eth",
+      Decimals: 18,
+      Logo: TokenLogo,
+    },
+    ANUSD: {
+      ContractAddress: "0xe6ffee89beb3bee2785eE88deD4Da74F8a082A78",
+      ContractInterface: new Contract(
+        "0xe6ffee89beb3bee2785eE88deD4Da74F8a082A78",
+        ERC20Interface
+      ),
+      Name: "an.usd",
+      Symbol: "an.usd",
+      Decimals: 18,
+      Logo: ANUSDLogo,
+    },
+    USDT: {
+      ContractAddress: "0xbfA0e2F4b2676c62885B1033670C71cdefd975fB",
+      ContractInterface: new Contract(
+        "0xbfA0e2F4b2676c62885B1033670C71cdefd975fB",
+        ERC20Interface
+      ),
+      Name: "Tether USDT",
+      Symbol: "USDT",
+      Decimals: 6,
+      Logo: USDTLogoSVG,
+    },
+    Native: {
+      ContractAddress: "",
+      ContractInterface: "",
+      Name: "Polygon",
+      Symbol: "MATIC",
+      Decimals: 18,
+      Logo: PolygonLogoSVG,
+    },
+    Network: BSCTestnet,
+    NetworkRPCUrl: "https://rpc-mainnet.matic.quiknode.pro",
+    NetworkColor: "purple",
+    NetworkExplorerLink: Polygon.blockExplorerUrl,
+    NetworkExplorerName: "PolygonScan",
+    NetworkExplorerLogo: PolygonLogoSVG,
   },
 };

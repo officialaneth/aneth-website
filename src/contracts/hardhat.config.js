@@ -24,7 +24,27 @@ module.exports = {
     apiKey: {
       bscTestnet: BSC_MAINNET_KEY,
       polygon: POLYGON_API_KEY,
+      myvee: "abc",
+      mainnet: "fb394902-fd60-4a94-aa35-729ac1148662",
     },
+    customChains: [
+      {
+        network: "myvee",
+        chainId: 7878,
+        urls: {
+          apiURL: "https://myveescan.com/api",
+          browserURL: "https://myveescan.com.io",
+        },
+      },
+      {
+        network: "bitgert",
+        chainId: 64668,
+        urls: {
+          apiURL: "http://testnet-explorer.brisescan.com/api",
+          browserURL: "https://testnet-explorer.brisescan.com",
+        },
+      },
+    ],
   },
 
   defaultNetwork: "bscTestnet",
@@ -45,6 +65,17 @@ module.exports = {
       chainId: 56,
       accounts: [PRIVATE_KEY],
     },
+    myvee: {
+      url: "https://rpc.myveescan.com/",
+      chainId: 7878,
+      accounts: [PRIVATE_KEY],
+    },
+
+    bitgert: {
+      url: "https://testnet-rpc.brisescan.com",
+      chainId: 64668,
+      accounts: [PRIVATE_KEY],
+    },
 
     bscTestnet: {
       url: "https://data-seed-prebsc-1-s3.binance.org:8545/",
@@ -55,6 +86,7 @@ module.exports = {
       url: "https://rpc.ankr.com/polygon",
       chainId: 137,
       accounts: [PRIVATE_KEY],
+      gasPrice: 200000000000,
     },
     mumbai: {
       url: "https://matic-mumbai.chainstacklabs.com",

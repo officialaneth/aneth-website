@@ -90,8 +90,14 @@ export const useGetUserTotalStakedValue = (address: string) => {
   return valueFormatted;
 };
 
-export const useGetUserTotalRewardClaimed = (address: string) => {
-  const value = useCallHook("getUserTotalRewardClaimed", [address]);
+export const useGetUserTotalRewardClaimedANUSD = (address: string) => {
+  const value = useCallHook("getUserTotalRewardClaimedANUSD", [address]);
+  const valueFormatted = value ? Number(formatEther(value?.[0])) : 0;
+  return valueFormatted;
+};
+
+export const useGetUserTotalRewardClaimedToken = (address: string) => {
+  const value = useCallHook("getUserTotalRewardClaimedToken", [address]);
   const valueFormatted = value ? Number(formatEther(value?.[0])) : 0;
   return valueFormatted;
 };

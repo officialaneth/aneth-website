@@ -6,7 +6,7 @@ import { BalancesCard, CardContainer } from "../../../components/UI";
 import { TokenSymbol, useSupportedNetworkInfo } from "../../../constants";
 import {
   useGetAllStakingRewards,
-  useGetUserTotalRewardClaimed,
+  useGetUserTotalRewardClaimedANUSD,
   useGetUserTotalStakedValue,
   useStakingUserAccountMap,
 } from "../../../hooks/StakingHooks";
@@ -18,7 +18,7 @@ export const Staking = () => {
   const userAccountMapStaking = useStakingUserAccountMap(account!);
   const userTotalValueStaked = useGetUserTotalStakedValue(account!);
   const userTotalPendingRewards = useGetAllStakingRewards(account!);
-  const userTotalRewardClaimed = useGetUserTotalRewardClaimed(account!);
+  const userTotalRewardClaimed = useGetUserTotalRewardClaimedANUSD(account!);
   const navigate = useNavigate();
   return (
     <VStack w="full" spacing={10}>
