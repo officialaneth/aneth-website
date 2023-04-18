@@ -24,23 +24,23 @@ export const UserStaking = ({
   const userTotalRewardClaimed = useGetUserTotalRewardClaimedANUSD(account);
   return (
     <CardContainer>
-      <Heading size="sm">Your Staking</Heading>
+      <Heading size="sm">Your Mining</Heading>
       <BalancesCard
-        currencyName={"Value Staked"}
-        currencyValue={`${userTotalStakedValue.toFixed(3)} ${
+        currencyName={"Value Locked"}
+        currencyValue={`${userTotalStakedValue.token.toFixed(3)} ${
           currentNetwork[chainId]?.Token?.Symbol
         }`}
         icon={FaPiggyBank}
       ></BalancesCard>
       <BalancesCard
-        currencyName={"Pending Reward"}
+        currencyName={"Coins Realeased"}
         currencyValue={`${userAllStakingRewards.toFixed(3)} ${
           currentNetwork[chainId]?.Token?.Symbol
         }`}
         icon={GiPayMoney}
       ></BalancesCard>
       <BalancesCard
-        currencyName={"Reward Claimed"}
+        currencyName={"Coins Claimed"}
         currencyValue={`${
           userTotalRewardClaimed > 0 ? userTotalRewardClaimed.toFixed(5) : "0"
         } ${currentNetwork[chainId]?.Token?.Symbol}`}

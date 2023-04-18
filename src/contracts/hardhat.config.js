@@ -47,7 +47,7 @@ module.exports = {
     ],
   },
 
-  defaultNetwork: "bscTestnet",
+  defaultNetwork: "polygon",
   networks: {
     hardhat: {
       gas: "auto",

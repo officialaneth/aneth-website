@@ -24,10 +24,10 @@ export const Staking = () => {
     <VStack w="full" spacing={10}>
       {userAccountMapStaking?.stakingIDs?.length > 0 ? (
         <VStack spacing={10}>
-          <Heading>Staking Stats</Heading>
+          <Heading>Mining Stats</Heading>
           <Wrap w="full" justify="center" spacing={10}>
             <CardContainer>
-              <Heading size="sm">Total Stakings</Heading>
+              <Heading size="sm">Total Minings</Heading>
               <BalancesCard
                 currencyName={"No of staking"}
                 // logo={currentNetwork?.Token?.Logo}
@@ -35,15 +35,23 @@ export const Staking = () => {
               ></BalancesCard>
             </CardContainer>
             <CardContainer>
-              <Heading size="sm">Value Staked</Heading>
+              <Heading size="sm">Value Locked</Heading>
               <BalancesCard
                 currencyName={currentNetwork?.Token?.Symbol}
                 logo={currentNetwork?.Token?.Logo}
-                currencyValue={userTotalValueStaked?.toFixed(3)}
+                currencyValue={userTotalValueStaked?.token.toFixed(3)}
               ></BalancesCard>
             </CardContainer>
             <CardContainer>
-              <Heading size="sm">Pending Rewards</Heading>
+              <Heading size="sm">Mining Bonus</Heading>
+              <BalancesCard
+                currencyName={currentNetwork?.Token?.Symbol}
+                logo={currentNetwork?.Token?.Logo}
+                currencyValue={userTotalValueStaked.anusd?.toFixed(3)}
+              ></BalancesCard>
+            </CardContainer>
+            <CardContainer>
+              <Heading size="sm">Coins Released</Heading>
               <BalancesCard
                 currencyName={currentNetwork?.Token?.Symbol}
                 logo={currentNetwork?.Token?.Logo}
@@ -51,7 +59,7 @@ export const Staking = () => {
               ></BalancesCard>
             </CardContainer>
             <CardContainer>
-              <Heading size="sm">Reward Claimed</Heading>
+              <Heading size="sm">Coins Claimed</Heading>
               <BalancesCard
                 currencyName={currentNetwork?.Token?.Symbol}
                 logo={currentNetwork?.Token?.Logo}
@@ -60,7 +68,7 @@ export const Staking = () => {
             </CardContainer>
           </Wrap>
           <Divider />
-          <Heading>Staking Details</Heading>
+          <Heading>Mining Details</Heading>
           <StakingIDCard
             tokenSymbol={currentNetwork?.Token?.Symbol}
             anusdSymbol={currentNetwork?.ANUSD?.Symbol}
@@ -69,8 +77,8 @@ export const Staking = () => {
         </VStack>
       ) : (
         <VStack>
-          <Heading color="red">You have no staking yet.</Heading>
-          <Text>Please buy some {TokenSymbol} to stake</Text>
+          <Heading color="red">You have no mining yet.</Heading>
+          <Text>Please buy some {TokenSymbol} be miner.</Text>
           <Button
             onClick={() => navigate("/swap")}
             rightIcon={<ChevronRightIcon />}

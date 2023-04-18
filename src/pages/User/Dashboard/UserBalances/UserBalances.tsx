@@ -28,23 +28,23 @@ export const UserBalances = ({
       <Heading size="sm">Balances</Heading>
       <BalancesCard
         currencyName={`${currentNetwork[chainId]?.Native?.Symbol}`}
-        currencyValue={Number(
-          formatEther(userNativeValueInWei ?? 0)
-        ).toPrecision(3)}
+        currencyValue={Number(formatEther(userNativeValueInWei ?? 0)).toFixed(
+          5
+        )}
         logo={currentNetwork[chainId]?.Native?.Logo}
       ></BalancesCard>
       <BalancesCard
         currencyName={`${currentNetwork[chainId]?.ANUSD?.Symbol}`}
-        currencyValue={Number(
-          formatEther(userANUSDBalanceInWei ?? 0)
-        ).toPrecision(5)}
+        currencyValue={Number(formatEther(userANUSDBalanceInWei ?? 0)).toFixed(
+          5
+        )}
         logo={currentNetwork[chainId]?.ANUSD?.Logo}
       ></BalancesCard>
       <BalancesCard
         currencyName={`${currentNetwork[chainId]?.Token?.Symbol}`}
-        currencyValue={Number(
-          formatEther(userTokenBalanceInWei ?? 0)
-        ).toPrecision(5)}
+        currencyValue={Number(formatEther(userTokenBalanceInWei ?? 0)).toFixed(
+          5
+        )}
         logo={currentNetwork[chainId]?.Token?.Logo}
       ></BalancesCard>
     </CardContainer>

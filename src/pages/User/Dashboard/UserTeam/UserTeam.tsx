@@ -56,13 +56,7 @@ export const UserTeam = ({
         {userAccount?.referee?.length > 0 ? (
           <VStack w="full" spacing={3}>
             <Center borderWidth="thick" borderRadius="full">
-              <MotionIcon
-                as={FaUserAstronaut}
-                boxSize={7}
-                whileHover={{
-                  scale: 1.5,
-                }}
-              ></MotionIcon>
+              <Icon as={FaUserAstronaut} boxSize={7}></Icon>
             </Center>
             <HStack spacing={5}>
               <VStack>
@@ -102,7 +96,12 @@ export const UserTeam = ({
             <Icon as={FaArrowDown}></Icon>
             <Wrap w="full" align="center" justify="center" p={2}>
               {userAccount.referee.map((address: string, key: number) => {
-                return <UserRefereeCard address={address}></UserRefereeCard>;
+                return (
+                  <UserRefereeCard
+                    address={address}
+                    key={key}
+                  ></UserRefereeCard>
+                );
               })}
             </Wrap>
           </VStack>

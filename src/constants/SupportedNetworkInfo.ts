@@ -55,9 +55,9 @@ export const useSupportedNetworkInfo = {
       "0x44F679149AE9f634Dee493bbe9375b685ac212e9",
       PresaleInterface?.abi
     ),
-    referralContract: "0xC736DE76a309DD0EF2DbdA9b593f30C5b97f65f7",
+    referralContract: "0xb41c6Dee574E94593195004542808bF0e0BC2f8C",
     referralContractInterface: new Contract(
-      "0xC736DE76a309DD0EF2DbdA9b593f30C5b97f65f7",
+      "0xb41c6Dee574E94593195004542808bF0e0BC2f8C",
       ReferralInterface.abi
     ),
     stakingContractAddress: "0xb2734c69156Caa3C50eD0B56E6686dCF005D1379",
@@ -114,25 +114,25 @@ export const useSupportedNetworkInfo = {
     NetworkExplorerLogo: BSCScanLogoCircleLight,
   },
   [Polygon.chainId]: {
-    variablesContract: "0x64f0F2FA59a92Df28bE30876958023A69689D88c",
+    variablesContract: "0x77daaFc7411C911b869C71bf70FE36cCE507845d",
     uniswapV2RouterContract: "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",
     uniswapV2RouterContractInterface: new Contract(
       "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",
       UniswapV2RouterInterface?.abi
     ),
-    presaleContract: "0x0c750b915ef0112B204f0f7E6812be292b9936A2",
+    presaleContract: "0x75703ea2Bb07ae89ae1bcbB7fA663F1CE4dC5499",
     presaleContractInterface: new Contract(
-      "0x0c750b915ef0112B204f0f7E6812be292b9936A2",
+      "0x75703ea2Bb07ae89ae1bcbB7fA663F1CE4dC5499",
       PresaleInterface?.abi
     ),
-    referralContract: "0x4b6610F521c33cFa6E2d055B563108650B732155",
+    referralContract: "0x6447fa83c1850bcf8c933fAe42FC0bC0f8491867",
     referralContractInterface: new Contract(
-      "0x4b6610F521c33cFa6E2d055B563108650B732155",
+      "0x6447fa83c1850bcf8c933fAe42FC0bC0f8491867",
       ReferralInterface.abi
     ),
-    stakingContractAddress: "0xFcE5456E731932dF6d4D9A6Ce3782C08BD2e5Efc",
+    stakingContractAddress: "0x44D0818CF7029c022D1558B556BbfB353572Bb26",
     stakingContractInterface: new Contract(
-      "0xFcE5456E731932dF6d4D9A6Ce3782C08BD2e5Efc",
+      "0x44D0818CF7029c022D1558B556BbfB353572Bb26",
       StakingInterface?.abi
     ),
     Token: {
@@ -158,9 +158,9 @@ export const useSupportedNetworkInfo = {
       Logo: ANUSDLogo,
     },
     USDT: {
-      ContractAddress: "0xbfA0e2F4b2676c62885B1033670C71cdefd975fB",
+      ContractAddress: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
       ContractInterface: new Contract(
-        "0xbfA0e2F4b2676c62885B1033670C71cdefd975fB",
+        "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
         ERC20Interface
       ),
       Name: "Tether USDT",

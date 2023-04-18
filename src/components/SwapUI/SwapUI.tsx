@@ -333,7 +333,7 @@ export const SwapUI = () => {
           {(state?.status === "None" || state?.status === "PendingSignature") &&
             (Number(formatEther(userANUSDAllowance ?? 0)) < userInput.anusd! ? (
               <ModalAllowance
-                tokenName={currentNetwork?.ANUSD?.Symbol}
+                tokenObject={currentNetwork?.ANUSD}
                 spenderAddress={currentNetwork?.presaleContract}
                 valueToApprove={`${userInput?.anusd! ?? 0}`}
                 onClose={onClose}

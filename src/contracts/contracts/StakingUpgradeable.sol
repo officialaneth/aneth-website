@@ -158,7 +158,7 @@ contract StakingUpgradeable is
     );
 
     function initialize() public initializer {
-        _variablesContract = 0x64f0F2FA59a92Df28bE30876958023A69689D88c;
+        _variablesContract = 0x77daaFc7411C911b869C71bf70FE36cCE507845d;
         _minStakingValue = 10000000000000000000;
         _stakingRewardRate = 150;
         _stakingDuration = 760 days;
@@ -170,12 +170,6 @@ contract StakingUpgradeable is
     }
 
     receive() external payable {}
-
-    function _stakeInfoMap(
-        uint256 _stakingID
-    ) private view returns (StakeInfo memory) {
-        return stakeInfo[_stakingID];
-    }
 
     function stakeInfoMap(
         uint256 _stakingID
@@ -326,7 +320,7 @@ contract StakingUpgradeable is
         uint256 userAllStakingRewards;
 
         for (uint8 i; i < stakingIDLength; i++) {
-            if (_stakeInfoMap(userStakingIDs[i]).isStaked == true) {
+            if (stakeInfo[userStakingIDs[i]].isStaked == true) {
                 userAllStakingRewards += _getStakingRewardANUSD(
                     userStakingIDs[i]
                 );
@@ -415,7 +409,7 @@ contract StakingUpgradeable is
         uint256 userStakingIDsLength = userStakingIDs.length;
 
         for (uint256 i; i < userStakingIDsLength; i++) {
-            if (_stakeInfoMap(userStakingIDs[i]).isStaked) {
+            if (stakeInfo[userStakingIDs[i]].isStaked) {
                 return true;
             }
         }
@@ -423,17 +417,18 @@ contract StakingUpgradeable is
         return false;
     }
 
-    function getUserTotalStakedValue(
+    function getUserTotalValueStaked(
         address _userAddress
-    ) external view returns (uint256 userTotalValueStaked) {
+    ) external view returns (uint256 token, uint256 anusd) {
         Account storage userAccount = account[_userAddress];
         uint256[] memory userStakingIDs = userAccount.stakingID;
         uint256 userStakingIDsLength = userStakingIDs.length;
 
         for (uint256 i; i < userStakingIDsLength; i++) {
-            if (_stakeInfoMap(userStakingIDs[i]).isStaked) {
-                userTotalValueStaked += _stakeInfoMap(userStakingIDs[i])
-                    .valueInToken;
+            StakeInfo storage userStakeInfo = stakeInfo[userStakingIDs[i]];
+            if (userStakeInfo.isStaked) {
+                token += userStakeInfo.valueInToken;
+                anusd += userStakeInfo.valueInANUSD;
             }
         }
     }
@@ -452,8 +447,8 @@ contract StakingUpgradeable is
         uint256 userStakingIDsLength = userStakingIDs.length;
 
         for (uint256 i; i < userStakingIDsLength; i++) {
-            totalRewardClaim += _stakeInfoMap(userStakingIDs[i])
-                .rewardClaimedToken;
+            StakeInfo storage userStakeInfo = stakeInfo[userStakingIDs[i]];
+            totalRewardClaim += userStakeInfo.rewardClaimedToken;
         }
     }
 
@@ -465,8 +460,8 @@ contract StakingUpgradeable is
         uint256 userStakingIDsLength = userStakingIDs.length;
 
         for (uint256 i; i < userStakingIDsLength; i++) {
-            totalRewardClaim += _stakeInfoMap(userStakingIDs[i])
-                .rewardClaimedANUSD;
+            StakeInfo storage userStakeInfo = stakeInfo[userStakingIDs[i]];
+            totalRewardClaim += userStakeInfo.rewardClaimedANUSD;
         }
     }
 
@@ -479,8 +474,8 @@ contract StakingUpgradeable is
         uint256 principalAmount;
 
         for (uint256 i; i < userStakingIDsLength; i++) {
-            principalAmount += _stakeInfoMap(userStakingIDs[i])
-                .principalClaimed;
+            StakeInfo storage userStakeInfo = stakeInfo[userStakingIDs[i]];
+            principalAmount += userStakeInfo.principalClaimed;
         }
 
         return principalAmount;

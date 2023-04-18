@@ -41,33 +41,40 @@ export const useStakingUserAccountMap = (
 export const useStakeInfoMap = (
   stakingID: string
 ): {
-  blockNumbers: BigNumber[] | [];
-  duration: number;
   isStaked: boolean;
-  lastTimeRewardClaimed: number;
   owner: string;
-  rewardClaimed: number;
-  rewardClaimedANUSD: number;
+  valueInToken: number;
+  valueInANUSD: number;
   rewardRate: number;
   startTime: number;
-  value: number;
+  duration: number;
+  rewardClaimedToken: number;
+  rewardClaimedANUSD: number;
+  principalClaimed: number;
+  lastTimeRewardClaimed: number;
 } => {
   const value = useCallHook("stakeInfoMap", [stakingID]);
   const valueObject = {
-    blockNumbers: value ? value?.[0].blockNumber : [],
-    duration: value ? Number(value?.[0].duration?.toString()) : 0,
     isStaked: value ? value?.[0]?.isStaked : false,
+    owner: value ? value?.[0]?.owner : AddressZero,
+    valueInToken: value ? Number(formatEther(value?.[0].valueInToken)) : 0,
+    valueInANUSD: value ? Number(formatEther(value?.[0].valueInANUSD)) : 0,
+    rewardRate: value ? Number(value?.[0].rewardRate.toString()) : 0,
+    startTime: value ? Number(value?.[0].startTime.toString()) : 0,
+    duration: value ? Number(value?.[0].duration?.toString()) : 0,
+    rewardClaimedToken: value
+      ? Number(formatEther(value?.[0].rewardClaimedToken))
+      : 0,
+    rewardClaimedANUSD: value
+      ? Number(formatEther(value?.[0].rewardClaimedANUSD))
+      : 0,
+
+    principalClaimed: value
+      ? Number(formatEther(value?.[0].principalClaimed))
+      : 0,
     lastTimeRewardClaimed: value
       ? Number(value?.[0].lastTimeRewardClaimed.toString())
       : 0,
-    owner: value ? value?.[0]?.owner : AddressZero,
-    rewardClaimed: value ? Number(formatEther(value?.[0].rewardClaimed)) : 0,
-    rewardClaimedANUSD: value
-      ? Number(formatEther(value?.[0].rewardClaimedAUSD))
-      : 0,
-    rewardRate: value ? Number(value?.[0].rewardRate.toString()) : 0,
-    startTime: value ? Number(value?.[0].startTime.toString()) : 0,
-    value: value ? Number(formatEther(value?.[0].value)) : 0,
   };
   return valueObject;
 };
@@ -85,9 +92,14 @@ export const useGetAllStakingRewards = (address: string) => {
 };
 
 export const useGetUserTotalStakedValue = (address: string) => {
-  const value = useCallHook("getUserTotalStakedValue", [address]);
-  const valueFormatted = value ? Number(formatEther(value?.[0])) : 0;
-  return valueFormatted;
+  const value = useCallHook("getUserTotalValueStaked", [address]);
+
+  const valueObject = {
+    token: value ? Number(formatEther(value?.token)) : 0,
+    anusd: value ? Number(formatEther(value?.anusd)) : 0,
+  };
+
+  return valueObject;
 };
 
 export const useGetUserTotalRewardClaimedANUSD = (address: string) => {

@@ -74,7 +74,7 @@ contract ReferralUpgradeable is
 
     mapping(address => Account) private accounts;
 
-    event RegisteredReferer(address indexed referrer, address indexed referee);
+    event RegisteredReferer(address indexed referee, address indexed referrer);
 
     event RegisteredTeamAddress(
         address indexed parent,
@@ -108,7 +108,7 @@ contract ReferralUpgradeable is
     );
 
     function initialize() public initializer {
-        _variablesContract = 0x64f0F2FA59a92Df28bE30876958023A69689D88c;
+        _variablesContract = 0x77daaFc7411C911b869C71bf70FE36cCE507845d;
         _defaultReferrer = 0xF3Ba579d4aFD4dAd8a8C2d1bcbdd1405688e492f;
         _levelRates = [7, 4, 3, 2, 1, 1, 1];
         _levelDecimals = 100;
@@ -260,45 +260,36 @@ contract ReferralUpgradeable is
         return accounts[_address].referrer != address(0);
     }
 
-    function _addTeamAddress(
+    function _addReferrer(
         address _userAddress,
         address _referrerAddress
     ) private {
-        address referrer = _referrerAddress;
+        Account storage userAccount = accounts[_userAddress];
+        userAccount.referrer = _referrerAddress;
+        emit RegisteredReferer(_userAddress, _referrerAddress);
+
         uint256 levelRatesLength = _levelRates.length;
+
         for (uint256 i; i < levelRatesLength; i++) {
-            if (referrer == address(0)) {
+            Account storage referrerAccount = accounts[userAccount.referrer];
+            if (i == 0) {
+                referrerAccount.referee.push(_userAddress);
+            }
+
+            if (userAccount.referrer == address(0)) {
                 break;
             }
 
-            Account storage parentAccount = accounts[referrer];
-
-            parentAccount.team.push(_userAddress);
+            referrerAccount.team.push(_userAddress);
 
             emit RegisteredTeamAddress(
-                referrer,
+                userAccount.referrer,
                 _referrerAddress,
                 _userAddress
             );
 
-            referrer = parentAccount.referrer;
+            userAccount = referrerAccount;
         }
-    }
-
-    function _addReferrer(address _address, address _referrer) private {
-        if (accounts[_address].referrer != address(0)) {
-            emit RegisterRefererFailed(
-                _address,
-                _referrer,
-                "Address already have referrer."
-            );
-        }
-
-        Account storage userAccount = accounts[_address];
-        Account storage referrerAccount = accounts[_referrer];
-        userAccount.referrer = payable(_referrer);
-        referrerAccount.referee.push(_address);
-        emit RegisteredReferer(_referrer, _address);
     }
 
     function addReferrerAdmin(
@@ -312,7 +303,6 @@ contract ReferralUpgradeable is
 
         for (uint256 i; i < _userAddress.length; i++) {
             _addReferrer(_userAddress[i], _referrerAddress[i]);
-            _addTeamAddress(_userAddress[i], _referrerAddress[i]);
         }
     }
 
@@ -321,7 +311,7 @@ contract ReferralUpgradeable is
     }
 
     function _payReferralInANUSD(
-        uint256 _valueInWei,
+        uint256 _valueInUSD,
         address _userAddress
     ) private {
         IVariables variables = IVariables(_variablesContract);
@@ -329,8 +319,8 @@ contract ReferralUpgradeable is
         uint256[] memory levelRates = _levelRates;
 
         Account storage userAccount = accounts[_userAddress];
-        userAccount.topUp.push(_valueInWei);
-        userAccount.selfBusiness += _valueInWei;
+        userAccount.topUp.push(_valueInUSD);
+        userAccount.selfBusiness += _valueInUSD;
 
         address[] memory passiveIncomeAddress = new address[](
             _passiveIncomeLevels
@@ -351,11 +341,11 @@ contract ReferralUpgradeable is
             }
 
             if (i < levelRates.length) {
-                uint256 c = (_valueInWei * levelRates[i]) / 100;
+                uint256 c = (_valueInUSD * levelRates[i]) / 100;
                 if (i == 0) {
-                    referrerAccount.directBusiness += _valueInWei;
+                    referrerAccount.directBusiness += _valueInUSD;
                 }
-                referrerAccount.totalBusiness += _valueInWei;
+                referrerAccount.totalBusiness += _valueInUSD;
                 referrerAccount.rewardsPaidReferral.push(c);
                 totalReferral += c;
 
@@ -386,11 +376,11 @@ contract ReferralUpgradeable is
                 passiveIncomeAddressCount++;
             }
 
-            referrer = referrerAccount.referrer;
+            userAccount = referrerAccount;
         }
 
         if (passiveIncomeAddressCount > 0) {
-            uint256 passiveIncomeValue = (_valueInWei * _passiveIncomeRate) /
+            uint256 passiveIncomeValue = (_valueInUSD * _passiveIncomeRate) /
                 100 /
                 passiveIncomeAddressCount;
             for (uint256 i; i < passiveIncomeAddressCount; i++) {
@@ -415,7 +405,7 @@ contract ReferralUpgradeable is
         }
 
         if (_globalAddress.length > 0) {
-            uint256 globalIncome = (_valueInWei * _globalRewardRate) / 100;
+            uint256 globalIncome = (_valueInUSD * _globalRewardRate) / 100;
             uint index = uint(
                 keccak256(abi.encodePacked(block.timestamp, block.difficulty))
             ) % _globalAddress.length;
@@ -435,7 +425,7 @@ contract ReferralUpgradeable is
         }
 
         if (coreMembersCount > 0) {
-            uint256 coreRewardValue = (_valueInWei * _coreRewardRate) /
+            uint256 coreRewardValue = (_valueInUSD * _coreRewardRate) /
                 100 /
                 coreMembersCount;
             for (uint256 i; i < coreMembersCount; i++) {
@@ -451,7 +441,7 @@ contract ReferralUpgradeable is
     }
 
     function payReferralANUSDAdmin(
-        uint256 _value,
+        uint256 _valueInUSD,
         address _userAddress,
         address _referrerAddress
     ) external {
@@ -464,15 +454,25 @@ contract ReferralUpgradeable is
 
         if (!_hasReferrer(_userAddress) && _referrerAddress != address(0)) {
             _addReferrer(_userAddress, _referrerAddress);
-            _addTeamAddress(_userAddress, _referrerAddress);
         }
 
-        if (!_hasReferrer(_referrerAddress) && _referrerAddress != address(0)) {
+        if (
+            !_hasReferrer(_referrerAddress) &&
+            _referrerAddress != address(0) &&
+            _referrerAddress != _defaultReferrer
+        ) {
             _addReferrer(_referrerAddress, _defaultReferrer);
-            _addTeamAddress(_referrerAddress, _defaultReferrer);
         }
 
-        _payReferralInANUSD(_value, _userAddress);
+        _payReferralInANUSD(_valueInUSD, _userAddress);
+    }
+
+    function getVariablesContract() external view returns (address) {
+        return _variablesContract;
+    }
+
+    function setVariablesContract(address _contractAddress) external onlyOwner {
+        _variablesContract = _contractAddress;
     }
 
     function pause() public onlyOwner {

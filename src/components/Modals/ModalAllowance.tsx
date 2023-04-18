@@ -16,31 +16,37 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useContractFunction, useEthers } from "@usedapp/core";
-import { utils } from "ethers";
+import { Contract, utils } from "ethers";
 import { useEffect, useState } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { useSupportedNetworkInfo } from "../../constants";
 
+interface tokenObject {
+  ContractAddress: string;
+  ContractInterface: Contract;
+  Name: string;
+  Symbol: string;
+  Decimals: number;
+  Logo: string;
+}
+
 export const ModalAllowance = ({
-  tokenName,
+  tokenObject,
   spenderAddress,
   valueToApprove,
   onClose,
 }: {
-  tokenName: string;
+  tokenObject: tokenObject;
   spenderAddress: string;
   valueToApprove: string;
   onClose?: () => void;
 }) => {
   const toast = useToast();
-  const { chainId } = useEthers();
-  const currentNetwork = useSupportedNetworkInfo[chainId!];
   const [transactionStatus, setTransactionStatus] = useState<
     "Mining" | "Success" | "Loading" | "No" | "Error"
   >("No");
   const { send, state, resetState } = useContractFunction(
-    // @ts-ignore
-    currentNetwork?.[tokenName]?.ContractInterface,
+    tokenObject.ContractInterface,
     "approve"
   );
 
@@ -106,18 +112,9 @@ export const ModalAllowance = ({
               onClose!();
             }}
           >
-            <Image
-              boxSize={10}
-              src={
-                // @ts-ignore
-                currentNetwork?.[tokenName]?.Logo
-              }
-            ></Image>
+            <Image boxSize={10} src={tokenObject.Logo}></Image>
             <Heading size="sm" opacity={0.75}>
-              {
-                // @ts-ignore
-                currentNetwork?.[tokenName]?.Symbol
-              }
+              {tokenObject.Symbol}
             </Heading>
           </VStack>
           <Spacer />

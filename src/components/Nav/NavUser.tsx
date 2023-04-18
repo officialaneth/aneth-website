@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { shortenAddress, useEthers } from "@usedapp/core";
 import { motion, MotionProps } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { navUser } from "./NavMenuItems";
 import { AiOutlineLogout } from "react-icons/ai";
@@ -27,6 +27,7 @@ const MotionTag = motion(Tag);
 export const NavUser = () => {
   const { account, deactivate } = useEthers();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   return (
     <Flex
@@ -72,9 +73,7 @@ export const NavUser = () => {
               borderRadius="xl"
               key={key}
               onClick={() => navigate(items?.link)}
-              color={
-                window.location.hash === items?.active ? "twitter.500" : ""
-              }
+              color={pathname === items.link ? "twitter.500" : ""}
               bgColor="transparent"
               cursor="pointer"
               whileHover={{

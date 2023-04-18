@@ -41,7 +41,7 @@ export const router = createHashRouter([
             element: <Dashboard />,
           },
           {
-            path: "staking",
+            path: "mining",
             element: <Staking />,
           },
           {

@@ -25,22 +25,26 @@ export const StakingInfoContainer = ({
   return (
     <CardContainer>
       <HStack w="full">
-        <Heading size="sm">Staking ID</Heading>
+        <Heading size="sm">Mining ID</Heading>
         <Spacer></Spacer>
         <Heading size="sm" fontWeight={900} color="twitter.500">
-          # {stakingID}
+          # {Number(stakingID) + 1000}
         </Heading>
       </HStack>
       <Divider></Divider>
       <VStack w="full">
-        <Heading size="sm">Value Staked</Heading>
+        <Heading size="sm">Locked Coins</Heading>
         <Card w="full" p={2} borderRadius="xl" align="center">
-          {stakeInfoMap?.value} {tokenSymbol}
+          {stakeInfoMap?.valueInToken} {tokenSymbol}
+        </Card>
+        <Heading size="sm">Mining Bonus</Heading>
+        <Card w="full" p={2} borderRadius="xl" align="center">
+          {stakeInfoMap?.valueInANUSD} {anusdSymbol}
         </Card>
       </VStack>
       <Divider></Divider>
       <VStack w="full">
-        <Heading size="sm">Staking Ends In</Heading>
+        <Heading size="sm">Mining Duration</Heading>
         <Counter
           timeinseconds={stakeInfoMap?.startTime + stakeInfoMap?.duration}
           size="sm"
@@ -48,7 +52,7 @@ export const StakingInfoContainer = ({
       </VStack>
       <Divider></Divider>
       <VStack w="full">
-        <Heading size="sm">Pending Reward</Heading>
+        <Heading size="sm">Coins Released</Heading>
         <Card
           w="full"
           p={2}
@@ -56,14 +60,14 @@ export const StakingInfoContainer = ({
           align="center"
           color="yellow.500"
         >
-          {getStakingRewardByID} {tokenSymbol}
+          {getStakingRewardByID} {anusdSymbol}
         </Card>
       </VStack>
       <Divider></Divider>
       <VStack w="full">
-        <Heading size="sm">Reward Claimed</Heading>
+        <Heading size="sm">Coins Claimed</Heading>
         <Card w="full" p={2} borderRadius="xl" align="center" color="green.300">
-          {stakeInfoMap?.rewardClaimed} {tokenSymbol}
+          {stakeInfoMap?.rewardClaimedToken} {tokenSymbol}
         </Card>
         <Card w="full" p={2} borderRadius="xl" align="center" color="green.300">
           {stakeInfoMap?.rewardClaimedANUSD} {anusdSymbol}

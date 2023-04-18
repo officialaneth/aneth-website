@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/PresaleUpgradeable.sol": {
-      "lastModificationDate": 1681719188436,
-      "contentHash": "f87ee1bf75c482b747fad5b64200df4d",
+      "lastModificationDate": 1681812696156,
+      "contentHash": "ed4f6f270d83cc4c08ece693bde01972",
       "sourceName": "contracts/PresaleUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -817,8 +817,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/StakingUpgradeable.sol": {
-      "lastModificationDate": 1681719478404,
-      "contentHash": "2994202e39771bfd72091d67970bf621",
+      "lastModificationDate": 1681812712448,
+      "contentHash": "b1d0023366f3a89920815daac83fb478",
       "sourceName": "contracts/StakingUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -905,8 +905,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/ReferralUpgradeable.sol": {
-      "lastModificationDate": 1681719542585,
-      "contentHash": "94ab7cb7c29c4c714fb7cdc0ba91ec00",
+      "lastModificationDate": 1681812701897,
+      "contentHash": "b7762168b8cda63138fba8732f428ed3",
       "sourceName": "contracts/ReferralUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",

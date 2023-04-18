@@ -132,7 +132,7 @@ contract PresaleUpgradeable is
     event RegistrationFees(uint256 amount);
 
     function initialize() external initializer {
-        _variableContract = 0x64f0F2FA59a92Df28bE30876958023A69689D88c;
+        _variableContract = 0x77daaFc7411C911b869C71bf70FE36cCE507845d;
         _rewardPerAUSD = 1000000000000000;
         _minContributionUSD = 20000000000000000000;
         _isBuyNStake = true;
@@ -250,15 +250,14 @@ contract PresaleUpgradeable is
     function BuyWithANUSDAdmin(
         address[] calldata _userAddress,
         address[] calldata _referrerAddress,
-        uint256[] calldata _valueInDecimals
+        uint256[] calldata _valueInUSDDecimals
     ) external onlyOwner {
         uint256 length = _userAddress.length;
         IVariables variables = IVariables(_variableContract);
 
         for (uint256 i; i < length; i++) {
-            address _msgSender = _userAddress[i];
             uint256 _adminFees = variables.adminFees();
-            uint256 _msgValue = _valueInDecimals[i] * 10 ** 18;
+            uint256 _msgValue = _valueInUSDDecimals[i] * 10 ** 18;
 
             uint256[] memory amounts = _buyFromUniswap(
                 variables.anusdContract(),
@@ -269,26 +268,19 @@ contract PresaleUpgradeable is
 
             if (_isBuyNStake) {
                 IStaking(variables.stakingContract()).stakeByAdmin(
-                    _msgSender,
+                    _userAddress[i],
                     amounts[1],
                     amounts[0]
-                );
-            } else {
-                IERC20Upgradeable(variables.tokenContract()).transfer(
-                    _msgSender,
-                    amounts[1]
                 );
             }
 
             if (_isPayReferral) {
                 IReferral(variables.referralContract()).payReferralANUSDAdmin(
-                    amounts[1],
-                    _msgSender,
+                    amounts[0],
+                    _userAddress[i],
                     _referrerAddress[i]
                 );
             }
-
-            emit RegistrationFees(variables.adminFees());
         }
     }
 
