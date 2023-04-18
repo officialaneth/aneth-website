@@ -817,8 +817,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/StakingUpgradeable.sol": {
-      "lastModificationDate": 1681812712448,
-      "contentHash": "b1d0023366f3a89920815daac83fb478",
+      "lastModificationDate": 1681829655221,
+      "contentHash": "723ba61800e04eddd57bf4b54becf74e",
       "sourceName": "contracts/StakingUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",

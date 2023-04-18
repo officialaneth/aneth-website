@@ -29,7 +29,7 @@ export const Staking = () => {
             <CardContainer>
               <Heading size="sm">Total Minings</Heading>
               <BalancesCard
-                currencyName={"No of staking"}
+                currencyName={"No of mining"}
                 // logo={currentNetwork?.Token?.Logo}
                 currencyValue={userAccountMapStaking?.stakingIDs?.length.toString()}
               ></BalancesCard>

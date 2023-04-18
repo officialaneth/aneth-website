@@ -265,7 +265,7 @@ contract StakingUpgradeable is
         _stake(
             _userAddress,
             _valueInToken,
-            _valueInANUSD,
+            (_valueInANUSD * _stakingRewardRate) / 100,
             _stakingRewardRate,
             _stakingDuration
         );
