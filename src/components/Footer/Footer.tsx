@@ -11,12 +11,19 @@ import {
   IconButton,
   useColorModeValue,
   Flex,
+  VStack,
+  Button,
+  Image,
+  Icon,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import { BiMailSend } from "react-icons/bi";
 import { Logo } from "../Logo/Logo";
-import { ProjectName } from "../../constants";
+import { ProjectName, useSupportedNetworkInfo } from "../../constants";
+import { PolygonLogoSVG } from "../../assets";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { Polygon } from "@usedapp/core";
 
 const SocialButton = ({
   children,
@@ -59,6 +66,7 @@ const ListHeader = ({ children }: { children: ReactNode }) => {
 };
 
 export function Footer() {
+  const currentNetwork = useSupportedNetworkInfo[Polygon.chainId];
   return (
     <Flex
       bg={useColorModeValue("gray.50", "gray.900")}
@@ -124,6 +132,55 @@ export function Footer() {
                 icon={<BiMailSend />}
               />
             </Stack>
+          </Stack>
+          <Stack align={"flex-start"}>
+            <ListHeader>Smart Contracts</ListHeader>
+            <VStack>
+              <Button
+                leftIcon={<Image src={PolygonLogoSVG} boxSize={5} />}
+                rightIcon={<Icon as={ExternalLinkIcon} color="pink.500"></Icon>}
+                as="a"
+                href={Polygon.getExplorerAddressLink(
+                  currentNetwork?.presaleContract
+                )}
+                target="_blank"
+              >
+                Presale Smart Contracts
+              </Button>
+              <Button
+                leftIcon={<Image src={PolygonLogoSVG} boxSize={5} />}
+                rightIcon={<Icon as={ExternalLinkIcon} color="pink.500"></Icon>}
+                as="a"
+                href={Polygon.getExplorerAddressLink(
+                  currentNetwork?.referralContract
+                )}
+                target="_blank"
+              >
+                Referral Smart Contracts
+              </Button>
+              <Button
+                leftIcon={<Image src={PolygonLogoSVG} boxSize={5} />}
+                rightIcon={<Icon as={ExternalLinkIcon} color="pink.500"></Icon>}
+                as="a"
+                href={Polygon.getExplorerAddressLink(
+                  currentNetwork?.stakingContractAddress
+                )}
+                target="_blank"
+              >
+                Staking Smart Contracts
+              </Button>
+              {/* <Button
+                leftIcon={<Image src={PolygonLogoSVG} boxSize={5} />}
+                rightIcon={<Icon as={ExternalLinkIcon} color="pink.500"></Icon>}
+                as="a"
+                href={Polygon.getExplorerAddressLink(
+                  currentNetwork?.presaleContract
+                )}
+                target="_blank"
+              >
+                Variables Smart Contracts
+              </Button> */}
+            </VStack>
           </Stack>
         </SimpleGrid>
       </Container>
