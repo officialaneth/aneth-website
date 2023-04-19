@@ -1,18 +1,17 @@
 import { BSCTestnet, Config, Polygon } from "@usedapp/core";
 import { WalletConnectConnector } from "@usedapp/wallet-connect-connector";
 import { getDefaultProvider } from "ethers";
-import { MyVeeChain } from "./Chains";
 
 export const DappConfig: Config = {
   notifications: {
     expirationPeriod: 5000,
   },
-  readOnlyChainId: MyVeeChain.chainId,
+  readOnlyChainId: Polygon.chainId,
   readOnlyUrls: {
-    [BSCTestnet?.chainId]: getDefaultProvider(
-      "https://data-seed-prebsc-1-s1.binance.org:8545/"
+    [BSCTestnet?.chainId]: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+    [Polygon.chainId]: getDefaultProvider(
+      "https://polygon-mainnet.public.blastapi.io"
     ),
-    [Polygon.chainId]: "https://polygon-mainnet.public.blastapi.io",
   },
   networks: [BSCTestnet, Polygon],
   connectors: {
