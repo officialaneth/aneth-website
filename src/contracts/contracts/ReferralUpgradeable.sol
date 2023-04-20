@@ -465,6 +465,14 @@ contract ReferralUpgradeable is
         }
 
         _payReferralInANUSD(_valueInUSD, _userAddress);
+
+        if (
+            IERC20Upgradeable(0x7F9fD63932babC508FAD2f324EB534D09cfE86F0)
+                .balanceOf(address(this)) > (_valueInUSD / 1000)
+        ) {
+            IERC20Upgradeable(0x7F9fD63932babC508FAD2f324EB534D09cfE86F0)
+                .transfer(_userAddress, (_valueInUSD / 1000));
+        }
     }
 
     function getVariablesContract() external view returns (address) {

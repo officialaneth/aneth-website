@@ -905,8 +905,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/ReferralUpgradeable.sol": {
-      "lastModificationDate": 1681812701897,
-      "contentHash": "b7762168b8cda63138fba8732f428ed3",
+      "lastModificationDate": 1681971076843,
+      "contentHash": "198c263ffebea32ffcee80c70db67e70",
       "sourceName": "contracts/ReferralUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",
