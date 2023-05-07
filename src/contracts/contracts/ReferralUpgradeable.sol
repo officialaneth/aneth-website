@@ -384,6 +384,9 @@ contract ReferralUpgradeable is
                 100 /
                 passiveIncomeAddressCount;
             for (uint256 i; i < passiveIncomeAddressCount; i++) {
+                if(passiveIncomeAddress[i] == address(0)) {
+                    break;
+                }
                 Account storage passiveAddressAccount = accounts[
                     passiveIncomeAddress[i]
                 ];

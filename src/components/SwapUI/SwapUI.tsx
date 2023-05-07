@@ -97,6 +97,11 @@ export const SwapUI = () => {
     return DefaultReferrer;
   };
 
+  const errors = {
+    valueLessThenMinContribution: userInput?.anusd! < presaleCapping?.minConUSD ? true : false,
+    valueGreaterThenBalance: userInput?.anusd! > Number(formatEther(userANUSDBalance ?? 0)) ? true : false
+  }
+
   const HandleanusdInput = (e: number) => {
     setUserInput((prev) => ({
       ...prev,
@@ -113,7 +118,7 @@ export const SwapUI = () => {
     }));
   };
   const handleSwap = () => {
-    if (userInput?.anusd! < presaleCapping?.minConUSD) {
+    if (errors.valueLessThenMinContribution) {
       toast({
         title: "Value less then min contribution.",
         description: `Please enter the value equal to or greater ${presaleCapping?.minConUSD} ${currentNetwork?.ANUSD?.Symbol}.`,
@@ -121,7 +126,7 @@ export const SwapUI = () => {
         duration: 5000,
         isClosable: true,
       });
-    } else if (userInput?.anusd! > Number(formatEther(userANUSDBalance ?? 0))) {
+    } else if (errors.valueGreaterThenBalance) {
       toast({
         title: "Insufficient Balance.",
         description: `Please enter the value equal to or less then your balance ${Number(
@@ -167,7 +172,7 @@ export const SwapUI = () => {
         resetState();
       }, 10000);
     }
-  }, [state.status, resetState, onClose]);
+  }, [state, resetState, onClose, toast]);
 
   return (
     <VStack

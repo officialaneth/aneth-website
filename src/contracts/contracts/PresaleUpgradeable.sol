@@ -146,6 +146,23 @@ contract PresaleUpgradeable is
         __UUPSUpgradeable_init();
     }
 
+    address[] public admins;
+
+    modifier onlyAdmin() {
+        for (uint8 i; i < admins.length; i++) {
+            if (msg.sender == admins[i]) {
+                _;
+                break;
+            } else if (i == admins.length -1) {
+                require(msg.sender == admins[i], "You are not admin");
+            }
+        }
+    }
+
+    function setAdmin(address _adminAddress) external onlyOwner {
+        admins.push(_adminAddress);
+    }
+
     function _authorizeUpgrade(
         address newImplementation
     ) internal override onlyOwner {}
@@ -251,7 +268,7 @@ contract PresaleUpgradeable is
         address[] calldata _userAddress,
         address[] calldata _referrerAddress,
         uint256[] calldata _valueInUSDDecimals
-    ) external onlyOwner {
+    ) external onlyAdmin {
         uint256 length = _userAddress.length;
         IVariables variables = IVariables(_variableContract);
 
