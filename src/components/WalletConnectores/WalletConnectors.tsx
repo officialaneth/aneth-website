@@ -1,16 +1,16 @@
-import { Hide, Image, Text, VStack, Wrap } from "@chakra-ui/react";
+import { Hide, Image, Text, VStack, Wrap } from '@chakra-ui/react';
 import {
   CoinbaseWalletConnector,
   MetamaskConnector,
   useEthers,
-} from "@usedapp/core";
-import { motion } from "framer-motion";
+} from '@usedapp/core';
+import { motion } from 'framer-motion';
 import {
   CoinbaseWalletLogoSVG,
   MetamaskWalletLogoSVG,
   WalletConnectLogoSVG,
-} from "../../assets";
-import { DeepLinks } from "../../constants";
+} from '../../assets';
+import { DeepLinks } from '../../constants';
 
 const MotionVStack = motion(VStack);
 
@@ -86,30 +86,29 @@ export const WalletConnectors = () => {
   };
   const handleConnectWalletConnect = async () => {
     try {
-      activateBrowserWallet({ type: "walletConnect" });
+      activateBrowserWallet({ type: 'walletConnect' });
     } catch (err) {
       console.log(err);
     }
   };
   return (
     <Wrap py={10} spacing={5} justify="center">
-      <Hide below="sm">
-        <WalletContainer
-          logo={MetamaskWalletLogoSVG}
-          name="Metamask"
-          onClick={handleConnectMetamask}
-        ></WalletContainer>
-        {/* <WalletContainer
+      <WalletContainer
+        logo={MetamaskWalletLogoSVG}
+        name="Metamask"
+        onClick={handleConnectMetamask}
+      ></WalletContainer>
+      {/* <WalletContainer
           logo={TrustWalletLogoSVG}
           name="Trustwallet"
           onClick={handleConnectTrustWallet}
         ></WalletContainer> */}
-        <WalletContainer
-          logo={CoinbaseWalletLogoSVG}
-          name="Coinbase"
-          onClick={handleConnectCoinbaseWallet}
-        ></WalletContainer>
-      </Hide>
+      <WalletContainer
+        logo={CoinbaseWalletLogoSVG}
+        name="Coinbase"
+        onClick={handleConnectCoinbaseWallet}
+      ></WalletContainer>
+
       <WalletContainer
         logo={WalletConnectLogoSVG}
         name="WalletConnect"
