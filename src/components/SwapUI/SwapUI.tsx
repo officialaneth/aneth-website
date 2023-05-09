@@ -289,7 +289,7 @@ export const SwapUI = () => {
           }}
         />
         <Tag p={3} borderRadius="xl" fontWeight={900} colorScheme="twitter">
-          1 {TokenSymbol} = {tokenPrice.toFixed(2)}{" "}
+          1 {TokenSymbol} = {tokenPrice.toFixed(5)}{" "}
           {currentNetwork?.ANUSD.Symbol}
         </Tag>
         <Button
