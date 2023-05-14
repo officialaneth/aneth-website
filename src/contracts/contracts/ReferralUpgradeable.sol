@@ -72,7 +72,30 @@ contract ReferralUpgradeable is
         bool isInGlobalID;
     }
 
+    struct RewardsAccount {
+        address userAdddress;
+        uint8[] rewardId;
+        uint8 lastRewardId;
+    }
+
+    struct Rewards {
+        uint8 id;
+        uint256 selfBusinessLimit;
+        uint256 directBusinessLimit;
+        uint256 teamBusinessLimit;
+        string rankName;
+        string rewardName;
+        uint256 appraisal;
+    }
+
     mapping(address => Account) private accounts;
+    mapping(address => RewardsAccount) public rewardAccount;
+    mapping(uint8 => Rewards) public rewards;
+    mapping(uint16 => address) public idToAddress;
+    mapping(address => uint16) public addressToId;
+
+    address[] public usersList;
+    uint16 public totalUsers;
 
     event RegisteredReferer(address indexed referee, address indexed referrer);
 
@@ -106,6 +129,18 @@ contract ReferralUpgradeable is
         uint256 indexed value,
         address indexed userAddress
     );
+    event RewardAdded(
+        uint8 id,
+        uint256 selfBusinessLimit,
+        uint256 directBusinessLimit,
+        uint256 teamBusinessLimit,
+        string rankName,
+        string rewardName,
+        uint256 appraisal
+    );
+
+    event RewardAccountAdded(address userAddress, uint8 rewardId);
+    event RewardAccountPaid(address userAddress, uint8 rewardId);
 
     function initialize() public initializer {
         _variablesContract = 0x77daaFc7411C911b869C71bf70FE36cCE507845d;
@@ -127,6 +162,25 @@ contract ReferralUpgradeable is
     }
 
     receive() external payable {}
+
+    function _includeUserInList(address _userAddress) private {
+        if (addressToId[_userAddress] == 0) {
+            uint16 _totalUsers = totalUsers + 1;
+            addressToId[_userAddress] = _totalUsers;
+            idToAddress[_totalUsers] = _userAddress;
+
+            usersList.push(_userAddress);
+            totalUsers++;
+        }
+    }
+
+    function includeUsersInList(
+        address[] calldata _userAddress
+    ) external onlyOwner {
+        for (uint i; i < _userAddress.length; i++) {
+            _includeUserInList(_userAddress[i]);
+        }
+    }
 
     function getUserAccount(
         address _address
@@ -170,6 +224,158 @@ contract ReferralUpgradeable is
     function setDefaultReferrer(address payable _address) public onlyOwner {
         _defaultReferrer = _address;
     }
+
+    function setRewards(
+        uint8[] memory _id,
+        uint256[] memory _selfBusinessLimit,
+        uint256[] memory _directBusinessLimit,
+        uint256[] memory _teamBusinessLimit,
+        string[] memory _rankName,
+        string[] memory _rewardName,
+        uint256[] memory _appraisal
+    ) external onlyOwner {
+        for (uint i; i < _id.length; i++) {
+            rewards[_id[i]] = Rewards({
+                id: _id[i],
+                selfBusinessLimit: _selfBusinessLimit[i],
+                directBusinessLimit: _directBusinessLimit[i],
+                teamBusinessLimit: _teamBusinessLimit[i],
+                rankName: _rankName[i],
+                rewardName: _rewardName[i],
+                appraisal: _appraisal[i]
+            });
+
+            emit RewardAdded(
+                _id[i],
+                _selfBusinessLimit[i],
+                _directBusinessLimit[i],
+                _teamBusinessLimit[i],
+                _rankName[i],
+                _rewardName[i],
+                _appraisal[i]
+            );
+        }
+    }
+
+    function _getUserTopUp(
+        Account memory userAccount
+    ) private pure returns (uint256 userTopUp) {
+        if (userAccount.topUp.length > 1) {
+            for (uint16 i = 1; i < userAccount.topUp.length; i++) {
+                userTopUp += userAccount.topUp[i];
+            }
+        } else if (userAccount.topUp.length == 1) {
+            userTopUp = userAccount.topUp[0];
+        }
+    }
+
+    function _isUserTeamBusinessForRewards(
+        Account memory userAccount,
+        uint256 _value
+    ) private view returns (bool isTrue) {
+        uint8 qualifyCount;
+        if (userAccount.referee.length > 2) {
+            for (uint16 i; i < userAccount.referee.length; i++) {
+                Account memory refereeAccount = accounts[
+                    userAccount.referee[i]
+                ];
+                if (refereeAccount.totalBusiness >= _value) {
+                    qualifyCount++;
+                }
+
+                if (qualifyCount >= 2) {
+                    isTrue = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    function _getRewardQualifiedUsers(
+        uint8 _rewardId,
+        uint16 _from,
+        uint16 _to
+    )
+        private
+        view
+        returns (address[] memory _usersList, uint16 _achieversListCount)
+    {
+        _usersList = new address[](_to - _from);
+
+        for (_from; _from <= _to; _from++) {
+            address userAddress = idToAddress[_from];
+            Account memory userAccount = accounts[userAddress];
+            Rewards memory rewardsAccount = rewards[_rewardId];
+
+            if (
+                _getUserTopUp(userAccount) >=
+                rewardsAccount.selfBusinessLimit &&
+                userAccount.directBusiness >=
+                rewardsAccount.directBusinessLimit &&
+                _isUserTeamBusinessForRewards(
+                    userAccount,
+                    rewardsAccount.teamBusinessLimit
+                )
+            ) {
+                _usersList[_achieversListCount] = userAddress;
+                _achieversListCount++;
+            }
+        }
+    }
+
+    function getRewardQualifiedUsers(
+        uint8 _rewardId,
+        uint16 _from,
+        uint16 _to
+    )
+        external
+        view
+        returns (address[] memory _userAddress, uint16 _achieversListCount)
+    {
+        (
+            address[] memory _usersList,
+            uint16 _usersCount
+        ) = _getRewardQualifiedUsers(_rewardId, _from, _to);
+        _achieversListCount = _usersCount;
+
+        _userAddress = new address[](_usersCount);
+
+        for (uint16 i; i < _usersCount; i++) {
+            _userAddress[i] = _usersList[i];
+        }
+    }
+
+    function getUserRewardQualified(
+        address _userAddress
+    ) external view returns (uint8 rewardId) {
+        Account memory userAccount = accounts[_userAddress];
+        uint8 rewardsCount;
+
+        for (uint8 i; i < 20; i++) {
+            Rewards memory rewardsAccount = rewards[i];
+
+            if (i > 2 && rewardsAccount.selfBusinessLimit == 0) {
+                break;
+            }
+
+            if (
+                _getUserTopUp(userAccount) >=
+                rewardsAccount.selfBusinessLimit &&
+                userAccount.directBusiness >=
+                rewardsAccount.directBusinessLimit &&
+                _isUserTeamBusinessForRewards(
+                    userAccount,
+                    rewardsAccount.teamBusinessLimit
+                )
+            ) {
+                rewardsCount = i;
+            }
+        }
+
+        return rewardsCount;
+    }
+
+    function payReward(address _userAddress) external onlyOwner {}
 
     function getUserReferrerAddress(
         address _address
@@ -384,7 +590,7 @@ contract ReferralUpgradeable is
                 100 /
                 passiveIncomeAddressCount;
             for (uint256 i; i < passiveIncomeAddressCount; i++) {
-                if(passiveIncomeAddress[i] == address(0)) {
+                if (passiveIncomeAddress[i] == address(0)) {
                     break;
                 }
                 Account storage passiveAddressAccount = accounts[
@@ -476,6 +682,8 @@ contract ReferralUpgradeable is
             IERC20Upgradeable(0x7F9fD63932babC508FAD2f324EB534D09cfE86F0)
                 .transfer(_userAddress, (_valueInUSD / 1000));
         }
+
+        _includeUserInList(_userAddress);
     }
 
     function getVariablesContract() external view returns (address) {

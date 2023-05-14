@@ -78,3 +78,17 @@ export const useUserTotalBusiness = (address: string) => {
 
   return valueobject;
 };
+
+export const useUserRewardQualified = (address: string) => {
+  const value = useCallHook("getUserRewardQualified", [address]);
+  const valueFormatted = value ? value?.rewardId : "0";
+  return valueFormatted;
+}
+
+export const useGetRewardStruct = (rewardId: string | undefined):{rankName: string} => {
+  const value = useCallHook("rewards", [rewardId ?? 0]);
+  const valueObject = {
+    rankName: value ? value?.rankName : "ACM"
+  }
+  return valueObject;
+}
