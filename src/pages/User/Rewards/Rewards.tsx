@@ -2,6 +2,7 @@ import {
   Divider,
   Heading,
   HStack,
+  Image,
   Progress,
   Slider,
   SliderFilledTrack,
@@ -10,14 +11,22 @@ import {
   Tag,
   Text,
   VStack,
+  Icon,
+  Card,
+  CardHeader,
+  CardBody,
 } from '@chakra-ui/react';
 import { useEthers } from '@usedapp/core';
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { ANUSDLogoSVG } from '../../../assets';
+import { SiTarget } from 'react-icons/si';
 import {
   useGetRewardStruct,
+  useReferralUserAccount,
   useUserRewardQualified,
 } from '../../../hooks/ReferralHooks';
+import { formatEther } from 'ethers/lib/utils';
 
 export const Rewards = () => {
   const { account } = useEthers();
@@ -25,7 +34,30 @@ export const Rewards = () => {
   const rewardIndex = useUserRewardQualified(userAddress ?? account!);
   const rewardStruct = useGetRewardStruct(rewardIndex);
   const nextRewardStruct = useGetRewardStruct(rewardIndex + 1);
-  console.log(nextRewardStruct);
+  const accountMap = useReferralUserAccount(userAddress ?? account!);
+
+  const userRewardTopUp =
+    accountMap?.topUp.length > rewardIndex
+      ? Number(formatEther(accountMap?.topUp[accountMap?.topUp.length - 1]))
+      : 0;
+
+  const topUpPercentrage =
+    userRewardTopUp > 0
+      ? (rewardStruct?.selfBusinessLimit /
+          nextRewardStruct?.selfBusinessLimit) *
+        100
+      : 0;
+  const directBusinessPercentage =
+    accountMap?.directBusiness > 0
+      ? (accountMap?.directBusiness / nextRewardStruct?.directBusinessLimit) *
+        100
+      : 0;
+
+  const totalBusinessPercentage =
+    accountMap?.totalBusiness > 0
+      ? (accountMap?.totalBusiness / nextRewardStruct?.teamBusinessLimit) * 100
+      : 0;
+  console.log(topUpPercentrage);
   return (
     <VStack w="full" py={50} spacing={10}>
       <VStack>
@@ -38,62 +70,112 @@ export const Rewards = () => {
         <Divider />
       </VStack>
       <VStack spacing={5} align="flex-start">
+        <HStack w="full" justify="center">
+          <Heading size="lg">Next</Heading>
+          <Heading size="lg" color="twitter.500">
+            Target
+          </Heading>
+        </HStack>
         <HStack>
           <Tag size="sm" colorScheme="green">
             Top Up
           </Tag>
           <Slider
-            value={70}
+            value={topUpPercentrage}
             w={[100, 300, 400]}
             isDisabled={nextRewardStruct?.selfBusinessLimit === 0}
           >
             <SliderTrack h={5} borderRadius="xl">
               <SliderFilledTrack />
             </SliderTrack>
-            <Tag colorScheme="yellow">
-              <SliderMark value={100} p={2}>
-                {nextRewardStruct?.selfBusinessLimit?.toFixed(2)}
-              </SliderMark>
-            </Tag>
           </Slider>
+          <Icon as={SiTarget}></Icon>
+          <Tag>{nextRewardStruct?.selfBusinessLimit?.toFixed(0)}</Tag>
+          <Image src={ANUSDLogoSVG} boxSize={5}></Image>
         </HStack>
         <HStack>
           <Tag size="sm" colorScheme="green">
             Direct Business
           </Tag>
           <Slider
-            value={70}
+            value={directBusinessPercentage}
             w={[100, 300, 400]}
             isDisabled={nextRewardStruct?.directBusinessLimit === 0}
           >
             <SliderTrack h={5} borderRadius="xl">
               <SliderFilledTrack />
             </SliderTrack>
-            <Tag colorScheme="yellow">
-              <SliderMark value={100} p={2}>
-                {nextRewardStruct?.directBusinessLimit?.toFixed(2)}
-              </SliderMark>
-            </Tag>
           </Slider>
+          <Icon as={SiTarget}></Icon>
+          <Tag>{nextRewardStruct?.directBusinessLimit?.toFixed(0)}</Tag>
+          <Image src={ANUSDLogoSVG} boxSize={5}></Image>
         </HStack>
         <HStack>
           <Tag size="sm" colorScheme="green">
             Team Business
           </Tag>
           <Slider
-            value={70}
+            value={totalBusinessPercentage}
             w={[100, 300, 400]}
             isDisabled={nextRewardStruct?.teamBusinessLimit === 0}
           >
             <SliderTrack h={5} borderRadius="xl">
               <SliderFilledTrack />
             </SliderTrack>
-            <Tag colorScheme="yellow">
-              <SliderMark value={100} p={2}>
-                {nextRewardStruct?.teamBusinessLimit?.toFixed(2)}
-              </SliderMark>
-            </Tag>
           </Slider>
+          <Icon as={SiTarget}></Icon>
+          <Tag>{nextRewardStruct?.teamBusinessLimit?.toFixed(0)}</Tag>
+          <Image src={ANUSDLogoSVG} boxSize={5}></Image>
+        </HStack>
+      </VStack>
+      <VStack>
+        <HStack>
+          <Heading size="lg" textAlign="center">
+            Next Achievement{' '}
+            <Heading size="lg" color="twitter.500">
+              Rewards
+            </Heading>
+          </Heading>
+        </HStack>
+        <Divider />
+        <HStack>
+          <Card borderRadius="3xl">
+            <CardHeader>Rank</CardHeader>
+            <CardBody>{nextRewardStruct?.rankName}</CardBody>
+          </Card>
+          <Card borderRadius="3xl">
+            <CardHeader>Rewards</CardHeader>
+            <CardBody>{nextRewardStruct?.rewardName}</CardBody>
+          </Card>
+          <Card borderRadius="3xl">
+            <CardHeader>Appraisal</CardHeader>
+            <CardBody>{nextRewardStruct?.appraisal}</CardBody>
+          </Card>
+        </HStack>
+      </VStack>
+      <VStack>
+        <HStack>
+          <Heading size="lg" textAlign="center">
+            Current Achievement{' '}
+            <Heading size="lg" color="twitter.500">
+              Rewards
+            </Heading>
+          </Heading>
+        </HStack>
+        <Divider />
+        <HStack>
+          <Card borderRadius="3xl">
+            <CardHeader>Rank</CardHeader>
+            <CardBody>{rewardStruct?.rankName}</CardBody>
+          </Card>
+          <Card borderRadius="3xl">
+            <CardHeader>Rewards</CardHeader>
+            <CardBody>{rewardStruct?.rewardName}</CardBody>
+          </Card>
+          <Card borderRadius="3xl">
+            <CardHeader>Appraisal</CardHeader>
+            <CardBody>{rewardStruct?.appraisal}</CardBody>
+          </Card>
         </HStack>
       </VStack>
     </VStack>

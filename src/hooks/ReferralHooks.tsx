@@ -28,6 +28,7 @@ export const useReferralUserAccount = (
   referrer: string;
   referee: string[] | [];
   team: string[] | [];
+  topUp: BigNumber[] | [];
   selfBusiness: number;
   directBusiness: number;
   totalBusiness: number;
@@ -42,6 +43,7 @@ export const useReferralUserAccount = (
     referrer: value ? value?.[0]?.referrer : AddressZero,
     referee: value ? value?.[0]?.referee : [],
     team: value ? value?.[0]?.team : [],
+    topUp: value ? value?.[0]?.topUp : [],
     selfBusiness: value ? Number(formatEther(value?.[0]?.selfBusiness)) : 0,
     directBusiness: value ? Number(formatEther(value?.[0]?.directBusiness)) : 0,
     totalBusiness: value ? Number(formatEther(value?.[0]?.totalBusiness)) : 0,
