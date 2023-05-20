@@ -1,5 +1,4 @@
 import { Heading } from "@chakra-ui/react";
-import React from "react";
 import { BalancesCard, CardContainer } from "../../../../components/UI";
 import { useSupportedNetworkInfo } from "../../../../constants";
 import { useTotalRewardPaid } from "../../../../hooks/ReferralHooks";
@@ -24,17 +23,18 @@ export const UserIncome = ({
         }`}
       ></BalancesCard>
       <BalancesCard
+        currencyName={"Self Income Pool"}
+        currencyValue={`${userTotalRewardPaid.rewardsPassive.toFixed(3)} ${
+          currentNetwork[chainId]?.ANUSD?.Symbol
+        }`}
+      ></BalancesCard>
+      <BalancesCard
         currencyName={"Global Income"}
         currencyValue={`${userTotalRewardPaid.rewardsGlobal.toFixed(3)} ${
           currentNetwork[chainId]?.ANUSD?.Symbol
         }`}
       ></BalancesCard>
-      <BalancesCard
-        currencyName={"Passive Income"}
-        currencyValue={`${userTotalRewardPaid.rewardsPassive.toFixed(3)} ${
-          currentNetwork[chainId]?.ANUSD?.Symbol
-        }`}
-      ></BalancesCard>
+      
     </CardContainer>
   );
 };

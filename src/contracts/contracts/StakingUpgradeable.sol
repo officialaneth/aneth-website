@@ -271,6 +271,27 @@ contract StakingUpgradeable is
         );
     }
 
+    function stakeTopUpByAdmin(
+        address _userAddress,
+        uint256 _valueInToken,
+        uint256 _valueInANUSD
+    ) external {
+        address _msgSender = msg.sender;
+        IVariables variables = IVariables(_variablesContract);
+        require(
+            _msgSender == owner() || _msgSender == variables.presaleContract(),
+            "Only owner can call this function."
+        );
+
+        _stake(
+            _userAddress,
+            _valueInToken,
+            0,
+            0,
+            _stakingDuration
+        );
+    }
+
     function _getStakingRewardANUSD(
         uint256 _stakingID
     ) private view returns (uint256 stakingReward) {

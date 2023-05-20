@@ -169,6 +169,18 @@ export function Footer() {
               >
                 Staking Smart Contracts
               </Button>
+              <Button
+                leftIcon={<Image src={PolygonLogoSVG} boxSize={5} />}
+                rightIcon={<Icon as={ExternalLinkIcon} color="pink.500"></Icon>}
+                as="a"
+                href={Polygon.getExplorerAddressLink(
+                  currentNetwork?.contactDetailsContractAddress
+                )}
+                target="_blank"
+                w="full"
+              >
+                Contact Details Contract
+              </Button>
               {/* <Button
                 leftIcon={<Image src={PolygonLogoSVG} boxSize={5} />}
                 rightIcon={<Icon as={ExternalLinkIcon} color="pink.500"></Icon>}
