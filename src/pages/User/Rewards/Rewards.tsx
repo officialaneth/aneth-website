@@ -149,7 +149,12 @@ export const Rewards = () => {
           </Card>
           <Card borderRadius="3xl">
             <CardHeader>Appraisal</CardHeader>
-            <CardBody>{nextRewardStruct?.appraisal}</CardBody>
+            <CardBody>
+              <HStack>
+                <Text>{nextRewardStruct?.appraisal}</Text>
+                <Image src={ANUSDLogoSVG} boxSize={5}></Image>
+              </HStack>
+            </CardBody>
           </Card>
         </HStack>
       </VStack>
@@ -174,7 +179,12 @@ export const Rewards = () => {
           </Card>
           <Card borderRadius="3xl">
             <CardHeader>Appraisal</CardHeader>
-            <CardBody>{rewardStruct?.appraisal}</CardBody>
+            <CardBody>
+              <HStack>
+                <Text>{rewardStruct?.appraisal}</Text>
+                <Image src={ANUSDLogoSVG} boxSize={5}></Image>
+              </HStack>
+            </CardBody>
           </Card>
         </HStack>
       </VStack>
