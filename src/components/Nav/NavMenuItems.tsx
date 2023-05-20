@@ -1,3 +1,4 @@
+import { BsFire } from "react-icons/bs";
 import { FaChartArea, FaPiggyBank, FaUsers } from "react-icons/fa";
 import { HiOutlineCube } from "react-icons/hi";
 import { TbArrowsDoubleNeSw } from "react-icons/tb";
@@ -22,5 +23,10 @@ export const navUser = [
     name: "Transfer Funds",
     link: "/user/transferFunds",
     icon: TbArrowsDoubleNeSw,
+  },
+  {
+    name: "Rewards",
+    link: "/user/rewards",
+    icon: BsFire,
   },
 ];

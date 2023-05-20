@@ -9,6 +9,7 @@ import {
   TransferFunds,
   User,
 } from "../pages/User";
+import { Rewards } from "../pages/User/Rewards/Rewards";
 import { ProtectedRoutes } from "./ProtectedRoutes";
 
 export const router = createHashRouter([
@@ -51,6 +52,14 @@ export const router = createHashRouter([
           {
             path: "transactions",
             element: <Transactions />,
+          },
+          {
+            path: "rewards",
+            element: <Rewards />,
+          },
+          {
+            path: "rewards/:userAddress",
+            element: <Rewards />,
           },
           {
             path: "transferFunds",

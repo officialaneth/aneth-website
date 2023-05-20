@@ -85,10 +85,23 @@ export const useUserRewardQualified = (address: string) => {
   return valueFormatted;
 }
 
-export const useGetRewardStruct = (rewardId: string | undefined):{rankName: string} => {
+export const useGetRewardStruct = (rewardId: string | undefined):{id: number,
+  selfBusinessLimit: number,
+  directBusinessLimit: number,
+  teamBusinessLimit: number,
+  rankName: string,
+  rewardName: string,
+  appraisal: number} => {
   const value = useCallHook("rewards", [rewardId ?? 0]);
   const valueObject = {
-    rankName: value ? value?.rankName : "ACM"
+    id: value ? value?.id : 0,
+    selfBusinessLimit: value ? Number(formatEther(value?.selfBusinessLimit)) : 0,
+    directBusinessLimit: value ? Number(formatEther(value?.directBusinessLimit)) : 0,
+    teamBusinessLimit: value ? Number(formatEther(value?.teamBusinessLimit)) : 0,
+    rankName: value ? value?.rankName : "ACM",
+    rewardName: value ? value?.rewardName : "",
+    appraisal: value ? Number(value?.appraisal) : 0,
+
   }
   return valueObject;
 }

@@ -19,7 +19,6 @@ export const User = () => {
   const { account } = useEthers();
   const rewardIndex = useUserRewardQualified(account!);
   const rewardStruct = useGetRewardStruct(rewardIndex);
-  console.log(rewardStruct);
 
   return (
     <Flex w="full" px={5} gap={5} pt={100}>
