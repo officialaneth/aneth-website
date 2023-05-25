@@ -113,3 +113,9 @@ export const useGetUserTotalRewardClaimedToken = (address: string) => {
   const valueFormatted = value ? Number(formatEther(value?.[0])) : 0;
   return valueFormatted;
 };
+
+export const useGetUserTotalPrincipalClaimed = (address: string) => {
+  const value = useCallHook("getUserTotalPrincipalClaimed", [address]);
+  const valueFormatted = value ? Number(formatEther(value?.[0])) : 0;
+  return valueFormatted;
+};

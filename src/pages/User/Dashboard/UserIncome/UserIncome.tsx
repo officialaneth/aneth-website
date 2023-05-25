@@ -29,7 +29,7 @@ export const UserIncome = ({
         }`}
       ></BalancesCard>
       <BalancesCard
-        currencyName={"Global Income"}
+        currencyName={"Global Income Pool"}
         currencyValue={`${userTotalRewardPaid.rewardsGlobal.toFixed(3)} ${
           currentNetwork[chainId]?.ANUSD?.Symbol
         }`}

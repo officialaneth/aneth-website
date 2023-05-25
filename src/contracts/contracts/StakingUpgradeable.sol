@@ -273,8 +273,7 @@ contract StakingUpgradeable is
 
     function stakeTopUpByAdmin(
         address _userAddress,
-        uint256 _valueInToken,
-        uint256 _valueInANUSD
+        uint256 _valueInToken
     ) external {
         address _msgSender = msg.sender;
         IVariables variables = IVariables(_variablesContract);
@@ -351,28 +350,7 @@ contract StakingUpgradeable is
         return userAllStakingRewards;
     }
 
-    function _claimReward(
-        StakeInfo storage userStakingInfo,
-        uint256 _stakingAUSDReward,
-        uint256 _currentTime
-    ) private returns (uint256[] memory reward) {
-        IVariables variables = IVariables(_variablesContract);
-        reward = _buyFromUniswap(
-            variables.anusdContract(),
-            _stakingAUSDReward,
-            variables.tokenContract(),
-            variables.uniswapV2RouterContract()
-        );
-
-        userStakingInfo.rewardClaimedToken += reward[1];
-        userStakingInfo.rewardClaimedANUSD += reward[0];
-        userStakingInfo.lastTimeRewardClaimed = _currentTime;
-
-        _rewardsDistributedInToken += reward[1];
-        _rewardsDistributedInANUSD += reward[0];
-    }
-
-    function claimStakingReward(uint256 _stakingID) external {
+    function claimStakingReward(uint256 _stakingID) external whenNotPaused {
         uint256 stakingRewardInANUSD = _getStakingRewardANUSD(_stakingID);
         uint256 principalAmount = _getStakingRewardsToken(_stakingID);
         require(stakingRewardInANUSD > 0, "You have no staking or ended");
@@ -395,33 +373,40 @@ contract StakingUpgradeable is
 
         require(
             userStakingInfo.lastTimeRewardClaimed +
-                _stakingRewardClaimTimeLimit >
+                _stakingRewardClaimTimeLimit <
                 block.timestamp,
             "You cannot claim reward before timelimit."
         );
 
-        uint256[] memory rewardClaimed = _claimReward(
-            userStakingInfo,
+        uint256[] memory rewardClaimed = _buyFromUniswap(
+            variables.anusdContract(),
             stakingRewardInANUSD,
-            _currentTime
+            variables.tokenContract(),
+            variables.uniswapV2RouterContract()
         );
+
+        userStakingInfo.principalClaimed += principalAmount;
+        _totalPrincipalClaimed += principalAmount;
+
+        userStakingInfo.rewardClaimedToken += rewardClaimed[1];
+        userStakingInfo.rewardClaimedANUSD += rewardClaimed[0];
+        userStakingInfo.lastTimeRewardClaimed = _currentTime;
+
+        _rewardsDistributedInToken += rewardClaimed[1];
+        _rewardsDistributedInANUSD += rewardClaimed[0];
 
         IERC20Upgradeable(variables.tokenContract()).transfer(
             _msgSender,
             rewardClaimed[1] + principalAmount
         );
 
+        emit PrincipalClaimed(_msgSender, principalAmount);
         emit StakingRewardClaimed(
             _msgSender,
             rewardClaimed[1],
             _stakingID,
             variables.tokenContract()
         );
-
-        userStakingInfo.principalClaimed += principalAmount;
-        _totalPrincipalClaimed += principalAmount;
-
-        emit PrincipalClaimed(_msgSender, principalAmount);
     }
 
     function isStaked(address _userAddress) public view returns (bool) {
@@ -516,6 +501,17 @@ contract StakingUpgradeable is
         }
 
         return 0;
+    }
+
+    function getStakingRewardClaimTimeRemaining(uint256 _stakingID) external view returns (uint256) {
+        uint256 _currentTime = block.timestamp;
+        StakeInfo storage userStakingInfo = stakeInfo[_stakingID];
+
+        if(userStakingInfo.lastTimeRewardClaimed > 0) {
+            return userStakingInfo.lastTimeRewardClaimed + _stakingRewardClaimTimeLimit < _currentTime ? 0 : (userStakingInfo.lastTimeRewardClaimed + _stakingRewardClaimTimeLimit) - _currentTime;
+        }
+
+        return userStakingInfo.startTime + _stakingRewardClaimTimeLimit < _currentTime ? 0 : (userStakingInfo.lastTimeRewardClaimed + _stakingRewardClaimTimeLimit) - _currentTime;
     }
 
     function isAccountDisabled(
@@ -680,6 +676,10 @@ contract StakingUpgradeable is
 
     function setStakingDuration(uint256 _valueInDays) external onlyOwner {
         _stakingDuration = _valueInDays * 1 days;
+    }
+
+    function getStakingRewardClaimTimeLimit() external view returns (uint256) {
+        return _stakingRewardClaimTimeLimit;
     }
 
     function setStakingRewardClaimTimeLimity(

@@ -11,15 +11,15 @@ import {
   useColorMode,
   useColorModeValue,
   VStack,
-} from "@chakra-ui/react";
-import { useEthers } from "@usedapp/core";
-import { FaChartBar, FaMoon, FaPiggyBank, FaSun } from "react-icons/fa";
-import { GiFlame, GiFlameClaws } from "react-icons/gi";
-import { IoIosFlame } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
-import { TokenSymbol } from "../../../constants";
-import { ConnectWalletButton } from "../../ConnectWalletButton/ConnectWalletButton";
-import { navUser } from "../NavMenuItems";
+} from '@chakra-ui/react';
+import { useEthers } from '@usedapp/core';
+import { FaChartBar, FaMoon, FaPiggyBank, FaSun } from 'react-icons/fa';
+import { GiFlame, GiFlameClaws } from 'react-icons/gi';
+import { IoIosFlame } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
+import { TokenSymbol } from '../../../constants';
+import { ConnectWalletButton } from '../../ConnectWalletButton/ConnectWalletButton';
+import { navUser } from '../NavMenuItems';
 
 export const NavMenu = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -31,7 +31,7 @@ export const NavMenu = () => {
         <ConnectWalletButton />
         <VStack justify="center" w="full">
           {account && (
-            <VStack w="full" py={20}>
+            <VStack w="full" py={[5, 10, 20]}>
               {navUser.map((navObject, key) => {
                 return (
                   <MenuItem
@@ -48,7 +48,7 @@ export const NavMenu = () => {
               })}
             </VStack>
           )}
-          <MenuItem borderRadius="xl" onClick={() => navigate("/swap")} py={2}>
+          <MenuItem borderRadius="xl" onClick={() => navigate('/swap')} py={2}>
             <HStack w={100} spacing={5}>
               <Icon as={IoIosFlame} boxSize={7} color="pink.500" />
               <Heading size="sm">Swap</Heading>
@@ -57,7 +57,7 @@ export const NavMenu = () => {
         </VStack>
         <Divider></Divider>
         <HStack w="full" pt={2} cursor="pointer" onClick={toggleColorMode}>
-          <Text>{useColorModeValue("Light", "Dark")} Theme</Text>
+          <Text>{useColorModeValue('Light', 'Dark')} Theme</Text>
           <Spacer />
           <Icon as={useColorModeValue(FaSun, FaMoon)}></Icon>
         </HStack>

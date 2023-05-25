@@ -28,7 +28,7 @@ export const StakingInfoContainer = ({
   const { chainId } = useEthers();
   const currentNetwork = useSupportedNetworkInfo[chainId!];
 
-  const { send, state, resetState } = useContractFunction(
+  const { send, state, resetState, events } = useContractFunction(
     currentNetwork?.stakingContractInterface,
     'claimStakingReward'
   );

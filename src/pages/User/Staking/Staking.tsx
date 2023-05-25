@@ -6,7 +6,9 @@ import { BalancesCard, CardContainer } from "../../../components/UI";
 import { TokenSymbol, useSupportedNetworkInfo } from "../../../constants";
 import {
   useGetAllStakingRewards,
+  useGetUserTotalPrincipalClaimed,
   useGetUserTotalRewardClaimedANUSD,
+  useGetUserTotalRewardClaimedToken,
   useGetUserTotalStakedValue,
   useStakingUserAccountMap,
 } from "../../../hooks/StakingHooks";
@@ -18,7 +20,8 @@ export const Staking = () => {
   const userAccountMapStaking = useStakingUserAccountMap(account!);
   const userTotalValueStaked = useGetUserTotalStakedValue(account!);
   const userTotalPendingRewards = useGetAllStakingRewards(account!);
-  const userTotalRewardClaimed = useGetUserTotalRewardClaimedANUSD(account!);
+  const userTotalRewardClaimedToken = useGetUserTotalRewardClaimedToken(account!);
+  const userTotalPrincipalAmountClaimed = useGetUserTotalPrincipalClaimed(account!);
   const navigate = useNavigate();
   return (
     <VStack w="full" spacing={10}>
@@ -43,27 +46,35 @@ export const Staking = () => {
               ></BalancesCard>
             </CardContainer>
             <CardContainer>
-              <Heading size="sm">Mining Bonus</Heading>
+              <Heading size="sm">Max Mining Bonus</Heading>
               <BalancesCard
-                currencyName={currentNetwork?.Token?.Symbol}
-                logo={currentNetwork?.Token?.Logo}
+                currencyName={currentNetwork?.ANUSD?.Symbol}
+                logo={currentNetwork?.ANUSD?.Logo}
                 currencyValue={userTotalValueStaked.anusd?.toFixed(3)}
               ></BalancesCard>
             </CardContainer>
             <CardContainer>
-              <Heading size="sm">Coins Released</Heading>
+              <Heading size="sm">Current Mining Reward</Heading>
               <BalancesCard
-                currencyName={currentNetwork?.Token?.Symbol}
-                logo={currentNetwork?.Token?.Logo}
+                currencyName={currentNetwork?.ANUSD?.Symbol}
+                logo={currentNetwork?.ANUSD?.Logo}
                 currencyValue={userTotalPendingRewards?.toFixed(5)}
               ></BalancesCard>
             </CardContainer>
             <CardContainer>
-              <Heading size="sm">Coins Claimed</Heading>
+              <Heading size="sm">Principal Claimed</Heading>
               <BalancesCard
                 currencyName={currentNetwork?.Token?.Symbol}
                 logo={currentNetwork?.Token?.Logo}
-                currencyValue={userTotalRewardClaimed?.toFixed(5)}
+                currencyValue={userTotalPrincipalAmountClaimed?.toFixed(5)}
+              ></BalancesCard>
+            </CardContainer>
+            <CardContainer>
+              <Heading size="sm">Mining Bonus Claimed</Heading>
+              <BalancesCard
+                currencyName={currentNetwork?.Token?.Symbol}
+                logo={currentNetwork?.Token?.Logo}
+                currencyValue={userTotalRewardClaimedToken?.toFixed(5)}
               ></BalancesCard>
             </CardContainer>
           </Wrap>
