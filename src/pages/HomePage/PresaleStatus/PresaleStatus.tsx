@@ -41,7 +41,7 @@ export const PresaleStatus = () => {
         <Heading>Presale has started</Heading>
         <Icon as={FcAreaChart} boxSize={10} color="pink.400"></Icon>
       </HStack>
-      <Counter timeinseconds={1688208584}></Counter>
+      <Counter timeinseconds={1}></Counter>
       <Wrap spacing={5} justify="center" p={2}>
         <CardContainer>
           <Image src={TokenLogo} boxSize={10}></Image>
@@ -65,9 +65,9 @@ export const PresaleStatus = () => {
           <Icon as={AiFillSchedule} boxSize={10}></Icon>
 
           <VStack spacing={0}>
-            <Text>Presale Ends In</Text>
+            <Text>Presale Ends With Sale of</Text>
             <Text fontSize="xl" fontWeight={900}>
-              {PresaleEndsIn}
+              6 Millions an.eth
             </Text>
           </VStack>
         </CardContainer>

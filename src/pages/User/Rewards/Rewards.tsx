@@ -17,7 +17,7 @@ import {
   CardBody,
 } from '@chakra-ui/react';
 import { useEthers } from '@usedapp/core';
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ANUSDLogoSVG } from '../../../assets';
 import { SiTarget } from 'react-icons/si';
@@ -57,7 +57,6 @@ export const Rewards = () => {
     accountMap?.totalBusiness > 0
       ? (accountMap?.totalBusiness / nextRewardStruct?.teamBusinessLimit) * 100
       : 0;
-  console.log(topUpPercentrage);
   return (
     <VStack w="full" py={50} spacing={10}>
       <VStack>

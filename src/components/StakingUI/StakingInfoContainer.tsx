@@ -6,10 +6,13 @@ import {
   HStack,
   Spacer,
   VStack,
-} from "@chakra-ui/react";
-import { useGetStakingReward, useStakeInfoMap } from "../../hooks/StakingHooks";
-import { Counter } from "../Counter";
-import { CardContainer } from "../UI";
+} from '@chakra-ui/react';
+import { useContractFunction, useEthers } from '@usedapp/core';
+import { useEffect } from 'react';
+import { useSupportedNetworkInfo } from '../../constants';
+import { useGetStakingReward, useStakeInfoMap } from '../../hooks/StakingHooks';
+import { Counter } from '../Counter';
+import { CardContainer } from '../UI';
 
 export const StakingInfoContainer = ({
   stakingID,
@@ -22,6 +25,24 @@ export const StakingInfoContainer = ({
 }) => {
   const stakeInfoMap = useStakeInfoMap(stakingID);
   const getStakingRewardByID = useGetStakingReward(stakingID);
+  const { chainId } = useEthers();
+  const currentNetwork = useSupportedNetworkInfo[chainId!];
+
+  const { send, state, resetState } = useContractFunction(
+    currentNetwork?.stakingContractInterface,
+    'claimStakingReward'
+  );
+
+  const handleTransaction = () => {
+    send(stakingID);
+  };
+
+  useEffect(() => {
+    if (state.status === 'Success') {
+      resetState();
+    }
+  },[state.status, resetState]);
+
   return (
     <CardContainer>
       <HStack w="full">
@@ -73,7 +94,13 @@ export const StakingInfoContainer = ({
           {stakeInfoMap?.rewardClaimedANUSD} {anusdSymbol}
         </Card>
         <Divider></Divider>
-        <Button w="full" h={14} borderRadius="xl" colorScheme="twitter">
+        <Button
+          w="full"
+          h={14}
+          borderRadius="xl"
+          colorScheme="twitter"
+          onClick={handleTransaction}
+        >
           Claim Reward
         </Button>
       </VStack>
