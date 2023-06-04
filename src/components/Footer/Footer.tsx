@@ -135,7 +135,7 @@ export function Footer() {
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Smart Contracts</ListHeader>
-            <VStack>
+            <VStack w="max-content">
               <Button
                 leftIcon={<Image src={PolygonLogoSVG} boxSize={5} />}
                 rightIcon={<Icon as={ExternalLinkIcon} color="pink.500"></Icon>}
@@ -144,6 +144,7 @@ export function Footer() {
                   currentNetwork?.Token.ContractAddress
                 )}
                 target="_blank"
+                w="full"
               >
                 an.eth
               </Button>
@@ -155,6 +156,7 @@ export function Footer() {
                   currentNetwork?.ANUSD.ContractAddress
                 )}
                 target="_blank"
+                w="full"
               >
                 an.usd
               </Button>
