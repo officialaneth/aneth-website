@@ -33,17 +33,17 @@ export const UserStaking = ({
         icon={FaPiggyBank}
       ></BalancesCard>
       <BalancesCard
-        currencyName={"Coins Realeased"}
+        currencyName={"Pending Mining Rewards"}
         currencyValue={`${userAllStakingRewards.toFixed(3)} ${
-          currentNetwork[chainId]?.Token?.Symbol
+          currentNetwork[chainId]?.ANUSD?.Symbol
         }`}
         icon={GiPayMoney}
       ></BalancesCard>
       <BalancesCard
-        currencyName={"Coins Claimed"}
+        currencyName={"Claimed Mining Rewards"}
         currencyValue={`${
           userTotalRewardClaimed > 0 ? userTotalRewardClaimed.toFixed(5) : "0"
-        } ${currentNetwork[chainId]?.Token?.Symbol}`}
+        } ${currentNetwork[chainId]?.ANUSD?.Symbol}`}
         icon={GiReceiveMoney}
       ></BalancesCard>
     </CardContainer>

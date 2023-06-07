@@ -1,9 +1,9 @@
-import { ChevronRightIcon } from "@chakra-ui/icons";
-import { Button, Divider, Heading, Text, VStack, Wrap } from "@chakra-ui/react";
-import { useEthers } from "@usedapp/core";
-import { useNavigate } from "react-router-dom";
-import { BalancesCard, CardContainer } from "../../../components/UI";
-import { TokenSymbol, useSupportedNetworkInfo } from "../../../constants";
+import { ChevronRightIcon } from '@chakra-ui/icons';
+import { Button, Divider, Heading, Text, VStack, Wrap } from '@chakra-ui/react';
+import { useEthers } from '@usedapp/core';
+import { useNavigate } from 'react-router-dom';
+import { BalancesCard, CardContainer } from '../../../components/UI';
+import { TokenSymbol, useSupportedNetworkInfo } from '../../../constants';
 import {
   useGetAllStakingRewards,
   useGetUserTotalPrincipalClaimed,
@@ -11,8 +11,8 @@ import {
   useGetUserTotalRewardClaimedToken,
   useGetUserTotalStakedValue,
   useStakingUserAccountMap,
-} from "../../../hooks/StakingHooks";
-import { StakingIDCard } from "./StakingIDCard/StakingIDCard";
+} from '../../../hooks/StakingHooks';
+import { StakingIDCard } from './StakingIDCard/StakingIDCard';
 
 export const Staking = () => {
   const { account, chainId } = useEthers();
@@ -20,8 +20,15 @@ export const Staking = () => {
   const userAccountMapStaking = useStakingUserAccountMap(account!);
   const userTotalValueStaked = useGetUserTotalStakedValue(account!);
   const userTotalPendingRewards = useGetAllStakingRewards(account!);
-  const userTotalRewardClaimedToken = useGetUserTotalRewardClaimedToken(account!);
-  const userTotalPrincipalAmountClaimed = useGetUserTotalPrincipalClaimed(account!);
+  const userTotalRewardClaimedToken = useGetUserTotalRewardClaimedToken(
+    account!
+  );
+  const userTotalRewardClaimedANUSD = useGetUserTotalRewardClaimedANUSD(
+    account!
+  );
+  const userTotalPrincipalAmountClaimed = useGetUserTotalPrincipalClaimed(
+    account!
+  );
   const navigate = useNavigate();
   return (
     <VStack w="full" spacing={10}>
@@ -32,7 +39,7 @@ export const Staking = () => {
             <CardContainer>
               <Heading size="sm">Total Minings</Heading>
               <BalancesCard
-                currencyName={"No of mining"}
+                currencyName={'No of mining'}
                 // logo={currentNetwork?.Token?.Logo}
                 currencyValue={userAccountMapStaking?.stakingIDs?.length.toString()}
               ></BalancesCard>
@@ -46,7 +53,17 @@ export const Staking = () => {
               ></BalancesCard>
             </CardContainer>
             <CardContainer>
-              <Heading size="sm">Max Mining Bonus</Heading>
+              <Heading size="sm">Remaining Value Locked</Heading>
+              <BalancesCard
+                currencyName={currentNetwork?.Token?.Symbol}
+                logo={currentNetwork?.Token?.Logo}
+                currencyValue={(
+                  userTotalValueStaked?.token - userTotalRewardClaimedToken
+                ).toFixed(5)}
+              ></BalancesCard>
+            </CardContainer>
+            <CardContainer>
+              <Heading size="sm">Total Max Mining Bonus</Heading>
               <BalancesCard
                 currencyName={currentNetwork?.ANUSD?.Symbol}
                 logo={currentNetwork?.ANUSD?.Logo}
@@ -54,7 +71,25 @@ export const Staking = () => {
               ></BalancesCard>
             </CardContainer>
             <CardContainer>
-              <Heading size="sm">Current Mining Reward</Heading>
+              <Heading size="sm">Mining Bonus Claimed</Heading>
+              <BalancesCard
+                currencyName={currentNetwork?.Token?.Symbol}
+                logo={currentNetwork?.Token?.Logo}
+                currencyValue={userTotalRewardClaimedToken?.toFixed(5)}
+              ></BalancesCard>
+            </CardContainer>
+            <CardContainer>
+              <Heading size="sm">Pending Max Mining Bonus</Heading>
+              <BalancesCard
+                currencyName={currentNetwork?.ANUSD?.Symbol}
+                logo={currentNetwork?.ANUSD?.Logo}
+                currencyValue={(
+                  userTotalValueStaked.anusd - userTotalRewardClaimedANUSD
+                )?.toFixed(5)}
+              ></BalancesCard>
+            </CardContainer>
+            <CardContainer>
+              <Heading size="sm">Pending Mining Rewards</Heading>
               <BalancesCard
                 currencyName={currentNetwork?.ANUSD?.Symbol}
                 logo={currentNetwork?.ANUSD?.Logo}
@@ -67,14 +102,6 @@ export const Staking = () => {
                 currencyName={currentNetwork?.Token?.Symbol}
                 logo={currentNetwork?.Token?.Logo}
                 currencyValue={userTotalPrincipalAmountClaimed?.toFixed(5)}
-              ></BalancesCard>
-            </CardContainer>
-            <CardContainer>
-              <Heading size="sm">Mining Bonus Claimed</Heading>
-              <BalancesCard
-                currencyName={currentNetwork?.Token?.Symbol}
-                logo={currentNetwork?.Token?.Logo}
-                currencyValue={userTotalRewardClaimedToken?.toFixed(5)}
               ></BalancesCard>
             </CardContainer>
           </Wrap>
@@ -91,7 +118,7 @@ export const Staking = () => {
           <Heading color="red">You have no mining yet.</Heading>
           <Text>Please buy some {TokenSymbol} be miner.</Text>
           <Button
-            onClick={() => navigate("/swap")}
+            onClick={() => navigate('/swap')}
             rightIcon={<ChevronRightIcon />}
             colorScheme="twitter"
           >

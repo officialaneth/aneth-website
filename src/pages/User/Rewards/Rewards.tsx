@@ -36,9 +36,11 @@ export const Rewards = () => {
   const nextRewardStruct = useGetRewardStruct(rewardIndex + 1);
   const accountMap = useReferralUserAccount(userAddress ?? account!);
 
+  console.log(accountMap)
+
   const userRewardTopUp =
     accountMap?.topUp.length > rewardIndex
-      ? Number(formatEther(accountMap?.topUp[accountMap?.topUp.length - 1]))
+      ? Number(formatEther(accountMap?.topUp[accountMap?.topUp.length - 2]))
       : 0;
 
   const topUpPercentrage =
@@ -160,7 +162,7 @@ export const Rewards = () => {
       <VStack>
         <HStack>
           <Heading size="lg" textAlign="center">
-            Current Achievement{' '}
+            Current Achieved{' '}
             <Heading size="lg" color="twitter.500">
               Rewards
             </Heading>

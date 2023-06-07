@@ -22,13 +22,13 @@ export const UserBusiness = ({
     <CardContainer>
       <Heading size="sm">Your Business</Heading>
       <BalancesCard
-        currencyName={'Direct Business'}
-        currencyValue={userTotalBusiness?.directBusiness.toFixed(3)}
+        currencyName={'Self Business'}
+        currencyValue={referralAccountMap?.selfBusiness?.toFixed(3)}
         logo={currentNetwork[chainId]?.ANUSD?.Logo}
       ></BalancesCard>
       <BalancesCard
-        currencyName={'Self Business'}
-        currencyValue={referralAccountMap?.selfBusiness?.toFixed(3)}
+        currencyName={'Direct Business'}
+        currencyValue={userTotalBusiness?.directBusiness.toFixed(3)}
         logo={currentNetwork[chainId]?.ANUSD?.Logo}
       ></BalancesCard>
       <BalancesCard
