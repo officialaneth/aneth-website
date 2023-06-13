@@ -65,7 +65,7 @@ export const TransferFundsUI = () => {
   };
 
   const handleTransfer = () => {
-    if (userInput?.valueInput > formatEther(selectedCoinBalance() ?? 0)) {
+    if (Number(userInput?.valueInput) > Number(formatEther(selectedCoinBalance() ?? 0))) {
       toast({
         title: "Error: Value greater then your balance.",
         description: "Please enter value less than your balance.",
