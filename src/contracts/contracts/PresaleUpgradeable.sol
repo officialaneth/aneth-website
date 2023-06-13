@@ -36,6 +36,8 @@ interface IVariables {
     function rewardContractOwner() external view returns (address);
 
     function adminFees() external view returns (uint256);
+
+    function isAdmin(address _address) external view returns (bool);
 }
 
 interface IStaking {
@@ -149,18 +151,8 @@ contract PresaleUpgradeable is
     address[] public admins;
 
     modifier onlyAdmin() {
-        for (uint8 i; i < admins.length; i++) {
-            if (msg.sender == admins[i]) {
-                _;
-                break;
-            } else if (i == admins.length -1) {
-                require(msg.sender == admins[i], "You are not admin");
-            }
-        }
-    }
-
-    function setAdmin(address _adminAddress) external onlyOwner {
-        admins.push(_adminAddress);
+        require(IVariables(_variableContract).isAdmin(msg.sender), "You are not admin");
+        _;
     }
 
     function _authorizeUpgrade(

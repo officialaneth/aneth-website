@@ -35,6 +35,10 @@ contract VariablesUpgradeable is
 
     uint256 private _adminFees;
 
+    mapping(address => bool) private _isAdmin;
+
+    address private _monthlyRewardsContract;
+
     function initialize() public initializer {
         _presaleContract = 0x5e8F3980E638fC5df657E33194cE428936d635a0;
         _referralContract = 0x58469D0d27aAE15cf611966b89E072E49d359097;
@@ -166,6 +170,24 @@ contract VariablesUpgradeable is
         if (_reward != address(0)) {
             _rewardContract = _reward;
         }
+    }
+
+    function isAdmin(address _address) external view returns (bool) {
+        return _isAdmin[_address];
+    }
+
+    function setAdmin(address _address, bool _status) external onlyOwner {
+        _isAdmin[_address] = _status;
+    }
+
+    function getMonthlyRewardsContract() external view returns (address) {
+        return _monthlyRewardsContract;
+    }
+
+    function setMonthlyRewardsContract(
+        address _contractAddress
+    ) external onlyOwner {
+        _monthlyRewardsContract = _contractAddress;
     }
 
     function _authorizeUpgrade(

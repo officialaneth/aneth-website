@@ -1,4 +1,4 @@
-import { ChevronRightIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon } from '@chakra-ui/icons';
 import {
   Button,
   Heading,
@@ -8,13 +8,13 @@ import {
   Text,
   VStack,
   Wrap,
-} from "@chakra-ui/react";
-import { AiFillSchedule } from "react-icons/ai";
-import { FcAreaChart } from "react-icons/fc";
-import { IoIosFlame } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
-import { Counter } from "../../../components";
-import { CardContainer } from "../../../components/UI";
+} from '@chakra-ui/react';
+import { AiFillSchedule } from 'react-icons/ai';
+import { FcAreaChart } from 'react-icons/fc';
+import { IoIosFlame } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
+import { Counter } from '../../../components';
+import { CardContainer } from '../../../components/UI';
 import {
   ANUSDLogo,
   DefaultChainId,
@@ -22,8 +22,8 @@ import {
   TokenLogo,
   TokenName,
   useSupportedNetworkInfo,
-} from "../../../constants";
-import { useUniswapTokenOut } from "../../../hooks/UniswapV2Hooks";
+} from '../../../constants';
+import { useUniswapTokenOut } from '../../../hooks/UniswapV2Hooks';
 
 export const PresaleStatus = () => {
   const currentNetwork = useSupportedNetworkInfo[DefaultChainId];
@@ -41,7 +41,7 @@ export const PresaleStatus = () => {
         <Heading>Presale has started</Heading>
         <Icon as={FcAreaChart} boxSize={10} color="pink.400"></Icon>
       </HStack>
-      <Counter timeinseconds={1}></Counter>
+      {/* <Counter timeinseconds={1}></Counter> */}
       <Wrap spacing={5} justify="center" p={2}>
         <CardContainer>
           <Image src={TokenLogo} boxSize={10}></Image>
@@ -84,7 +84,7 @@ export const PresaleStatus = () => {
       <Button
         colorScheme="twitter"
         size="lg"
-        onClick={() => navigate("swap")}
+        onClick={() => navigate('swap')}
         w={300}
         h={20}
         borderRadius="3xl"

@@ -26,6 +26,27 @@ interface IVariables {
     function tokenContract() external view returns (address);
 
     function anusdContract() external view returns (address);
+
+    function isAdmin(address _address) external view returns (bool);
+
+    function getMonthlyRewardsContract() external view returns (address);
+}
+
+interface IMonthlyRewards {
+    function updateSelfBusiness(
+        address _userAddress,
+        uint256 _selfBusiness
+    ) external;
+
+    function updateDirectBusiness(
+        address _userAddress,
+        uint256 _directBusiness
+    ) external;
+
+    function updateTeamBusiness(
+        address _userAddress,
+        uint256 _teamBusiness
+    ) external;
 }
 
 contract ReferralUpgradeable is
@@ -163,6 +184,14 @@ contract ReferralUpgradeable is
 
     receive() external payable {}
 
+    modifier onlyAdmin() {
+        require(
+            IVariables(_variablesContract).isAdmin(msg.sender),
+            "You are not admin"
+        );
+        _;
+    }
+
     function _includeUserInList(address _userAddress) private {
         if (addressToId[_userAddress] == 0) {
             uint16 _totalUsers = totalUsers + 1;
@@ -176,7 +205,7 @@ contract ReferralUpgradeable is
 
     function includeUsersInList(
         address[] calldata _userAddress
-    ) external onlyOwner {
+    ) external onlyAdmin {
         for (uint i; i < _userAddress.length; i++) {
             _includeUserInList(_userAddress[i]);
         }
@@ -210,18 +239,18 @@ contract ReferralUpgradeable is
 
     function setLevelDecimals(
         uint256 _value
-    ) external onlyOwner returns (bool) {
+    ) external onlyAdmin returns (bool) {
         _levelDecimals = _value;
         return true;
     }
 
     function setLevelRates(
         uint256[] calldata _valueInArray
-    ) external onlyOwner {
+    ) external onlyAdmin {
         _levelRates = _valueInArray;
     }
 
-    function setDefaultReferrer(address payable _address) public onlyOwner {
+    function setDefaultReferrer(address payable _address) public onlyAdmin {
         _defaultReferrer = _address;
     }
 
@@ -233,7 +262,7 @@ contract ReferralUpgradeable is
         string[] memory _rankName,
         string[] memory _rewardName,
         uint256[] memory _appraisal
-    ) external onlyOwner {
+    ) external onlyAdmin {
         for (uint i; i < _id.length; i++) {
             rewards[_id[i]] = Rewards({
                 id: _id[i],
@@ -375,7 +404,7 @@ contract ReferralUpgradeable is
         return rewardsCount;
     }
 
-    function payReward(address _userAddress) external onlyOwner {}
+    function payReward(address _userAddress) external onlyAdmin {}
 
     function getUserReferrerAddress(
         address _address
@@ -501,7 +530,7 @@ contract ReferralUpgradeable is
     function addReferrerAdmin(
         address[] calldata _userAddress,
         address[] calldata _referrerAddress
-    ) external onlyOwner {
+    ) external onlyAdmin {
         require(
             _userAddress.length == _referrerAddress.length,
             "Length is not equal please check."
@@ -521,12 +550,16 @@ contract ReferralUpgradeable is
         address _userAddress
     ) private {
         IVariables variables = IVariables(_variablesContract);
+        IMonthlyRewards monthlyRewardsInterface = IMonthlyRewards(
+            variables.getMonthlyRewardsContract()
+        );
 
         uint256[] memory levelRates = _levelRates;
 
         Account storage userAccount = accounts[_userAddress];
         userAccount.topUp.push(_valueInUSD);
         userAccount.selfBusiness += _valueInUSD;
+        monthlyRewardsInterface.updateSelfBusiness(_userAddress, _valueInUSD);
 
         address[] memory passiveIncomeAddress = new address[](
             _passiveIncomeLevels
@@ -550,8 +583,16 @@ contract ReferralUpgradeable is
                 uint256 c = (_valueInUSD * levelRates[i]) / 100;
                 if (i == 0) {
                     referrerAccount.directBusiness += _valueInUSD;
+                    monthlyRewardsInterface.updateDirectBusiness(
+                        referrer,
+                        _valueInUSD
+                    );
                 }
                 referrerAccount.totalBusiness += _valueInUSD;
+                monthlyRewardsInterface.updateTeamBusiness(
+                    referrer,
+                    _valueInUSD
+                );
                 referrerAccount.rewardsPaidReferral.push(c);
                 totalReferral += c;
 
@@ -690,37 +731,37 @@ contract ReferralUpgradeable is
         return _variablesContract;
     }
 
-    function setVariablesContract(address _contractAddress) external onlyOwner {
+    function setVariablesContract(address _contractAddress) external onlyAdmin {
         _variablesContract = _contractAddress;
     }
 
-    function pause() public onlyOwner {
+    function pause() public onlyAdmin {
         _pause();
     }
 
-    function unpause() public onlyOwner {
+    function unpause() public onlyAdmin {
         _unpause();
     }
 
     function _authorizeUpgrade(
         address newImplementation
-    ) internal override onlyOwner {}
+    ) internal override onlyAdmin {}
 
     function transferNative(
         address _address,
         uint256 _value
-    ) external onlyOwner {
+    ) external onlyAdmin {
         payable(_address).transfer(_value);
     }
 
-    function withdrawNative() external onlyOwner {
+    function withdrawNative() external onlyAdmin {
         payable(msg.sender).transfer(address(this).balance);
     }
 
     function withdrawtokens(
         address _tokenAddress,
         uint256 _value
-    ) external onlyOwner {
+    ) external onlyAdmin {
         IERC20Upgradeable(_tokenAddress).transfer(msg.sender, _value);
     }
 }
