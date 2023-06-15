@@ -1,32 +1,30 @@
 import {
+  Card,
+  CardBody,
+  CardHeader,
   Divider,
   Heading,
   HStack,
+  Icon,
   Image,
-  Progress,
   Slider,
   SliderFilledTrack,
-  SliderMark,
   SliderTrack,
   Tag,
   Text,
   VStack,
-  Icon,
-  Card,
-  CardHeader,
-  CardBody,
 } from '@chakra-ui/react';
 import { useEthers } from '@usedapp/core';
-import React, { useState } from 'react';
+import { formatEther } from 'ethers/lib/utils';
+import { SiTarget } from 'react-icons/si';
 import { useParams } from 'react-router-dom';
 import { ANUSDLogoSVG } from '../../../assets';
-import { SiTarget } from 'react-icons/si';
 import {
   useGetRewardStruct,
+  useGetUserTopUpForReward,
   useReferralUserAccount,
   useUserRewardQualified,
 } from '../../../hooks/ReferralHooks';
-import { formatEther } from 'ethers/lib/utils';
 
 export const Rewards = () => {
   const { account } = useEthers();
@@ -36,18 +34,12 @@ export const Rewards = () => {
   const nextRewardStruct = useGetRewardStruct(rewardIndex + 1);
   const accountMap = useReferralUserAccount(userAddress ?? account!);
 
-  console.log(accountMap)
-
-  const userRewardTopUp =
-    accountMap?.topUp.length > rewardIndex
-      ? Number(formatEther(accountMap?.topUp[accountMap?.topUp.length - 2]))
-      : 0;
-
+  
+  const userRewardTopUp = useGetUserTopUpForReward(account!);
+  
   const topUpPercentrage =
     userRewardTopUp > 0
-      ? (rewardStruct?.selfBusinessLimit /
-          nextRewardStruct?.selfBusinessLimit) *
-        100
+      ? (userRewardTopUp / nextRewardStruct?.selfBusinessLimit) * 100
       : 0;
   const directBusinessPercentage =
     accountMap?.directBusiness > 0
@@ -116,7 +108,7 @@ export const Rewards = () => {
             Team Business
           </Tag>
           <Slider
-            value={totalBusinessPercentage}
+            value={totalBusinessPercentage * 2}
             w={[100, 300, 400]}
             isDisabled={nextRewardStruct?.teamBusinessLimit === 0}
           >

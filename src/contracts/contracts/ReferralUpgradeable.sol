@@ -47,6 +47,8 @@ interface IMonthlyRewards {
         address _userAddress,
         uint256 _teamBusiness
     ) external;
+
+    function isPayMonthlyRewards() external view returns (bool);
 }
 
 contract ReferralUpgradeable is
@@ -289,13 +291,18 @@ contract ReferralUpgradeable is
     function _getUserTopUp(
         Account memory userAccount
     ) private pure returns (uint256 userTopUp) {
-        if (userAccount.topUp.length > 1) {
+        if (userAccount.topUp.length > 0) {
             for (uint16 i = 1; i < userAccount.topUp.length; i++) {
                 userTopUp += userAccount.topUp[i];
             }
-        } else if (userAccount.topUp.length == 1) {
-            userTopUp = userAccount.topUp[0];
         }
+    }
+
+    function getUserTopUpForRewards(
+        address _userAddress
+    ) external view returns (uint256) {
+        Account memory userAccount = accounts[_userAddress];
+        return _getUserTopUp(userAccount);
     }
 
     function _isUserTeamBusinessForRewards(
@@ -378,7 +385,6 @@ contract ReferralUpgradeable is
         address _userAddress
     ) external view returns (uint8 rewardId) {
         Account memory userAccount = accounts[_userAddress];
-        uint8 rewardsCount;
 
         for (uint8 i; i < 20; i++) {
             Rewards memory rewardsAccount = rewards[i];
@@ -397,14 +403,28 @@ contract ReferralUpgradeable is
                     rewardsAccount.teamBusinessLimit
                 )
             ) {
-                rewardsCount = i;
+                rewardId = i;
             }
         }
-
-        return rewardsCount;
     }
 
-    function payReward(address _userAddress) external onlyAdmin {}
+    function updateIfRewardPaidAdmin(
+        address _userAddress,
+        uint8 _rewardId
+    ) external onlyAdmin {
+        RewardsAccount storage userRewardAccount = rewardAccount[_userAddress];
+        if (userRewardAccount.userAdddress == address(0)) {
+            userRewardAccount.userAdddress = _userAddress;
+        }
+
+        userRewardAccount.rewardId.push(_rewardId);
+    }
+
+    function getUserRewardAccount(
+        address _userAddress
+    ) external view returns (RewardsAccount memory) {
+        return rewardAccount[_userAddress];
+    }
 
     function getUserReferrerAddress(
         address _address
@@ -550,16 +570,16 @@ contract ReferralUpgradeable is
         address _userAddress
     ) private {
         IVariables variables = IVariables(_variablesContract);
-        IMonthlyRewards monthlyRewardsInterface = IMonthlyRewards(
-            variables.getMonthlyRewardsContract()
-        );
+        // IMonthlyRewards monthlyRewardsInterface = IMonthlyRewards(
+        //     variables.getMonthlyRewardsContract()
+        // );
 
         uint256[] memory levelRates = _levelRates;
 
         Account storage userAccount = accounts[_userAddress];
         userAccount.topUp.push(_valueInUSD);
         userAccount.selfBusiness += _valueInUSD;
-        monthlyRewardsInterface.updateSelfBusiness(_userAddress, _valueInUSD);
+        // monthlyRewardsInterface.updateSelfBusiness(_userAddress, _valueInUSD);
 
         address[] memory passiveIncomeAddress = new address[](
             _passiveIncomeLevels
@@ -570,12 +590,11 @@ contract ReferralUpgradeable is
         address[] memory coreMembers = _coreMembers;
         uint256 coreMembersCount = coreMembers.length;
 
-        uint256 totalReferral;
+        // uint256 totalReferral;
 
         for (uint256 i; i < _passiveIncomeLevels; i++) {
-            address referrer = userAccount.referrer;
-            Account storage referrerAccount = accounts[referrer];
-            if (referrer == address(0)) {
+            Account storage referrerAccount = accounts[userAccount.referrer];
+            if (userAccount.referrer == address(0)) {
                 break;
             }
 
@@ -583,27 +602,30 @@ contract ReferralUpgradeable is
                 uint256 c = (_valueInUSD * levelRates[i]) / 100;
                 if (i == 0) {
                     referrerAccount.directBusiness += _valueInUSD;
-                    monthlyRewardsInterface.updateDirectBusiness(
-                        referrer,
-                        _valueInUSD
-                    );
+
+                    // monthlyRewardsInterface.updateDirectBusiness(
+                    //     userAccount.referrer,
+                    //     _valueInUSD
+                    // );
                 }
                 referrerAccount.totalBusiness += _valueInUSD;
-                monthlyRewardsInterface.updateTeamBusiness(
-                    referrer,
-                    _valueInUSD
-                );
+                // monthlyRewardsInterface.updateTeamBusiness(
+                //     userAccount.referrer,
+                //     _valueInUSD
+                // );
+
                 referrerAccount.rewardsPaidReferral.push(c);
-                totalReferral += c;
+                _totalReferralPaidANUSD += c;
+                // totalReferral += c;
 
                 IERC20Upgradeable(variables.anusdContract()).transfer(
-                    referrer,
+                    userAccount.referrer,
                     c
                 );
 
                 emit ReferralRewardPaid(
                     _userAddress,
-                    referrer,
+                    userAccount.referrer,
                     c,
                     i + 1,
                     "ANUSD"
@@ -611,17 +633,19 @@ contract ReferralUpgradeable is
 
                 if (!referrerAccount.isInGlobalID) {
                     if (referrerAccount.directBusiness > _globalBusinessValue) {
-                        _globalAddress.push(referrer);
+                        _globalAddress.push(userAccount.referrer);
                         referrerAccount.isInGlobalID = true;
-                        emit GlobalAddressAdded(referrer);
+                        emit GlobalAddressAdded(userAccount.referrer);
                     }
                 }
             }
 
             if (referrerAccount.directBusiness > _passiveBusinessValue) {
-                passiveIncomeAddress[passiveIncomeAddressCount] = referrer;
+                passiveIncomeAddress[passiveIncomeAddressCount] = userAccount.referrer;
                 passiveIncomeAddressCount++;
             }
+
+            
 
             userAccount = referrerAccount;
         }
@@ -687,7 +711,7 @@ contract ReferralUpgradeable is
             }
         }
 
-        _totalReferralPaidANUSD += totalReferral;
+        // _totalReferralPaidANUSD += totalReferral;
     }
 
     function payReferralANUSDAdmin(

@@ -85,6 +85,8 @@ contract MonthlyRewardsUpgradeable is
     address private _variablesContract;
     address[] private _users;
 
+    bool private _isPayRewards;
+
     mapping(uint8 => StructMonthlyRewards) private _monthlyRewards;
     mapping(address => StructAccountRewards) private _accounts;
 
@@ -298,6 +300,14 @@ contract MonthlyRewardsUpgradeable is
     {
         usersList = _users;
         usersCount = usersList.length;
+    }
+
+    function isPayMonthlyRewards() external view returns (bool) {
+        return _isPayRewards;
+    }
+
+    function setIsPayMonthlyRewards(bool _trueOrFalse) external onlyAdmins {
+        _isPayRewards = _trueOrFalse;
     }
 
     function pause() public onlyOwner {

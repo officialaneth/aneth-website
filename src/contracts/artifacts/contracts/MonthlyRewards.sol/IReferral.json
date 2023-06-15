@@ -1,0 +1,87 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IReferral",
+  "sourceName": "contracts/MonthlyRewards.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "getUserAccount",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "referrer",
+              "type": "address"
+            },
+            {
+              "internalType": "address[]",
+              "name": "referee",
+              "type": "address[]"
+            },
+            {
+              "internalType": "address[]",
+              "name": "team",
+              "type": "address[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "topUp",
+              "type": "uint256[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "selfBusiness",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "directBusiness",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalBusiness",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "rewardsPaidReferral",
+              "type": "uint256[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "rewardsPaidGlobal",
+              "type": "uint256[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "rewardPaidPassive",
+              "type": "uint256[]"
+            },
+            {
+              "internalType": "bool",
+              "name": "isInGlobalID",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct Account",
+          "name": "userAccount",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

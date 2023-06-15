@@ -1,7 +1,7 @@
-import { useCall, useEthers } from "@usedapp/core";
-import { BigNumber } from "ethers";
-import { formatEther } from "ethers/lib/utils";
-import { AddressZero, useSupportedNetworkInfo } from "../constants";
+import { useCall, useEthers } from '@usedapp/core';
+import { BigNumber } from 'ethers';
+import { formatEther } from 'ethers/lib/utils';
+import { AddressZero, useSupportedNetworkInfo } from '../constants';
 
 const useCallHook = (methodName: string, arg: any[]) => {
   const { chainId } = useEthers();
@@ -16,7 +16,7 @@ const useCallHook = (methodName: string, arg: any[]) => {
     ) ?? {};
 
   if (error) {
-    console.error("Staking Hooks", error.message);
+    console.error('Staking Hooks', error.message);
     return undefined;
   }
   return value;
@@ -38,7 +38,7 @@ export const useReferralUserAccount = (
   isInGlobalID: boolean;
   blockNumbers: BigNumber[] | [];
 } => {
-  const value = useCallHook("getUserAccount", [address]);
+  const value = useCallHook('getUserAccount', [address]);
   const valueObject = {
     referrer: value ? value?.[0]?.referrer : AddressZero,
     referee: value ? value?.[0]?.referee : [],
@@ -58,7 +58,7 @@ export const useReferralUserAccount = (
 };
 
 export const useTotalRewardPaid = (address: string) => {
-  const value = useCallHook("getUserTotalRewardPaid", [address]);
+  const value = useCallHook('getUserTotalRewardPaid', [address]);
   const valueObject = {
     rewardsAUSD: value ? Number(formatEther(value?.rewardsAUSD)) : 0,
     rewardsGlobal: value ? Number(formatEther(value?.rewardsGlobal)) : 0,
@@ -68,7 +68,7 @@ export const useTotalRewardPaid = (address: string) => {
 };
 
 export const useUserTotalBusiness = (address: string) => {
-  const value = useCallHook("getUserTotalBusiness", [address]);
+  const value = useCallHook('getUserTotalBusiness', [address]);
   const valueobject = {
     totalBusiness: value ? Number(formatEther(value?.totalBusiness)) : 0,
     directBusiness: value ? Number(formatEther(value?.directBusiness)) : 0,
@@ -82,28 +82,43 @@ export const useUserTotalBusiness = (address: string) => {
 };
 
 export const useUserRewardQualified = (address: string) => {
-  const value = useCallHook("getUserRewardQualified", [address]);
-  const valueFormatted = value ? value?.rewardId : "0";
+  const value = useCallHook('getUserRewardQualified', [address]);
+  const valueFormatted = value ? value?.rewardId : '0';
   return valueFormatted;
-}
+};
 
-export const useGetRewardStruct = (rewardId: string | undefined):{id: number,
-  selfBusinessLimit: number,
-  directBusinessLimit: number,
-  teamBusinessLimit: number,
-  rankName: string,
-  rewardName: string,
-  appraisal: number} => {
-  const value = useCallHook("rewards", [rewardId ?? 0]);
+export const useGetRewardStruct = (
+  rewardId: string | undefined
+): {
+  id: number;
+  selfBusinessLimit: number;
+  directBusinessLimit: number;
+  teamBusinessLimit: number;
+  rankName: string;
+  rewardName: string;
+  appraisal: number;
+} => {
+  const value = useCallHook('rewards', [rewardId ?? 0]);
   const valueObject = {
     id: value ? value?.id : 0,
-    selfBusinessLimit: value ? Number(formatEther(value?.selfBusinessLimit)) : 0,
-    directBusinessLimit: value ? Number(formatEther(value?.directBusinessLimit)) : 0,
-    teamBusinessLimit: value ? Number(formatEther(value?.teamBusinessLimit)) : 0,
-    rankName: value ? value?.rankName : "ACM",
-    rewardName: value ? value?.rewardName : "",
+    selfBusinessLimit: value
+      ? Number(formatEther(value?.selfBusinessLimit))
+      : 0,
+    directBusinessLimit: value
+      ? Number(formatEther(value?.directBusinessLimit))
+      : 0,
+    teamBusinessLimit: value
+      ? Number(formatEther(value?.teamBusinessLimit))
+      : 0,
+    rankName: value ? value?.rankName : 'ACM',
+    rewardName: value ? value?.rewardName : '',
     appraisal: value ? Number(value?.appraisal) : 0,
-
-  }
+  };
   return valueObject;
-}
+};
+
+export const useGetUserTopUpForReward = (address: string) => {
+  const value = useCallHook('getUserTopUpForRewards', [address])?.[0];
+  const valueFormatted = value ? Number(formatEther(value)) : 0;
+  return valueFormatted;
+};

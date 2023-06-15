@@ -1,16 +1,16 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IVariables",
-  "sourceName": "contracts/ReferralUpgradeable.sol",
+  "sourceName": "contracts/MonthlyRewards.sol",
   "abi": [
     {
       "inputs": [],
-      "name": "anusdContract",
+      "name": "adminFees",
       "outputs": [
         {
-          "internalType": "address",
+          "internalType": "uint256",
           "name": "",
-          "type": "address"
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -18,7 +18,7 @@
     },
     {
       "inputs": [],
-      "name": "getMonthlyRewardsContract",
+      "name": "anusdContract",
       "outputs": [
         {
           "internalType": "address",
@@ -50,7 +50,7 @@
     },
     {
       "inputs": [],
-      "name": "presaleContract",
+      "name": "referralContract",
       "outputs": [
         {
           "internalType": "address",
@@ -63,7 +63,20 @@
     },
     {
       "inputs": [],
-      "name": "referralContract",
+      "name": "rewardContract",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "rewardContractOwner",
       "outputs": [
         {
           "internalType": "address",
@@ -90,6 +103,45 @@
     {
       "inputs": [],
       "name": "tokenContract",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "tokenContractOwner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "uniswapV2RouterContract",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "usdtContract",
       "outputs": [
         {
           "internalType": "address",
