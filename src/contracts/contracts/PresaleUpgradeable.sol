@@ -150,10 +150,10 @@ contract PresaleUpgradeable is
 
     address[] public admins;
 
-    modifier onlyAdmin() {
-        require(IVariables(_variableContract).isAdmin(msg.sender), "You are not admin");
-        _;
-    }
+    // modifier onlyAdmin() {
+    //     require(IVariables(_variableContract).isAdmin(msg.sender), "You are not admin");
+    //     _;
+    // }
 
     function _authorizeUpgrade(
         address newImplementation
@@ -260,7 +260,11 @@ contract PresaleUpgradeable is
         address[] calldata _userAddress,
         address[] calldata _referrerAddress,
         uint256[] calldata _valueInUSDDecimals
-    ) external onlyAdmin {
+    ) external {
+        require(
+            IVariables(_variableContract).isAdmin(msg.sender),
+            "You are not admin"
+        );
         uint256 length = _userAddress.length;
         IVariables variables = IVariables(_variableContract);
 

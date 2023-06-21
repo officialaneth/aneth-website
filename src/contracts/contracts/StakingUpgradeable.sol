@@ -157,6 +157,8 @@ contract StakingUpgradeable is
         uint256 indexed stakingID
     );
 
+    uint8 private _stakingReleaseRewardRate;
+
     function initialize() public initializer {
         _variablesContract = 0x77daaFc7411C911b869C71bf70FE36cCE507845d;
         _minStakingValue = 10000000000000000000;
@@ -299,7 +301,7 @@ contract StakingUpgradeable is
         uint256 stakingTimePassed = currentTime - userStakingInfo.startTime;
 
         uint256 baseReward = ((userStakingInfo.valueInANUSD *
-            userStakingInfo.rewardRate) / 100) / userStakingInfo.duration;
+            _stakingReleaseRewardRate) / 100) / userStakingInfo.duration;
         stakingReward =
             baseReward *
             _min(stakingTimePassed, userStakingInfo.duration) -
@@ -718,6 +720,14 @@ contract StakingUpgradeable is
 
     //     return amounts[1];
     // }
+
+    function getStakingReleaseRewardRate() external view returns (uint8) {
+        return _stakingReleaseRewardRate;
+    }
+
+    function setStakingReleaseRewardRate(uint8 _valueInDecimals) external onlyOwner {
+        _stakingReleaseRewardRate = _valueInDecimals;
+    }
 
     function withdrawTokens(
         address _tokenAddress,

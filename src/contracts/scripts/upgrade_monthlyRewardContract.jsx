@@ -12,9 +12,9 @@ async function main() {
 
   console.log("Account balance:", formatedBalance.toString(), "ETH");
 
-  const TokenV2 = await ethers.getContractFactory("VariablesUpgradeable");
+  const TokenV2 = await ethers.getContractFactory("MonthlyRewardsUpgradeable");
   const mc = await upgrades.upgradeProxy(
-    "0x77daaFc7411C911b869C71bf70FE36cCE507845d",
+    "0x099A5e96606Ae3F8acfddF9FAB25B7b58E1Ee026",
     TokenV2,
     { gasPrice: gas }
   );

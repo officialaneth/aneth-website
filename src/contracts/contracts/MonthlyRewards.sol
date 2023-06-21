@@ -90,21 +90,49 @@ contract MonthlyRewardsUpgradeable is
     mapping(uint8 => StructMonthlyRewards) private _monthlyRewards;
     mapping(address => StructAccountRewards) private _accounts;
 
-    modifier onlyAdmins() {
-        require(
-            IVariables(_variablesContract).isAdmin(msg.sender),
-            "You are not admin"
-        );
-        _;
-    }
+    // modifier onlyAdmins() {
+    //     require(
+    //         IVariables(_variablesContract).isAdmin(msg.sender),
+    //         "You are not admin"
+    //     );
+    //     _;
+    // }
 
     function initialize() public initializer {
         _startDate = block.timestamp;
-        _duration = 30 days;
+        _duration = 31 days;
 
         __Pausable_init();
         __Ownable_init();
         __UUPSUpgradeable_init();
+    }
+
+    function getRewardsByID(
+        uint8 _id
+    ) external view returns (StructMonthlyRewards memory) {
+        return _monthlyRewards[_id];
+    }
+
+    function setMonthlyRewards(
+        uint8 _id,
+        uint256 _selfBusinessLimit,
+        uint256 _directBusinessLimit,
+        uint256 _teamBusinessLimit,
+        string memory _rewardName,
+        uint256 _appraisal,
+        uint256 _selfTopUpLimit,
+        uint256 _teamsToCount
+    ) external onlyOwner {
+        _monthlyRewards[_id] = StructMonthlyRewards({
+            id: _id,
+            selfBusinessLimit: _selfBusinessLimit,
+            directBusinessLimit: _directBusinessLimit,
+            teamBusinessLimit: _teamBusinessLimit,
+            rewardName: _rewardName,
+            appraisal: _appraisal,
+            selfTopUpLimit: _selfTopUpLimit,
+            teamsToCount: _teamsToCount
+        });
     }
 
     function getUserBusiness(
@@ -129,8 +157,12 @@ contract MonthlyRewardsUpgradeable is
     function updateSelfBusiness(
         address _userAddress,
         uint256 _selfBusiness
-    ) external onlyAdmins {
-        if (_startDate + _duration > block.timestamp) {
+    ) external {
+        require(
+            IVariables(_variablesContract).isAdmin(msg.sender),
+            "You are not admin"
+        );
+        if (_startDate + _duration > block.timestamp && _isPayRewards) {
             StructAccountRewards storage userRewardsAccount = _accounts[
                 _userAddress
             ];
@@ -145,8 +177,12 @@ contract MonthlyRewardsUpgradeable is
     function updateDirectBusiness(
         address _userAddress,
         uint256 _directBusiness
-    ) external onlyAdmins {
-        if (_startDate + _duration > block.timestamp) {
+    ) external {
+        require(
+            IVariables(_variablesContract).isAdmin(msg.sender),
+            "You are not admin"
+        );
+        if (_startDate + _duration > block.timestamp && _isPayRewards) {
             StructAccountRewards storage userRewardsAccount = _accounts[
                 _userAddress
             ];
@@ -161,8 +197,12 @@ contract MonthlyRewardsUpgradeable is
     function updateTeamBusiness(
         address _userAddress,
         uint256 _teamBusiness
-    ) external onlyAdmins {
-        if (_startDate + _duration > block.timestamp) {
+    ) external {
+        require(
+            IVariables(_variablesContract).isAdmin(msg.sender),
+            "You are not admin"
+        );
+        if (_startDate + _duration > block.timestamp && _isPayRewards) {
             StructAccountRewards storage userRewardsAccount = _accounts[
                 _userAddress
             ];
@@ -302,12 +342,40 @@ contract MonthlyRewardsUpgradeable is
         usersCount = usersList.length;
     }
 
-    function isPayMonthlyRewards() external view returns (bool) {
-        return _isPayRewards;
+    function getDefaults()
+        external
+        view
+        returns (
+            uint256 startTime,
+            uint256 duration,
+            bool isPayRewards,
+            address variablesContract
+        )
+    {
+        startTime = _startDate;
+        duration = _duration;
+        isPayRewards = _isPayRewards;
+        variablesContract = _variablesContract;
     }
 
-    function setIsPayMonthlyRewards(bool _trueOrFalse) external onlyAdmins {
+    function setIsPayMonthlyRewards(bool _trueOrFalse) external {
+        require(
+            IVariables(_variablesContract).isAdmin(msg.sender),
+            "You are not admin"
+        );
         _isPayRewards = _trueOrFalse;
+    }
+
+    function setVariablesContract(address _contractAddress) external onlyOwner {
+        _variablesContract = _contractAddress;
+    }
+
+    function setStartTime(uint256 _timeInEpoch) external onlyOwner {
+        _startDate = _timeInEpoch;
+    }
+
+    function setDuration(uint256 _days) external onlyOwner {
+        _duration = _days * 1 days;
     }
 
     function pause() public onlyOwner {
