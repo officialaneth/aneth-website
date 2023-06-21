@@ -38,6 +38,7 @@ contract VariablesUpgradeable is
     mapping(address => bool) private _isAdmin;
 
     address private _monthlyRewardsContract;
+    address[] public adminsList;
 
     function initialize() public initializer {
         _presaleContract = 0x5e8F3980E638fC5df657E33194cE428936d635a0;
@@ -172,17 +173,33 @@ contract VariablesUpgradeable is
         }
     }
 
+    function getAdminsList() external view returns (address[] memory) {
+        return adminsList;
+    }
+
     function isAdmin(address _address) external view returns (bool) {
         return _isAdmin[_address];
     }
 
     function setAdmin(address _address, bool _status) external onlyOwner {
         _isAdmin[_address] = _status;
+        address[] memory admins = adminsList;
+        uint8 adminsCount = uint8(adminsList.length);
+
+        for (uint8 i; i < adminsCount; i++) {
+            if (admins[i] == _address) {
+                break;
+            } else if (i == adminsCount - 1 && admins[i] != _address) {
+                adminsList.push(_address);
+            }
+        }
     }
 
     function getMonthlyRewardsContract() external view returns (address) {
         return _monthlyRewardsContract;
     }
+
+    
 
     function setMonthlyRewardsContract(
         address _contractAddress
