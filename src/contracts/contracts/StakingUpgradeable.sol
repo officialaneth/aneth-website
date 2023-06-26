@@ -284,13 +284,7 @@ contract StakingUpgradeable is
             "Only owner can call this function."
         );
 
-        _stake(
-            _userAddress,
-            _valueInToken,
-            0,
-            0,
-            _stakingDuration
-        );
+        _stake(_userAddress, _valueInToken, 0, 0, _stakingDuration);
     }
 
     function _getStakingRewardANUSD(
@@ -299,16 +293,13 @@ contract StakingUpgradeable is
         uint256 currentTime = block.timestamp;
         StakeInfo storage userStakingInfo = stakeInfo[_stakingID];
         uint256 stakingTimePassed = currentTime - userStakingInfo.startTime;
-
-        uint256 baseReward = ((userStakingInfo.valueInANUSD *
-            _stakingReleaseRewardRate) / 100) / userStakingInfo.duration;
         stakingReward =
-            baseReward *
+            (userStakingInfo.valueInANUSD / userStakingInfo.duration) *
             _min(stakingTimePassed, userStakingInfo.duration) -
             userStakingInfo.rewardClaimedANUSD;
-
-        return stakingReward;
     }
+
+    //in above line rewardClaimedToken is mistakely updated with rewardClaimedANUSD
 
     function _getStakingRewardsToken(
         uint256 _stakingID
@@ -324,8 +315,6 @@ contract StakingUpgradeable is
             baseReward *
             _min(stakingTimePassed, userStakingInfo.duration) -
             userStakingInfo.principalClaimed;
-
-        return stakingReward;
     }
 
     function getStakingReward(
@@ -505,15 +494,28 @@ contract StakingUpgradeable is
         return 0;
     }
 
-    function getStakingRewardClaimTimeRemaining(uint256 _stakingID) external view returns (uint256) {
+    function getStakingRewardClaimTimeRemaining(
+        uint256 _stakingID
+    ) external view returns (uint256) {
         uint256 _currentTime = block.timestamp;
         StakeInfo storage userStakingInfo = stakeInfo[_stakingID];
 
-        if(userStakingInfo.lastTimeRewardClaimed > 0) {
-            return userStakingInfo.lastTimeRewardClaimed + _stakingRewardClaimTimeLimit < _currentTime ? 0 : (userStakingInfo.lastTimeRewardClaimed + _stakingRewardClaimTimeLimit) - _currentTime;
+        if (userStakingInfo.lastTimeRewardClaimed > 0) {
+            return
+                userStakingInfo.lastTimeRewardClaimed +
+                    _stakingRewardClaimTimeLimit <
+                    _currentTime
+                    ? 0
+                    : (userStakingInfo.lastTimeRewardClaimed +
+                        _stakingRewardClaimTimeLimit) - _currentTime;
         }
 
-        return userStakingInfo.startTime + _stakingRewardClaimTimeLimit < _currentTime ? 0 : (userStakingInfo.lastTimeRewardClaimed + _stakingRewardClaimTimeLimit) - _currentTime;
+        return
+            userStakingInfo.startTime + _stakingRewardClaimTimeLimit <
+                _currentTime
+                ? 0
+                : (userStakingInfo.lastTimeRewardClaimed +
+                    _stakingRewardClaimTimeLimit) - _currentTime;
     }
 
     function isAccountDisabled(
@@ -725,7 +727,9 @@ contract StakingUpgradeable is
         return _stakingReleaseRewardRate;
     }
 
-    function setStakingReleaseRewardRate(uint8 _valueInDecimals) external onlyOwner {
+    function setStakingReleaseRewardRate(
+        uint8 _valueInDecimals
+    ) external onlyOwner {
         _stakingReleaseRewardRate = _valueInDecimals;
     }
 

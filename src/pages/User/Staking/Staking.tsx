@@ -1,7 +1,7 @@
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Button, Divider, Heading, Text, VStack, Wrap } from '@chakra-ui/react';
 import { useEthers } from '@usedapp/core';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BalancesCard, CardContainer } from '../../../components/UI';
 import { TokenSymbol, useSupportedNetworkInfo } from '../../../constants';
 import {
@@ -16,10 +16,11 @@ import { StakingIDCard } from './StakingIDCard/StakingIDCard';
 
 export const Staking = () => {
   const { account, chainId } = useEthers();
+  const { userAddress } = useParams();
   const currentNetwork = useSupportedNetworkInfo[chainId!];
-  const userAccountMapStaking = useStakingUserAccountMap(account!);
-  const userTotalValueStaked = useGetUserTotalStakedValue(account!);
-  const userTotalPendingRewards = useGetAllStakingRewards(account!);
+  const userAccountMapStaking = useStakingUserAccountMap(userAddress ?? account!);
+  const userTotalValueStaked = useGetUserTotalStakedValue(userAddress ?? account!);
+  // const userTotalPendingRewards = useGetAllStakingRewards(userAddress ?? account!);
   const userTotalRewardClaimedToken = useGetUserTotalRewardClaimedToken(
     account!
   );
@@ -90,11 +91,11 @@ export const Staking = () => {
             </CardContainer>
             <CardContainer>
               <Heading size="sm">Pending Mining Rewards</Heading>
-              <BalancesCard
+              {/* <BalancesCard
                 currencyName={currentNetwork?.ANUSD?.Symbol}
                 logo={currentNetwork?.ANUSD?.Logo}
                 currencyValue={userTotalPendingRewards?.toFixed(5)}
-              ></BalancesCard>
+              ></BalancesCard> */}
             </CardContainer>
             <CardContainer>
               <Heading size="sm">Principal Claimed</Heading>

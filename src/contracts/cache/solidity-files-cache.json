@@ -738,8 +738,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/VariablesUpgradeable.sol": {
-      "lastModificationDate": 1687232145087,
-      "contentHash": "1b961be44f40e7f70703ccd762acd513",
+      "lastModificationDate": 1687329497770,
+      "contentHash": "20047482bb6d0e860a9cbd27042ad90e",
       "sourceName": "contracts/VariablesUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -780,8 +780,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/StakingUpgradeable.sol": {
-      "lastModificationDate": 1687169829945,
-      "contentHash": "434db77e656b53068cb05279d65ea467",
+      "lastModificationDate": 1687767969992,
+      "contentHash": "81ceba471fd8ac8c46dfa1820b936b36",
       "sourceName": "contracts/StakingUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -1224,8 +1224,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/MonthlyRewards.sol": {
-      "lastModificationDate": 1687328876309,
-      "contentHash": "5a0ca592cfa91695ca9fa63ed91dd97b",
+      "lastModificationDate": 1687678933524,
+      "contentHash": "784622111d69fc7f21b32298cbe35882",
       "sourceName": "contracts/MonthlyRewards.sol",
       "solcConfig": {
         "version": "0.8.17",

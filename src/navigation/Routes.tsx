@@ -1,6 +1,6 @@
-import { createHashRouter } from "react-router-dom";
-import { App } from "../App";
-import { HomePage, SwapPage } from "../pages";
+import { createHashRouter } from 'react-router-dom';
+import { App } from '../App';
+import { HomePage, SwapPage } from '../pages';
 import {
   Dashboard,
   Staking,
@@ -8,13 +8,13 @@ import {
   Transactions,
   TransferFunds,
   User,
-} from "../pages/User";
-import { Rewards } from "../pages/User/Rewards/Rewards";
-import { ProtectedRoutes } from "./ProtectedRoutes";
+} from '../pages/User';
+import { Rewards } from '../pages/User/Rewards/Rewards';
+import { ProtectedRoutes } from './ProtectedRoutes';
 
 export const router = createHashRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
     children: [
       {
@@ -22,15 +22,15 @@ export const router = createHashRouter([
         element: <HomePage />,
       },
       {
-        path: "swap",
+        path: 'swap',
         element: <SwapPage />,
       },
       {
-        path: "swap/:referrerAddress",
+        path: 'swap/:referrerAddress',
         element: <SwapPage />,
       },
       {
-        path: "user",
+        path: 'user',
         element: (
           <ProtectedRoutes>
             <User />
@@ -42,27 +42,35 @@ export const router = createHashRouter([
             element: <Dashboard />,
           },
           {
-            path: "mining",
+            path: 'dashboard/:userAddress',
+            element: <Dashboard />,
+          },
+          {
+            path: 'mining',
             element: <Staking />,
           },
           {
-            path: "team",
+            path: 'mining/:userAddress',
+            element: <Staking />,
+          },
+          {
+            path: 'team',
             element: <Team />,
           },
           {
-            path: "transactions",
+            path: 'transactions',
             element: <Transactions />,
           },
           {
-            path: "rewards",
+            path: 'rewards',
             element: <Rewards />,
           },
           {
-            path: "rewards/:userAddress",
+            path: 'rewards/:userAddress',
             element: <Rewards />,
           },
           {
-            path: "transferFunds",
+            path: 'transferFunds',
             element: <TransferFunds />,
           },
         ],

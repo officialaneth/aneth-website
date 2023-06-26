@@ -16,7 +16,7 @@ const useCallHook = (methodName: string, arg: any[]) => {
     ) ?? {};
 
   if (error) {
-    console.error('Staking Hooks', error.message);
+    console.error('Referral Hooks', error.message);
     return undefined;
   }
   return value;

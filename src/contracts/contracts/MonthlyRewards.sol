@@ -107,6 +107,14 @@ contract MonthlyRewardsUpgradeable is
         __UUPSUpgradeable_init();
     }
 
+    function getRewardsIDsCount() external view returns (uint8 rewardIDsCount) {
+        for (uint8 i; i < 10; i++) {
+            if (i > 0 && _monthlyRewards[i].selfBusinessLimit > 0) {
+                rewardIDsCount = i;
+            }
+        }
+    }
+
     function getRewardsByID(
         uint8 _id
     ) external view returns (StructMonthlyRewards memory) {
@@ -224,41 +232,48 @@ contract MonthlyRewardsUpgradeable is
         Account memory userAccount,
         uint256 _value
     ) private view returns (bool isTrue) {
-        uint8 qualifyCount;
+        uint256 totalBusiness;
+        uint256 maxTotalBusiness;
         if (userAccount.referee.length > 2) {
             for (uint16 i; i < userAccount.referee.length; i++) {
                 StructAccountRewards memory refereeRewardsAccount = _accounts[
                     userAccount.referee[i]
                 ];
 
-                if (refereeRewardsAccount.teamBusiness >= _value) {
-                    qualifyCount++;
-                }
+                totalBusiness += refereeRewardsAccount.teamBusiness;
 
-                if (qualifyCount >= 2) {
-                    isTrue = true;
-                    break;
+                if (refereeRewardsAccount.teamBusiness > maxTotalBusiness) {
+                    maxTotalBusiness = refereeRewardsAccount.teamBusiness;
                 }
+            }
+
+            if (
+                maxTotalBusiness >= _value &&
+                (totalBusiness - maxTotalBusiness) >= _value
+            ) {
+                isTrue = true;
             }
         }
     }
 
     function getUserRewardQualified(
         address _address
-    ) external view returns (uint8 rewardId, uint256 valueToTopUp) {
+    ) external view returns (uint8 rewardId) {
         Account memory userAccount = IReferral(
             IVariables(_variablesContract).referralContract()
         ).getUserAccount(_address);
 
         StructAccountRewards memory userRewardsAccount = _accounts[_address];
 
-        for (uint8 i; i < 20; i++) {
+        for (uint8 i; i < 10; i++) {
             StructMonthlyRewards memory rewardsAccount = _monthlyRewards[i];
 
-            if (i > 2 && rewardsAccount.selfBusinessLimit == 0) {
+            if (i > 1 && rewardsAccount.selfBusinessLimit == 0) {
                 break;
             }
             if (
+                userRewardsAccount.selfBusiness >=
+                rewardsAccount.selfBusinessLimit &&
                 userRewardsAccount.directBusiness >=
                 rewardsAccount.directBusinessLimit &&
                 _isUserTeamBusinessForRewards(
@@ -267,7 +282,6 @@ contract MonthlyRewardsUpgradeable is
                 )
             ) {
                 rewardId = i;
-                valueToTopUp += rewardsAccount.selfTopUpLimit;
             }
         }
     }
