@@ -10,7 +10,7 @@ export const DappConfig: Config = {
   readOnlyUrls: {
     [BSCTestnet?.chainId]: "https://data-seed-prebsc-1-s1.binance.org:8545/",
     [Polygon.chainId]: getDefaultProvider(
-      "https://rpc.ankr.com/polygon/116f86c5aa8f660de1bcde9bccdb9bbf0e0261f3551777d1231e88d124612e8f"
+      "https://polygon-mainnet.public.blastapi.io"
     ),
   },
   networks: [BSCTestnet, Polygon],
@@ -18,7 +18,7 @@ export const DappConfig: Config = {
     walletConnect: new WalletConnectConnector({
       rpc: {
         97: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-        [Polygon.chainId]: "https://rpc.ankr.com/polygon/116f86c5aa8f660de1bcde9bccdb9bbf0e0261f3551777d1231e88d124612e8f",
+        [Polygon.chainId]: "https://polygon-mainnet.public.blastapi.io",
       },
       qrcodeModalOptions: {
         desktopLinks: [
