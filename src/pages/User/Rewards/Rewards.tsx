@@ -266,6 +266,7 @@ export const Rewards = () => {
           </Tag>
           <Image src={ANUSDLogoSVG} boxSize={5}></Image>
         </HStack>
+        <Heading size="sm">Self Business: {userTotalMonthlyBusiness?.selfBusiness} ANUSD</Heading>
         <HStack>
           <Tag size="sm" colorScheme="green">
             Direct Business
@@ -281,6 +282,7 @@ export const Rewards = () => {
           </Tag>
           <Image src={ANUSDLogoSVG} boxSize={5}></Image>
         </HStack>
+        <Heading size="sm">Direct Business: {userTotalMonthlyBusiness?.directBusiness} ANUSD</Heading>
         <HStack>
           <Tag size="sm" colorScheme="green">
             Team Business
@@ -300,6 +302,7 @@ export const Rewards = () => {
           </Tag>
           <Image src={ANUSDLogoSVG} boxSize={5}></Image>
         </HStack>
+        <Heading size="sm">Team Business: {userTotalMonthlyBusiness?.teamBusiness} ANUSD</Heading>
       </VStack>
       <VStack>
         <HStack>
