@@ -56,3 +56,8 @@ export const useGetUserRewardQualified = (userAddress: string) => {
   const value = useCallHook('getUserRewardQualified', [userAddress])?.[0];
   return value ? Number(value) : 0;
 };
+
+export const useGetMonthlyRewardsDefaults = () => {
+  const value = useCallHook("getDefaults", []);
+  return value;
+}

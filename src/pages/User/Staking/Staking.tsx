@@ -20,7 +20,7 @@ export const Staking = () => {
   const currentNetwork = useSupportedNetworkInfo[chainId!];
   const userAccountMapStaking = useStakingUserAccountMap(userAddress ?? account!);
   const userTotalValueStaked = useGetUserTotalStakedValue(userAddress ?? account!);
-  // const userTotalPendingRewards = useGetAllStakingRewards(userAddress ?? account!);
+  const userTotalPendingRewards = useGetAllStakingRewards(userAddress ?? account!);
   const userTotalRewardClaimedToken = useGetUserTotalRewardClaimedToken(
     account!
   );
@@ -91,11 +91,11 @@ export const Staking = () => {
             </CardContainer>
             <CardContainer>
               <Heading size="sm">Pending Mining Rewards</Heading>
-              {/* <BalancesCard
+              <BalancesCard
                 currencyName={currentNetwork?.ANUSD?.Symbol}
                 logo={currentNetwork?.ANUSD?.Logo}
                 currencyValue={userTotalPendingRewards?.toFixed(5)}
-              ></BalancesCard> */}
+              ></BalancesCard>
             </CardContainer>
             <CardContainer>
               <Heading size="sm">Principal Claimed</Heading>

@@ -20,6 +20,7 @@ import { useParams } from 'react-router-dom';
 import { ANUSDLogoSVG } from '../../../assets';
 import {
   useGetMonthlyRewardById,
+  useGetMonthlyRewardsDefaults,
   useGetUserMonthlyBusiness,
   useGetUserRewardQualified,
 } from '../../../hooks/MonthlyRewardsHooks';
@@ -91,7 +92,9 @@ export const Rewards = () => {
         100
       : 0;
 
-  console.log(monthlyRewardObjectByID);
+  const monthlyDefault = useGetMonthlyRewardsDefaults();
+
+  console.log(monthlyDefault);
   return (
     <VStack w="full" py={50} spacing={10}>
       <VStack>
@@ -266,7 +269,9 @@ export const Rewards = () => {
           </Tag>
           <Image src={ANUSDLogoSVG} boxSize={5}></Image>
         </HStack>
-        <Heading size="sm">Self Business: {userTotalMonthlyBusiness?.selfBusiness} ANUSD</Heading>
+        <Heading size="sm">
+          Self Business: {userTotalMonthlyBusiness?.selfBusiness} ANUSD
+        </Heading>
         <HStack>
           <Tag size="sm" colorScheme="green">
             Direct Business
@@ -282,7 +287,9 @@ export const Rewards = () => {
           </Tag>
           <Image src={ANUSDLogoSVG} boxSize={5}></Image>
         </HStack>
-        <Heading size="sm">Direct Business: {userTotalMonthlyBusiness?.directBusiness} ANUSD</Heading>
+        <Heading size="sm">
+          Direct Business: {userTotalMonthlyBusiness?.directBusiness} ANUSD
+        </Heading>
         <HStack>
           <Tag size="sm" colorScheme="green">
             Team Business
@@ -298,11 +305,15 @@ export const Rewards = () => {
           </Slider>
           <Icon as={SiTarget}></Icon>
           <Tag>
-            {Number(nextMonthlyRewardObjectByID?.teamBusinessLimit * 2)?.toFixed(0)}
+            {Number(
+              nextMonthlyRewardObjectByID?.teamBusinessLimit * 2
+            )?.toFixed(0)}
           </Tag>
           <Image src={ANUSDLogoSVG} boxSize={5}></Image>
         </HStack>
-        <Heading size="sm">Team Business: {userTotalMonthlyBusiness?.teamBusiness} ANUSD</Heading>
+        <Heading size="sm">
+          Team Business: {userTotalMonthlyBusiness?.teamBusiness} ANUSD
+        </Heading>
       </VStack>
       <VStack>
         <HStack>
