@@ -39,7 +39,7 @@ export const NavMenu = () => {
                     borderRadius="xl"
                     onClick={() =>
                       navigate(
-                        userAddress
+                        !userAddress
                           ? `${navObject?.link}`
                           : `${navObject?.link}/${userAddress}`
                       )
