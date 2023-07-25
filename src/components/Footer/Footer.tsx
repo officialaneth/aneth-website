@@ -198,6 +198,17 @@ export function Footer() {
                 rightIcon={<Icon as={ExternalLinkIcon} color="pink.500"></Icon>}
                 as="a"
                 href={Polygon.getExplorerAddressLink(
+                  currentNetwork?.variablesContract
+                )}
+                target="_blank"
+              >
+                Variables Smart Contracts
+              </Button>
+              <Button
+                leftIcon={<Image src={PolygonLogoSVG} boxSize={5} />}
+                rightIcon={<Icon as={ExternalLinkIcon} color="pink.500"></Icon>}
+                as="a"
+                href={Polygon.getExplorerAddressLink(
                   currentNetwork?.contactDetailsContractAddress
                 )}
                 target="_blank"
