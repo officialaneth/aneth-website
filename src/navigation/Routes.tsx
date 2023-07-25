@@ -58,6 +58,10 @@ export const router = createHashRouter([
             element: <Team />,
           },
           {
+            path: 'team/:userAddress',
+            element: <Team />,
+          },
+          {
             path: 'transactions',
             element: <Transactions />,
           },

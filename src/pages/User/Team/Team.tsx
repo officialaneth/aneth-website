@@ -8,33 +8,35 @@ import {
   useColorModeValue,
   VStack,
   Wrap,
-} from "@chakra-ui/react";
-import { useEthers } from "@usedapp/core";
-import { motion } from "framer-motion";
-import { AiTwotoneShop } from "react-icons/ai";
-import { BsEmojiSunglassesFill } from "react-icons/bs";
+} from '@chakra-ui/react';
+import { useEthers } from '@usedapp/core';
+import { motion } from 'framer-motion';
+import { AiTwotoneShop } from 'react-icons/ai';
+import { BsEmojiSunglassesFill } from 'react-icons/bs';
 import {
   FaArrowDown,
   FaCartArrowDown,
   FaUserAstronaut,
   FaUserFriends,
   FaUsers,
-} from "react-icons/fa";
-import { GiPayMoney, GiReceiveMoney } from "react-icons/gi";
-import { CardContainer } from "../../../components/UI";
-import { UserRefereeCard } from "../../../components/UI/UserRefereeCard";
+} from 'react-icons/fa';
+import { GiPayMoney, GiReceiveMoney } from 'react-icons/gi';
+import { useParams } from 'react-router-dom';
+import { CardContainer } from '../../../components/UI';
+import { UserRefereeCard } from '../../../components/UI/UserRefereeCard';
 import {
   useReferralUserAccount,
   useUserTotalBusiness,
-} from "../../../hooks/ReferralHooks";
+} from '../../../hooks/ReferralHooks';
 
 const MotionIcon = motion(Icon);
 const MotionCard = motion(Card);
 
 export const Team = () => {
   const { account, chainId } = useEthers();
-  const userAccount = useReferralUserAccount(account!);
-  const userTotalBusiness = useUserTotalBusiness(account!);
+  const { userAddress } = useParams();
+  const userAccount = useReferralUserAccount(userAddress ?? account!);
+  const userTotalBusiness = useUserTotalBusiness(userAddress ?? account!);
   return (
     <VStack w="full" p={10} spacing={5}>
       <Wrap spacing={10} p={2} justify="center">
@@ -103,19 +105,19 @@ export const Team = () => {
       <CardContainer>
         <MotionCard
           w="full"
-          bgColor={useColorModeValue("gray.50", "whiteAlpha.200")}
+          bgColor={useColorModeValue('gray.50', 'whiteAlpha.200')}
           borderRadius="50px"
           p={3}
           whileHover={{
-            borderRadius: "75px",
+            borderRadius: '75px',
             scale: 0.99,
           }}
           whileTap={{
-            borderRadius: "75px",
+            borderRadius: '75px',
             scale: 0.99,
           }}
           transition={{
-            type: "spring",
+            type: 'spring',
             stiffness: 700,
           }}
         >
@@ -153,19 +155,19 @@ export const Team = () => {
       <CardContainer>
         <MotionCard
           w="full"
-          bgColor={useColorModeValue("gray.50", "whiteAlpha.200")}
+          bgColor={useColorModeValue('gray.50', 'whiteAlpha.200')}
           borderRadius="50px"
           p={3}
           whileHover={{
-            borderRadius: "75px",
+            borderRadius: '75px',
             scale: 0.99,
           }}
           whileTap={{
-            borderRadius: "75px",
+            borderRadius: '75px',
             scale: 0.99,
           }}
           transition={{
-            type: "spring",
+            type: 'spring',
             stiffness: 700,
           }}
         >

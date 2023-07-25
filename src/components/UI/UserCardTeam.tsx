@@ -10,11 +10,13 @@ import {
   CardFooter,
   Box,
   Tooltip,
+  Button,
 } from "@chakra-ui/react";
 import { shortenAddress } from "@usedapp/core";
 import React from "react";
 import { IconType } from "react-icons";
 import { FaUserGraduate } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { UserAddressActionButton } from "./UserAddressActionButton";
 
 export const UserCardTeam = ({
@@ -46,6 +48,7 @@ export const UserCardTeam = ({
             <Heading size="sm">{shortenAddress(address!)}</Heading>
           </Tooltip>
           <UserAddressActionButton address={address}></UserAddressActionButton>
+          <Button as={Link} to={`${address}`}>Open Account</Button>
         </VStack>
       </CardBody>
     </Card>

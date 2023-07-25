@@ -12,15 +12,15 @@ import {
   Icon,
   Text,
   Spacer,
-} from "@chakra-ui/react";
-import { shortenAddress, useEthers } from "@usedapp/core";
-import { motion, MotionProps } from "framer-motion";
-import { useLocation, useNavigate } from "react-router-dom";
-import { ColorModeSwitcher } from "../ColorModeSwitcher";
-import { navUser } from "./NavMenuItems";
-import { AiOutlineLogout } from "react-icons/ai";
-import { IconType } from "react-icons";
-import { UserAddressActionButton } from "../UI/UserAddressActionButton";
+} from '@chakra-ui/react';
+import { shortenAddress, useEthers } from '@usedapp/core';
+import { motion, MotionProps } from 'framer-motion';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { ColorModeSwitcher } from '../ColorModeSwitcher';
+import { navUser } from './NavMenuItems';
+import { AiOutlineLogout } from 'react-icons/ai';
+import { IconType } from 'react-icons';
+import { UserAddressActionButton } from '../UI/UserAddressActionButton';
 
 const MotionTag = motion(Tag);
 
@@ -28,12 +28,13 @@ export const NavUser = () => {
   const { account, deactivate } = useEthers();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { userAddress } = useParams();
 
   return (
     <Flex
       w={200}
       h={500}
-      bgColor={useColorModeValue("gray.50", "gray.900")}
+      bgColor={useColorModeValue('gray.50', 'gray.900')}
       borderRadius="50px"
       py={5}
       px={5}
@@ -48,14 +49,14 @@ export const NavUser = () => {
         </Avatar>
         <VStack pt={3}>
           <Badge borderRadius="lg" colorScheme="twitter">
-            {shortenAddress(account ?? "")}
+            {shortenAddress(account ?? '')}
           </Badge>
           <UserAddressActionButton
             address={account}
             style={{
-              size: "xs",
-              borderRadius: "lg",
-              colorScheme: "twitter",
+              size: 'xs',
+              borderRadius: 'lg',
+              colorScheme: 'twitter',
             }}
           />
         </VStack>
@@ -72,8 +73,14 @@ export const NavUser = () => {
               p={2}
               borderRadius="xl"
               key={key}
-              onClick={() => navigate(items?.link)}
-              color={pathname === items.link ? "twitter.500" : ""}
+              onClick={() =>
+                navigate(
+                  userAddress
+                    ? `${items?.link}/${userAddress}`
+                    : `${items?.link}`
+                )
+              }
+              color={pathname === items.link ? 'twitter.500' : ''}
               bgColor="transparent"
               cursor="pointer"
               whileHover={{
@@ -85,7 +92,7 @@ export const NavUser = () => {
             >
               <HStack
                 _hover={{
-                  color: "twitter.400",
+                  color: 'twitter.400',
                 }}
               >
                 <Icon as={items.icon}></Icon>

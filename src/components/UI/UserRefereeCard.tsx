@@ -1,5 +1,6 @@
 import { CheckIcon, CopyIcon, ExternalLinkIcon } from '@chakra-ui/icons';
 import {
+  Button,
   ButtonProps,
   Card,
   HStack,
@@ -32,6 +33,11 @@ export const UserRefereeCard = ({
 }) => {
   const { onCopy, hasCopied } = useClipboard(address!);
   const userTotalBusiness = useUserTotalBusiness(address!);
+  const currentWebProtocol = window.location.protocol;
+  const currentWebHost = window.location.host;
+
+  console.log(currentWebProtocol);
+
   return (
     <MotionCard
       p={5}
@@ -48,6 +54,13 @@ export const UserRefereeCard = ({
         <Icon as={FaUser} boxSize={7} onClick={onClick}></Icon>
         <Text fontSize="sm">{shortenAddress(address!)}</Text>
         <UserAddressActionButton address={address} style={style} />
+        <Button
+          as="a"
+          href={`${currentWebProtocol}//${currentWebHost}/#/user/team/${address}`}
+          target="_blank"
+        >
+          View Account
+        </Button>
         <Wrap align="center" justify="center" w="full">
           <Tag>
             <HStack spacing={1}>
