@@ -16,7 +16,7 @@ import { useEthers } from '@usedapp/core';
 import { FaChartBar, FaMoon, FaPiggyBank, FaSun } from 'react-icons/fa';
 import { GiFlame, GiFlameClaws } from 'react-icons/gi';
 import { IoIosFlame } from 'react-icons/io';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { TokenSymbol } from '../../../constants';
 import { ConnectWalletButton } from '../../ConnectWalletButton/ConnectWalletButton';
 import { navUser } from '../NavMenuItems';
@@ -25,6 +25,7 @@ export const NavMenu = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const navigate = useNavigate();
   const { account } = useEthers();
+  const { userAddress } = useParams();
   return (
     <MenuList borderRadius="3xl" overflow="hidden" fontSize="sm" p={5}>
       <VStack w="full">
@@ -36,7 +37,13 @@ export const NavMenu = () => {
                 return (
                   <MenuItem
                     borderRadius="xl"
-                    onClick={() => navigate(navObject?.link)}
+                    onClick={() =>
+                      navigate(
+                        userAddress
+                          ? `${navObject?.link}`
+                          : `${navObject?.link}/${userAddress}`
+                      )
+                    }
                     key={key}
                   >
                     <HStack w={100} spacing={5}>
