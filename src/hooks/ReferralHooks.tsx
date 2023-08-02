@@ -122,3 +122,13 @@ export const useGetUserTopUpForReward = (address: string) => {
   const valueFormatted = value ? Number(formatEther(value)) : 0;
   return valueFormatted;
 };
+
+export const useUserTeamBusinessForRewards = (address: string) => {
+  const value = useCallHook('getTeamBusinessToQualifyRewards', [address]);
+
+  const valueObject = {
+    mainBusiness: value ? Number(formatEther(value?.mainBusiness)) : 0,
+    otherBusiness: value ? Number(formatEther(value?.otherBusiness)) : 0,
+  };
+  return valueObject;
+};

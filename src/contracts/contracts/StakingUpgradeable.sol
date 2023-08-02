@@ -242,6 +242,7 @@ contract StakingUpgradeable is
         userStakingInfo.valueInToken = _valueInToken;
         userStakingInfo.valueInANUSD = _valueInANUSD;
         userStakingInfo.rewardRate = _rewardRate;
+        userStakingInfo.lastTimeRewardClaimed = currentTime;
 
         _totalValueStakedInToken += _valueInToken;
         _totalValueStakedInANUSD += _valueInANUSD;

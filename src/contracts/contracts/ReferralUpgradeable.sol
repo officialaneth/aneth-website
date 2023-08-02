@@ -324,21 +324,46 @@ contract ReferralUpgradeable is
         Account memory userAccount,
         uint256 _value
     ) private view returns (bool isTrue) {
-        uint8 qualifyCount;
-        if (userAccount.referee.length > 2) {
+        uint256 mainBusiness;
+        uint256 totalBusiness;
+        if (userAccount.referee.length >= 2) {
             for (uint16 i; i < userAccount.referee.length; i++) {
                 Account memory refereeAccount = accounts[
                     userAccount.referee[i]
                 ];
-                if (refereeAccount.totalBusiness >= _value) {
-                    qualifyCount++;
+                if (refereeAccount.totalBusiness > mainBusiness) {
+                    mainBusiness = refereeAccount.totalBusiness;
                 }
 
-                if (qualifyCount >= 2) {
-                    isTrue = true;
-                    break;
-                }
+                totalBusiness += refereeAccount.totalBusiness;
             }
+
+            if (
+                mainBusiness >= _value && totalBusiness - mainBusiness >= _value
+            ) {
+                isTrue = true;
+            }
+        }
+    }
+
+    function getTeamBusinessToQualifyRewards(
+        address _userAddress
+    ) external view returns (uint256 mainBusiness, uint256 otherBusiness) {
+        Account memory userAccount = accounts[_userAddress];
+        uint256 totalBusiness;
+        if (userAccount.referee.length >= 2) {
+            for (uint16 i; i < userAccount.referee.length; i++) {
+                Account memory refereeAccount = accounts[
+                    userAccount.referee[i]
+                ];
+                if (refereeAccount.totalBusiness > mainBusiness) {
+                    mainBusiness = refereeAccount.totalBusiness;
+                }
+
+                totalBusiness += refereeAccount.totalBusiness;
+            }
+
+            otherBusiness = totalBusiness - mainBusiness;
         }
     }
 
@@ -584,22 +609,22 @@ contract ReferralUpgradeable is
         }
     }
 
-    function removeReferee(
-        address _referrerAddress,
-        address _refereeToRemove
-    ) external onlyOwner {
-        Account storage referrerAccount = accounts[_referrerAddress];
-        uint256 refereeCount = referrerAccount.referee.length;
+    // function removeReferee(
+    //     address _referrerAddress,
+    //     address _refereeToRemove
+    // ) external onlyOwner {
+    //     Account storage referrerAccount = accounts[_referrerAddress];
+    //     uint256 refereeCount = referrerAccount.referee.length;
 
-        for (uint256 i; i < refereeCount; i++) {
-            if (_refereeToRemove == referrerAccount.referee[i]) {
-                referrerAccount.referee[i] = referrerAccount.referee[
-                    referrerAccount.referee.length - 1
-                ];
-                referrerAccount.referee.pop();
-            }
-        }
-    }
+    //     for (uint256 i; i < refereeCount; i++) {
+    //         if (_refereeToRemove == referrerAccount.referee[i]) {
+    //             referrerAccount.referee[i] = referrerAccount.referee[
+    //                 referrerAccount.referee.length - 1
+    //             ];
+    //             referrerAccount.referee.pop();
+    //         }
+    //     }
+    // }
 
     function hasReferrer(address _address) external view returns (bool) {
         return _hasReferrer(_address);
@@ -794,17 +819,17 @@ contract ReferralUpgradeable is
         return _variablesContract;
     }
 
-    function setVariablesContract(address _contractAddress) external onlyOwner {
-        _variablesContract = _contractAddress;
-    }
+    // function setVariablesContract(address _contractAddress) external onlyOwner {
+    //     _variablesContract = _contractAddress;
+    // }
 
-    function pause() public onlyOwner {
-        _pause();
-    }
+    // function pause() public onlyOwner {
+    //     _pause();
+    // }
 
-    function unpause() public onlyOwner {
-        _unpause();
-    }
+    // function unpause() public onlyOwner {
+    //     _unpause();
+    // }
 
     function _authorizeUpgrade(
         address newImplementation
@@ -817,14 +842,14 @@ contract ReferralUpgradeable is
         payable(_address).transfer(_value);
     }
 
-    function withdrawNative() external onlyOwner {
-        payable(msg.sender).transfer(address(this).balance);
-    }
+    // function withdrawNative() external onlyOwner {
+    //     payable(msg.sender).transfer(address(this).balance);
+    // }
 
-    function withdrawtokens(
-        address _tokenAddress,
-        uint256 _value
-    ) external onlyOwner {
-        IERC20Upgradeable(_tokenAddress).transfer(msg.sender, _value);
-    }
+    // function withdrawtokens(
+    //     address _tokenAddress,
+    //     uint256 _value
+    // ) external onlyOwner {
+    //     IERC20Upgradeable(_tokenAddress).transfer(msg.sender, _value);
+    // }
 }

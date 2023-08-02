@@ -52,7 +52,7 @@ export const DappConfig: Config = {
     }),
     walletConnectV2: new WalletConnectV2Connector({
       projectId: "8bce980d5111c224d378dad1864c20af",
-      chains: [BSCTestnet, Polygon],
+      chains: [Polygon],
       rpcMap: {
         [BSCTestnet.chainId]: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
         [Polygon.chainId]: 'https://polygon-mainnet.public.blastapi.io',

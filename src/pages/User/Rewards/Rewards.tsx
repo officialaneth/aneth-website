@@ -13,6 +13,7 @@ import {
   Tag,
   Text,
   VStack,
+  Wrap,
 } from '@chakra-ui/react';
 import { useEthers } from '@usedapp/core';
 import { SiTarget } from 'react-icons/si';
@@ -29,6 +30,7 @@ import {
   useGetUserTopUpForReward,
   useReferralUserAccount,
   useUserRewardQualified,
+  useUserTeamBusinessForRewards,
 } from '../../../hooks/ReferralHooks';
 
 export const Rewards = () => {
@@ -38,6 +40,12 @@ export const Rewards = () => {
   const rewardStruct = useGetRewardStruct(rewardIndex);
   const nextRewardStruct = useGetRewardStruct(rewardIndex + 1);
   const accountMap = useReferralUserAccount(userAddress ?? account!);
+
+  const userBusinessForRewards = useUserTeamBusinessForRewards(
+    userAddress ?? account!
+  );
+
+  console.log(userBusinessForRewards);
 
   const userRewardTopUp = useGetUserTopUpForReward(userAddress ?? account!);
 
@@ -85,16 +93,20 @@ export const Rewards = () => {
         100
       : 0;
 
-  const monthTeamPercentrage =
-    userTotalMonthlyBusiness?.teamBusiness > 0
-      ? (userTotalMonthlyBusiness?.teamBusiness /
+  const monthTeamPercentrageMain =
+    userBusinessForRewards?.mainBusiness > 0
+      ? (userBusinessForRewards?.mainBusiness /
           nextMonthlyRewardObjectByID?.teamBusinessLimit) *
         100
       : 0;
 
-  const monthlyDefault = useGetMonthlyRewardsDefaults();
+  const monthTeamPercentrageOther =
+    userBusinessForRewards?.otherBusiness > 0
+      ? (userBusinessForRewards?.otherBusiness /
+          nextMonthlyRewardObjectByID?.teamBusinessLimit) *
+        100
+      : 0;
 
-  console.log(monthlyDefault);
   return (
     <VStack w="full" py={50} spacing={10}>
       <VStack>
@@ -113,7 +125,7 @@ export const Rewards = () => {
             Target
           </Heading>
         </HStack>
-        <HStack>
+        <Wrap>
           <Tag size="sm" colorScheme="green">
             Top Up
           </Tag>
@@ -129,8 +141,8 @@ export const Rewards = () => {
           <Icon as={SiTarget}></Icon>
           <Tag>{nextRewardStruct?.selfBusinessLimit?.toFixed(0)}</Tag>
           <Image src={ANUSDLogoSVG} boxSize={5}></Image>
-        </HStack>
-        <HStack>
+        </Wrap>
+        <Wrap>
           <Tag size="sm" colorScheme="green">
             Direct Business
           </Tag>
@@ -146,13 +158,14 @@ export const Rewards = () => {
           <Icon as={SiTarget}></Icon>
           <Tag>{nextRewardStruct?.directBusinessLimit?.toFixed(0)}</Tag>
           <Image src={ANUSDLogoSVG} boxSize={5}></Image>
-        </HStack>
-        <HStack>
+        </Wrap>
+        <Text>Team Business</Text>
+        <Wrap>
           <Tag size="sm" colorScheme="green">
-            Team Business
+            Team Business Main
           </Tag>
           <Slider
-            value={totalBusinessPercentage * 2}
+            value={monthTeamPercentrageMain}
             w={[100, 300, 400]}
             isDisabled={nextRewardStruct?.teamBusinessLimit === 0}
           >
@@ -162,8 +175,27 @@ export const Rewards = () => {
           </Slider>
           <Icon as={SiTarget}></Icon>
           <Tag>{nextRewardStruct?.teamBusinessLimit?.toFixed(0)}</Tag>
+          <Tag>{userBusinessForRewards?.mainBusiness}</Tag>
           <Image src={ANUSDLogoSVG} boxSize={5}></Image>
-        </HStack>
+        </Wrap>
+        <Wrap>
+          <Tag size="sm" colorScheme="green">
+            Team Business Others
+          </Tag>
+          <Slider
+            value={monthTeamPercentrageOther}
+            w={[100, 300, 400]}
+            isDisabled={nextRewardStruct?.teamBusinessLimit === 0}
+          >
+            <SliderTrack h={5} borderRadius="xl">
+              <SliderFilledTrack />
+            </SliderTrack>
+          </Slider>
+          <Icon as={SiTarget}></Icon>
+          <Tag>{nextRewardStruct?.teamBusinessLimit?.toFixed(0)}</Tag>
+          <Tag>{userBusinessForRewards?.otherBusiness}</Tag>
+          <Image src={ANUSDLogoSVG} boxSize={5}></Image>
+        </Wrap>
       </VStack>
       <VStack>
         <HStack>
@@ -227,7 +259,7 @@ export const Rewards = () => {
       </VStack>
       <Divider></Divider>
 
-      <Tag size="lg" borderRadius="xl" colorScheme="green">
+      {/* <Tag size="lg" borderRadius="xl" colorScheme="green">
         <Heading>Monthly Rewards</Heading>
       </Tag>
       <VStack>
@@ -290,12 +322,34 @@ export const Rewards = () => {
         <Heading size="sm">
           Direct Business: {userTotalMonthlyBusiness?.directBusiness} ANUSD
         </Heading>
+        <Text>Team Business</Text>
         <HStack>
           <Tag size="sm" colorScheme="green">
-            Team Business
+            Team Business Main
           </Tag>
           <Slider
-            value={monthTeamPercentrage}
+            value={monthTeamPercentrageMain}
+            w={[100, 300, 400]}
+            isDisabled={nextRewardStruct?.teamBusinessLimit === 0}
+          >
+            <SliderTrack h={5} borderRadius="xl">
+              <SliderFilledTrack />
+            </SliderTrack>
+          </Slider>
+          <Icon as={SiTarget}></Icon>
+          <Tag>
+            {Number(
+              nextMonthlyRewardObjectByID?.teamBusinessLimit * 2
+            )?.toFixed(0)}
+          </Tag>
+          <Image src={ANUSDLogoSVG} boxSize={5}></Image>
+        </HStack>
+        <HStack>
+          <Tag size="sm" colorScheme="green">
+            Team Business Others
+          </Tag>
+          <Slider
+            value={monthTeamPercentrageOther}
             w={[100, 300, 400]}
             isDisabled={nextRewardStruct?.teamBusinessLimit === 0}
           >
@@ -326,7 +380,7 @@ export const Rewards = () => {
         </HStack>
         <Divider />
         <Heading>{nextMonthlyRewardObjectByID?.rewardName}</Heading>
-      </VStack>
+      </VStack> */}
       {/* <VStack>
         <HStack>
           <Heading size="lg" textAlign="center">
