@@ -738,8 +738,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/VariablesUpgradeable.sol": {
-      "lastModificationDate": 1687329497770,
-      "contentHash": "20047482bb6d0e860a9cbd27042ad90e",
+      "lastModificationDate": 1690720206954,
+      "contentHash": "d6db01b16e01b4059b776040752c1965",
       "sourceName": "contracts/VariablesUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",

@@ -86,7 +86,7 @@ export const WalletConnectors = () => {
   };
   const handleConnectWalletConnect = async () => {
     try {
-      activateBrowserWallet({ type: 'walletConnect' });
+      activateBrowserWallet({ type: 'walletConnectV2' });
     } catch (err) {
       console.log(err);
     }

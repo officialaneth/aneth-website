@@ -40,6 +40,10 @@ contract VariablesUpgradeable is
     address private _monthlyRewardsContract;
     address[] public adminsList;
 
+    address[] private _managersList;
+
+    mapping(address => bool) private _isManager;
+
     function initialize() public initializer {
         _presaleContract = 0x5e8F3980E638fC5df657E33194cE428936d635a0;
         _referralContract = 0x58469D0d27aAE15cf611966b89E072E49d359097;
@@ -181,16 +185,78 @@ contract VariablesUpgradeable is
         return _isAdmin[_address];
     }
 
-    function setAdmin(address _address, bool _status) external onlyOwner {
-        _isAdmin[_address] = _status;
-        address[] memory admins = adminsList;
-        uint8 adminsCount = uint8(adminsList.length);
+    function addAdmin(address _address) external {
+        require(
+            _isAdmin[msg.sender] || msg.sender == owner(),
+            "Only Admin or owner can call this function."
+        );
+        require(!_isAdmin[_address], "Address is already admin.");
+        _isAdmin[_address] = true;
+        adminsList.push(_address);
+    }
 
-        for (uint8 i; i < adminsCount; i++) {
-            if (admins[i] == _address) {
+    function removeAdmin(address _address) external {
+        require(
+            _isAdmin[msg.sender] || msg.sender == owner(),
+            "Only Admin or owner can call this function."
+        );
+        require(_isAdmin[_address], "Address is not admin.");
+        _isAdmin[_address] = false;
+        uint8 adminsListCount = uint8(adminsList.length);
+
+        for (uint i; i < adminsListCount; ++i) {
+            if (_isAdmin[_address]) {
+                adminsList[i] = adminsList[adminsList.length - 1];
+                adminsList.pop();
+            }
+
+            if (
+                adminsList.length < adminsListCount &&
+                i == adminsList.length - 1
+            ) {
                 break;
-            } else if (i == adminsCount - 1 && admins[i] != _address) {
-                adminsList.push(_address);
+            }
+        }
+    }
+
+    function isManager(address _userAddress) external view returns (bool) {
+        return _isManager[_userAddress];
+    }
+
+    function getManagers() external view returns (address[] memory) {
+        return _managersList;
+    }
+
+    function addManager(address _address) external {
+        require(
+            _isAdmin[msg.sender] || msg.sender == owner(),
+            "Only Admin or owner can call this function."
+        );
+        require(!_isManager[_address], "Address is already manager.");
+        _isManager[_address] = true;
+        _managersList.push(_address);
+    }
+
+    function removeManager(address _address) external {
+        require(
+            _isAdmin[msg.sender] || msg.sender == owner(),
+            "Only Admin or owner can call this function."
+        );
+        require(_isManager[_address], "Address is not manager.");
+        _isManager[_address] = false;
+        uint8 managersList = uint8(_managersList.length);
+
+        for (uint i; i < managersList; ++i) {
+            if (_isAdmin[_address]) {
+                _managersList[i] = _managersList[_managersList.length - 1];
+                _managersList.pop();
+            }
+
+            if (
+                _managersList.length < managersList &&
+                i == _managersList.length - 1
+            ) {
+                break;
             }
         }
     }
@@ -198,8 +264,6 @@ contract VariablesUpgradeable is
     function getMonthlyRewardsContract() external view returns (address) {
         return _monthlyRewardsContract;
     }
-
-    
 
     function setMonthlyRewardsContract(
         address _contractAddress

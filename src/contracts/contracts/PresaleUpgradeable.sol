@@ -38,6 +38,8 @@ interface IVariables {
     function adminFees() external view returns (uint256);
 
     function isAdmin(address _address) external view returns (bool);
+
+    function isManager(address _userAddress) external view returns (bool);
 }
 
 interface IStaking {
@@ -295,6 +297,65 @@ contract PresaleUpgradeable is
                 );
             }
         }
+    }
+
+    function BuyWithANUSDManager(
+        address _userAddress,
+        address _referrerAddress,
+        uint256 _valueInDecimals
+    ) external whenNotPaused {
+        require(
+            IVariables(_variableContract).isManager(msg.sender),
+            "Only managers can call this function."
+        );
+
+        IVariables variables = IVariables(_variableContract);
+        address _msgSender = msg.sender;
+        uint256 _adminFees = variables.adminFees();
+        uint256 _msgValue = _valueInDecimals * 10 ** 18;
+
+        require(
+            _msgValue >= _minContributionUSD,
+            "AUSD value less then min buy value."
+        );
+
+        require(_msgValue <= _maxBuyLimitANUSD, "Max buy limit reached");
+
+        IERC20Upgradeable(variables.anusdContract()).transferFrom(
+            _msgSender,
+            address(this),
+            _msgValue
+        );
+
+        uint256[] memory amounts = _buyFromUniswap(
+            variables.anusdContract(),
+            _msgValue - _adminFees,
+            variables.tokenContract(),
+            variables.uniswapV2RouterContract()
+        );
+
+        if (_isBuyNStake) {
+            IStaking(variables.stakingContract()).stakeByAdmin(
+                _userAddress,
+                amounts[1],
+                amounts[0]
+            );
+        } else {
+            IERC20Upgradeable(variables.tokenContract()).transfer(
+                _userAddress,
+                amounts[1]
+            );
+        }
+
+        if (_isPayReferral) {
+            IReferral(variables.referralContract()).payReferralANUSDAdmin(
+                amounts[0],
+                _userAddress,
+                _referrerAddress
+            );
+        }
+
+        emit RegistrationFees(variables.adminFees());
     }
 
     function getCapping()
