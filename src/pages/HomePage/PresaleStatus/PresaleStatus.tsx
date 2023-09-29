@@ -9,6 +9,7 @@ import {
   VStack,
   Wrap,
 } from '@chakra-ui/react';
+import { Polygon } from '@usedapp/core';
 import { AiFillSchedule } from 'react-icons/ai';
 import { FcAreaChart } from 'react-icons/fc';
 import { IoIosFlame } from 'react-icons/io';
@@ -26,7 +27,7 @@ import {
 import { useUniswapTokenOut } from '../../../hooks/UniswapV2Hooks';
 
 export const PresaleStatus = () => {
-  const currentNetwork = useSupportedNetworkInfo[DefaultChainId];
+  const currentNetwork = useSupportedNetworkInfo[Polygon?.chainId];
   const navigate = useNavigate();
   const tokenPrice = useUniswapTokenOut(
     1,
