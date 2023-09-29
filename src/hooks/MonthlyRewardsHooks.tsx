@@ -61,3 +61,19 @@ export const useGetMonthlyRewardsDefaults = () => {
   const value = useCallHook("getDefaults", []);
   return value;
 }
+
+export type TypeTeamStruct = {
+  userAddress: string;
+  teamLevel: BigNumber
+}
+
+export type TypeMonthUser = {
+  referrer: string;
+  referee: string[];
+  team: TypeTeamStruct[]
+}
+
+export const useGetMonthlyUserAccount = (userAddress: string): TypeMonthUser => {
+  const value = useCallHook('getUserAccount', [userAddress])?.[0];
+  return value ? value : {}
+}
