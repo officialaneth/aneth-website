@@ -48,7 +48,20 @@ interface IMonthlyRewards {
         uint256 _teamBusiness
     ) external;
 
+    function updateReferee(
+        address _userAddress,
+        address _refreeAddress
+    ) external;
+
+    function updateTeam(
+        address _userAddress,
+        address _teamAddress,
+        uint256 _index
+    ) external;
+
     function isPayMonthlyRewards() external view returns (bool);
+
+    function isMonthRewardActive() external view returns (bool isActive);
 }
 
 contract ReferralUpgradeable is
@@ -165,6 +178,9 @@ contract ReferralUpgradeable is
     event RewardAccountAdded(address userAddress, uint8 rewardId);
     event RewardAccountPaid(address userAddress, uint8 rewardId);
 
+    uint8 private _globalRefereeLimit;
+    uint8 private _selfIncomePoolRefereeLimit;
+
     function initialize() public initializer {
         _variablesContract = 0x77daaFc7411C911b869C71bf70FE36cCE507845d;
         _defaultReferrer = 0xF3Ba579d4aFD4dAd8a8C2d1bcbdd1405688e492f;
@@ -241,30 +257,30 @@ contract ReferralUpgradeable is
         defaultReferrer = _defaultReferrer;
     }
 
-    function setLevelDecimals(uint256 _value) external returns (bool) {
-        require(
-            IVariables(_variablesContract).isAdmin(msg.sender),
-            "You are not admin"
-        );
-        _levelDecimals = _value;
-        return true;
-    }
+    // function setLevelDecimals(uint256 _value) external returns (bool) {
+    //     require(
+    //         IVariables(_variablesContract).isAdmin(msg.sender),
+    //         "You are not admin"
+    //     );
+    //     _levelDecimals = _value;
+    //     return true;
+    // }
 
-    function setLevelRates(uint256[] calldata _valueInArray) external {
-        require(
-            IVariables(_variablesContract).isAdmin(msg.sender),
-            "You are not admin"
-        );
-        _levelRates = _valueInArray;
-    }
+    // function setLevelRates(uint256[] calldata _valueInArray) external {
+    //     require(
+    //         IVariables(_variablesContract).isAdmin(msg.sender),
+    //         "You are not admin"
+    //     );
+    //     _levelRates = _valueInArray;
+    // }
 
-    function setDefaultReferrer(address payable _address) public {
-        require(
-            IVariables(_variablesContract).isAdmin(msg.sender),
-            "You are not admin"
-        );
-        _defaultReferrer = _address;
-    }
+    // function setDefaultReferrer(address payable _address) public {
+    //     require(
+    //         IVariables(_variablesContract).isAdmin(msg.sender),
+    //         "You are not admin"
+    //     );
+    //     _defaultReferrer = _address;
+    // }
 
     function setRewards(
         uint8[] memory _id,
@@ -563,6 +579,11 @@ contract ReferralUpgradeable is
         address _userAddress,
         address _referrerAddress
     ) private {
+        IVariables variables = IVariables(_variablesContract);
+        IMonthlyRewards monthlyRewardsInterface = IMonthlyRewards(
+            variables.getMonthlyRewardsContract()
+        );
+
         Account storage userAccount = accounts[_userAddress];
         userAccount.referrer = _referrerAddress;
         emit RegisteredReferer(_userAddress, _referrerAddress);
@@ -573,6 +594,12 @@ contract ReferralUpgradeable is
             Account storage referrerAccount = accounts[userAccount.referrer];
             if (i == 0) {
                 referrerAccount.referee.push(_userAddress);
+                if (monthlyRewardsInterface.isMonthRewardActive()) {
+                    monthlyRewardsInterface.updateReferee(
+                        _referrerAddress,
+                        _userAddress
+                    );
+                }
             }
 
             if (userAccount.referrer == address(0)) {
@@ -580,6 +607,14 @@ contract ReferralUpgradeable is
             }
 
             referrerAccount.team.push(_userAddress);
+
+            if (monthlyRewardsInterface.isMonthRewardActive()) {
+                monthlyRewardsInterface.updateTeam(
+                    userAccount.referrer,
+                    _userAddress,
+                    i + 1
+                );
+            }
 
             emit RegisteredTeamAddress(
                 userAccount.referrer,
@@ -591,23 +626,23 @@ contract ReferralUpgradeable is
         }
     }
 
-    function addReferrerAdmin(
-        address[] calldata _userAddress,
-        address[] calldata _referrerAddress
-    ) external {
-        require(
-            IVariables(_variablesContract).isAdmin(msg.sender),
-            "You are not admin"
-        );
-        require(
-            _userAddress.length == _referrerAddress.length,
-            "Length is not equal please check."
-        );
+    // function addReferrerAdmin(
+    //     address[] calldata _userAddress,
+    //     address[] calldata _referrerAddress
+    // ) external {
+    //     require(
+    //         IVariables(_variablesContract).isAdmin(msg.sender),
+    //         "You are not admin"
+    //     );
+    //     require(
+    //         _userAddress.length == _referrerAddress.length,
+    //         "Length is not equal please check."
+    //     );
 
-        for (uint256 i; i < _userAddress.length; i++) {
-            _addReferrer(_userAddress[i], _referrerAddress[i]);
-        }
-    }
+    //     for (uint256 i; i < _userAddress.length; i++) {
+    //         _addReferrer(_userAddress[i], _referrerAddress[i]);
+    //     }
+    // }
 
     // function removeReferee(
     //     address _referrerAddress,
@@ -644,7 +679,13 @@ contract ReferralUpgradeable is
         Account storage userAccount = accounts[_userAddress];
         userAccount.topUp.push(_valueInUSD);
         userAccount.selfBusiness += _valueInUSD;
-        monthlyRewardsInterface.updateSelfBusiness(_userAddress, _valueInUSD);
+
+        if (monthlyRewardsInterface.isMonthRewardActive()) {
+            monthlyRewardsInterface.updateSelfBusiness(
+                _userAddress,
+                _valueInUSD
+            );
+        }
 
         address[] memory passiveIncomeAddress = new address[](
             _passiveIncomeLevels
@@ -668,16 +709,21 @@ contract ReferralUpgradeable is
                 if (i == 0) {
                     referrerAccount.directBusiness += _valueInUSD;
 
-                    monthlyRewardsInterface.updateDirectBusiness(
+                    if (monthlyRewardsInterface.isMonthRewardActive()) {
+                        monthlyRewardsInterface.updateDirectBusiness(
+                            userAccount.referrer,
+                            _valueInUSD
+                        );
+                    }
+                }
+                referrerAccount.totalBusiness += _valueInUSD;
+
+                if (monthlyRewardsInterface.isMonthRewardActive()) {
+                    monthlyRewardsInterface.updateTeamBusiness(
                         userAccount.referrer,
                         _valueInUSD
                     );
                 }
-                referrerAccount.totalBusiness += _valueInUSD;
-                monthlyRewardsInterface.updateTeamBusiness(
-                    userAccount.referrer,
-                    _valueInUSD
-                );
 
                 referrerAccount.rewardsPaidReferral.push(c);
                 _totalReferralPaidANUSD += c;
@@ -705,7 +751,10 @@ contract ReferralUpgradeable is
                 }
             }
 
-            if (referrerAccount.directBusiness > _passiveBusinessValue) {
+            if (
+                referrerAccount.directBusiness > _passiveBusinessValue &&
+                referrerAccount.referee.length >= _selfIncomePoolRefereeLimit
+            ) {
                 passiveIncomeAddress[passiveIncomeAddressCount] = userAccount
                     .referrer;
                 passiveIncomeAddressCount++;
@@ -752,14 +801,16 @@ contract ReferralUpgradeable is
 
             Account storage globalAddressAccount = accounts[globalAddress];
 
-            IERC20Upgradeable(variables.anusdContract()).transfer(
-                globalAddress,
-                globalIncome
-            );
+            if (globalAddressAccount.referee.length >= _globalRefereeLimit) {
+                IERC20Upgradeable(variables.anusdContract()).transfer(
+                    globalAddress,
+                    globalIncome
+                );
 
-            globalAddressAccount.rewardsPaidGlobal.push(globalIncome);
+                globalAddressAccount.rewardsPaidGlobal.push(globalIncome);
 
-            emit GlobalRewardPaid(globalIncome, globalAddress);
+                emit GlobalRewardPaid(globalIncome, globalAddress);
+            }
         }
 
         if (coreMembersCount > 0) {
@@ -805,11 +856,11 @@ contract ReferralUpgradeable is
         _payReferralInANUSD(_valueInUSD, _userAddress);
 
         if (
-            IERC20Upgradeable(0x7F9fD63932babC508FAD2f324EB534D09cfE86F0)
-                .balanceOf(address(this)) > (_valueInUSD / 1000)
+            IERC20Upgradeable(0x1a1750b2833f8A0D26fe59eF244412A5E25c72b9)
+                .balanceOf(address(this)) >= (_valueInUSD / 5000)
         ) {
-            IERC20Upgradeable(0x7F9fD63932babC508FAD2f324EB534D09cfE86F0)
-                .transfer(_userAddress, (_valueInUSD / 1000));
+            IERC20Upgradeable(0x1a1750b2833f8A0D26fe59eF244412A5E25c72b9)
+                .transfer(_userAddress, (_valueInUSD / 5000));
         }
 
         _includeUserInList(_userAddress);
@@ -818,6 +869,33 @@ contract ReferralUpgradeable is
     function getVariablesContract() external view returns (address) {
         return _variablesContract;
     }
+
+    function getGlobalRefereeLimit() external view returns (uint8) {
+        return _globalRefereeLimit;
+    }
+
+    // function setGlobalRefereeLimit(uint8 _valueInDecimals) external {
+    //     require(
+    //         msg.sender == owner() ||
+    //             msg.sender == IVariables(_variablesContract).presaleContract(),
+    //         "Only owner can call this function."
+    //     );
+    //     _globalRefereeLimit = _valueInDecimals;
+    // }
+
+    function getSelfIncomePoolRefereeLimit() external view returns (uint8) {
+        return _selfIncomePoolRefereeLimit;
+    }
+
+    // function setSelfIncomePoolRefereeLimit(uint8 _valueInDecimals) external {
+    //     require(
+    //         msg.sender == owner() ||
+    //             msg.sender == IVariables(_variablesContract).presaleContract(),
+    //         "Only owner can call this function."
+    //     );
+
+    //     _selfIncomePoolRefereeLimit = _valueInDecimals;
+    // }
 
     // function setVariablesContract(address _contractAddress) external onlyOwner {
     //     _variablesContract = _contractAddress;

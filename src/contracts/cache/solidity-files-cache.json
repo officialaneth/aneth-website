@@ -738,8 +738,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/VariablesUpgradeable.sol": {
-      "lastModificationDate": 1690956108653,
-      "contentHash": "15523857fed9bb4d0476641122cd9363",
+      "lastModificationDate": 1693397466588,
+      "contentHash": "1749a114a2899ae3efca8ca70c8bc4a6",
       "sourceName": "contracts/VariablesUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -780,8 +780,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/StakingUpgradeable.sol": {
-      "lastModificationDate": 1690962172277,
-      "contentHash": "40d89533728bd767b4bc6d4f58174d8c",
+      "lastModificationDate": 1693396195798,
+      "contentHash": "70dfcc61c62d061b7751fdd40271a294",
       "sourceName": "contracts/StakingUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -826,8 +826,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/ReferralUpgradeable.sol": {
-      "lastModificationDate": 1690963944640,
-      "contentHash": "5d3d5214715d1aed8faefd8240307103",
+      "lastModificationDate": 1695118113296,
+      "contentHash": "e7d7742927aed177f39ab451c14b2333",
       "sourceName": "contracts/ReferralUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -908,8 +908,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/PresaleUpgradeable.sol": {
-      "lastModificationDate": 1690956922518,
-      "contentHash": "a8fd4ba6bb487ec12a993842f52f8e3c",
+      "lastModificationDate": 1693394790196,
+      "contentHash": "31fc7d741a609a85822f500f780ad314",
       "sourceName": "contracts/PresaleUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -1224,8 +1224,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/MonthlyRewards.sol": {
-      "lastModificationDate": 1687678933524,
-      "contentHash": "784622111d69fc7f21b32298cbe35882",
+      "lastModificationDate": 1695117624547,
+      "contentHash": "aa6d29c50982da70815f292d494cc6e8",
       "sourceName": "contracts/MonthlyRewards.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -1261,8 +1261,6 @@
         "^0.8.9"
       ],
       "artifacts": [
-        "IERC20_EXTENDED",
-        "IReferral",
         "IVariables",
         "MonthlyRewardsUpgradeable"
       ]

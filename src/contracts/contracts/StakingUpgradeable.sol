@@ -579,59 +579,50 @@ contract StakingUpgradeable is
         }
     }
 
-    function getActiveStakingIDs() public view returns (uint256[] memory) {
-        uint256 stakingIDsLength = _stakers.length;
+    // function getActiveStakingIDs() public view returns (uint256[] memory) {
+    //     uint256 stakingIDsLength = _stakers.length;
 
-        uint256[] memory stakingIDsArray = new uint256[](stakingIDsLength);
+    //     uint256[] memory stakingIDsArray = new uint256[](stakingIDsLength);
 
-        for (uint256 i; i < stakingIDsLength; i++) {
-            StakeInfo storage userStakingInfo = stakeInfo[i];
-            if (userStakingInfo.isStaked == true) {
-                if (i != 0) {
-                    stakingIDsArray[i] = i;
-                }
-            }
-        }
+    //     for (uint256 i; i < stakingIDsLength; i++) {
+    //         StakeInfo storage userStakingInfo = stakeInfo[i];
+    //         if (userStakingInfo.isStaked == true) {
+    //             if (i != 0) {
+    //                 stakingIDsArray[i] = i;
+    //             }
+    //         }
+    //     }
 
-        return stakingIDsArray;
-    }
+    //     return stakingIDsArray;
+    // }
 
-    function activeStakersList() external view returns (address[] memory) {
-        address[] memory stakers = _stakers;
-        uint256 totalStakers = stakers.length;
-        address[] memory activeStakersArray = new address[](totalStakers);
-        uint256 activeStakersLength;
+    // function activeStakersList() external view returns (address[] memory) {
+    //     address[] memory stakers = _stakers;
+    //     uint256 totalStakers = stakers.length;
+    //     address[] memory activeStakersArray = new address[](totalStakers);
+    //     uint256 activeStakersLength;
 
-        for (uint256 i; i < totalStakers; i++) {
-            if (_isAddressInList(activeStakersArray, stakers[i]) == true) {
-                continue;
-            }
+    //     for (uint256 i; i < totalStakers; i++) {
+    //         if (_isAddressInList(activeStakersArray, stakers[i]) == true) {
+    //             continue;
+    //         }
 
-            if (isStaked(stakers[i])) {
-                activeStakersArray[activeStakersLength] = stakers[i];
-                activeStakersLength++;
-            }
-        }
+    //         if (isStaked(stakers[i])) {
+    //             activeStakersArray[activeStakersLength] = stakers[i];
+    //             activeStakersLength++;
+    //         }
+    //     }
 
-        return activeStakersArray;
-    }
+    //     return activeStakersArray;
+    // }
 
-    function allStakersList() external view returns (address[] memory) {
-        address[] memory stakers = _stakers;
-        uint256 totalStakers = stakers.length;
-        address[] memory stakersArray = new address[](totalStakers);
-        uint256 stakersArrayLength;
-
-        for (uint256 i; i < totalStakers; i++) {
-            if (_isAddressInList(stakersArray, stakers[i]) == true) {
-                continue;
-            }
-
-            stakersArray[stakersArrayLength] = stakers[i];
-            stakersArrayLength++;
-        }
-
-        return stakersArray;
+    function allStakersList()
+        external
+        view
+        returns (uint256 stakersCount, address[] memory stakersList)
+    {
+        stakersList = _stakers;
+        stakersCount = stakersList.length;
     }
 
     function getTotalValueStaked()

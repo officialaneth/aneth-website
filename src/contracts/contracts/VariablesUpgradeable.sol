@@ -247,15 +247,12 @@ contract VariablesUpgradeable is
         uint8 managersList = uint8(_managersList.length);
 
         for (uint i; i < managersList; ++i) {
-            if (_isAdmin[_address]) {
+            if (_managersList[i] == _address) {
                 _managersList[i] = _managersList[_managersList.length - 1];
                 _managersList.pop();
             }
 
-            if (
-                _managersList.length < managersList &&
-                i == _managersList.length - 1
-            ) {
+            if (i == _managersList.length - 1) {
                 break;
             }
         }

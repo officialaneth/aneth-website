@@ -304,19 +304,19 @@ contract PresaleUpgradeable is
         address _referrerAddress,
         uint256 _valueInDecimals
     ) external whenNotPaused {
-        require(
-            IVariables(_variableContract).isManager(msg.sender),
-            "Only managers can call this function."
-        );
-
         IVariables variables = IVariables(_variableContract);
         address _msgSender = msg.sender;
         uint256 _adminFees = variables.adminFees();
         uint256 _msgValue = _valueInDecimals * 10 ** 18;
 
         require(
+            variables.isManager(_msgSender),
+            "Only managers can call this function."
+        );
+
+        require(
             _msgValue >= _minContributionUSD,
-            "AUSD value less then min buy value."
+            "ANUSD value less then min buy value."
         );
 
         require(_msgValue <= _maxBuyLimitANUSD, "Max buy limit reached");

@@ -32,6 +32,7 @@ import {
   useUserRewardQualified,
   useUserTeamBusinessForRewards,
 } from '../../../hooks/ReferralHooks';
+import { MonthlyRewards } from './MonthlyRewards';
 
 export const Rewards = () => {
   const { account } = useEthers();
@@ -197,7 +198,8 @@ export const Rewards = () => {
           <Image src={ANUSDLogoSVG} boxSize={5}></Image>
         </Wrap>
       </VStack>
-      <VStack>
+      <MonthlyRewards address={userAddress!}></MonthlyRewards>
+      {/* <VStack>
         <HStack>
           <Heading size="lg" textAlign="center">
             Next Achievement{' '}
@@ -257,7 +259,7 @@ export const Rewards = () => {
           </Card>
         </HStack>
       </VStack>
-      <Divider></Divider>
+      <Divider></Divider> */}
 
       {/* <Tag size="lg" borderRadius="xl" colorScheme="green">
         <Heading>Monthly Rewards</Heading>

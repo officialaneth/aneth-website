@@ -6,60 +6,51 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-interface IERC20_EXTENDED {
-    function name() external view returns (string memory);
+// interface IERC20_EXTENDED {
+//     function name() external view returns (string memory);
 
-    function decimals() external view returns (uint256);
-}
+//     function decimals() external view returns (uint256);
+// }
 
 interface IVariables {
     function referralContract() external view returns (address);
 
-    function stakingContract() external view returns (address);
+    // function stakingContract() external view returns (address);
 
-    function tokenContract() external view returns (address);
+    // function tokenContract() external view returns (address);
 
-    function anusdContract() external view returns (address);
+    // function anusdContract() external view returns (address);
 
-    function usdtContract() external view returns (address);
+    // function usdtContract() external view returns (address);
 
-    function uniswapV2RouterContract() external view returns (address);
+    // function tokenContractOwner() external view returns (address);
 
-    function tokenContractOwner() external view returns (address);
+    // function rewardContract() external view returns (address);
 
-    function rewardContract() external view returns (address);
+    // function rewardContractOwner() external view returns (address);
 
-    function rewardContractOwner() external view returns (address);
-
-    function adminFees() external view returns (uint256);
+    // function adminFees() external view returns (uint256);
 
     function isAdmin(address _address) external view returns (bool);
 }
 
-interface IReferral {
-    function getUserAccount(
-        address _address
-    ) external view returns (Account memory userAccount);
+struct StructTeam {
+    address userAddress;
+    uint256 teamLevel;
 }
 
-struct Account {
+struct StructAccount {
     address referrer;
     address[] referee;
-    address[] team;
+    StructTeam[] team;
     uint256[] topUp;
     uint256 selfBusiness;
     uint256 directBusiness;
-    uint256 totalBusiness;
+    uint256 teamBusiness;
     uint256[] rewardsPaidReferral;
     uint256[] rewardsPaidGlobal;
     uint256[] rewardPaidPassive;
     bool isInGlobalID;
-}
-
-struct StructAccountRewards {
-    uint256 selfBusiness;
-    uint256 directBusiness;
-    uint256 teamBusiness;
     bool isListed;
 }
 
@@ -85,26 +76,26 @@ contract MonthlyRewardsUpgradeable is
     address private _variablesContract;
     address[] private _users;
 
-    bool private _isPayRewards;
-
     mapping(uint8 => StructMonthlyRewards) private _monthlyRewards;
-    mapping(address => StructAccountRewards) private _accounts;
-
-    // modifier onlyAdmins() {
-    //     require(
-    //         IVariables(_variablesContract).isAdmin(msg.sender),
-    //         "You are not admin"
-    //     );
-    //     _;
-    // }
+    mapping(address => StructAccount) private _accounts;
 
     function initialize() public initializer {
         _startDate = block.timestamp;
-        _duration = 31 days;
+        _duration = 50 days;
 
         __Pausable_init();
         __Ownable_init();
         __UUPSUpgradeable_init();
+    }
+
+    function _isMonthRewardActive() private view returns (bool isActive) {
+        if (block.timestamp < _startDate + _duration) {
+            isActive = true;
+        }
+    }
+
+    function isMonthRewardActive() public view returns (bool) {
+        return _isMonthRewardActive();
     }
 
     function getRewardsIDsCount() external view returns (uint8 rewardIDsCount) {
@@ -151,15 +142,17 @@ contract MonthlyRewardsUpgradeable is
         returns (
             uint256 _selfBusiness,
             uint256 _directBusiness,
-            uint256 _teamBusiness
+            uint256 _teamBusinessMain,
+            uint256 _teamBusinessOther,
+            uint256  _totalTeamBusiness
         )
     {
-        StructAccountRewards storage userRewardsAccount = _accounts[
-            _userAddress
-        ];
+        StructAccount storage userRewardsAccount = _accounts[_userAddress];
         _selfBusiness = userRewardsAccount.selfBusiness;
         _directBusiness = userRewardsAccount.directBusiness;
-        _teamBusiness = userRewardsAccount.teamBusiness;
+        // _teamBusiness =
+        //     userRewardsAccount.teamBusiness -
+        //     userRewardsAccount.directBusiness;
     }
 
     function updateSelfBusiness(
@@ -170,10 +163,9 @@ contract MonthlyRewardsUpgradeable is
             IVariables(_variablesContract).isAdmin(msg.sender),
             "You are not admin"
         );
-        if (_startDate + _duration > block.timestamp && _isPayRewards) {
-            StructAccountRewards storage userRewardsAccount = _accounts[
-                _userAddress
-            ];
+
+        if (_isMonthRewardActive()) {
+            StructAccount storage userRewardsAccount = _accounts[_userAddress];
             userRewardsAccount.selfBusiness += _selfBusiness;
             if (!userRewardsAccount.isListed) {
                 _users.push(_userAddress);
@@ -190,10 +182,8 @@ contract MonthlyRewardsUpgradeable is
             IVariables(_variablesContract).isAdmin(msg.sender),
             "You are not admin"
         );
-        if (_startDate + _duration > block.timestamp && _isPayRewards) {
-            StructAccountRewards storage userRewardsAccount = _accounts[
-                _userAddress
-            ];
+        if (_isMonthRewardActive()) {
+            StructAccount storage userRewardsAccount = _accounts[_userAddress];
             userRewardsAccount.directBusiness += _directBusiness;
             if (!userRewardsAccount.isListed) {
                 _users.push(_userAddress);
@@ -210,11 +200,53 @@ contract MonthlyRewardsUpgradeable is
             IVariables(_variablesContract).isAdmin(msg.sender),
             "You are not admin"
         );
-        if (_startDate + _duration > block.timestamp && _isPayRewards) {
-            StructAccountRewards storage userRewardsAccount = _accounts[
-                _userAddress
-            ];
+        if (_isMonthRewardActive()) {
+            StructAccount storage userRewardsAccount = _accounts[_userAddress];
             userRewardsAccount.teamBusiness += _teamBusiness;
+            if (!userRewardsAccount.isListed) {
+                _users.push(_userAddress);
+                userRewardsAccount.isListed = true;
+            }
+        }
+    }
+
+    function updateReferee(
+        address _userAddress,
+        address _refreeAddress
+    ) external {
+        require(
+            IVariables(_variablesContract).isAdmin(msg.sender),
+            "You are not admin"
+        );
+
+        if (_isMonthRewardActive()) {
+            StructAccount storage userRewardsAccount = _accounts[_userAddress];
+
+            userRewardsAccount.referee.push(_refreeAddress);
+            if (!userRewardsAccount.isListed) {
+                _users.push(_userAddress);
+                userRewardsAccount.isListed = true;
+            }
+        }
+    }
+
+    function updateTeam(
+        address _userAddress,
+        address _teamAddress,
+        uint256 _index
+    ) external {
+        require(
+            IVariables(_variablesContract).isAdmin(msg.sender),
+            "You are not admin"
+        );
+
+        if (_isMonthRewardActive()) {
+            StructAccount storage userRewardsAccount = _accounts[_userAddress];
+
+            userRewardsAccount.team.push(
+                StructTeam({userAddress: _teamAddress, teamLevel: _index})
+            );
+
             if (!userRewardsAccount.isListed) {
                 _users.push(_userAddress);
                 userRewardsAccount.isListed = true;
@@ -224,19 +256,19 @@ contract MonthlyRewardsUpgradeable is
 
     function getUserAccount(
         address _userAddress
-    ) external view returns (StructAccountRewards memory) {
+    ) external view returns (StructAccount memory) {
         return _accounts[_userAddress];
     }
 
     function _isUserTeamBusinessForRewards(
-        Account memory userAccount,
+        StructAccount memory userAccount,
         uint256 _value
     ) private view returns (bool isTrue) {
         uint256 totalBusiness;
         uint256 maxTotalBusiness;
         if (userAccount.referee.length > 2) {
             for (uint16 i; i < userAccount.referee.length; i++) {
-                StructAccountRewards memory refereeRewardsAccount = _accounts[
+                StructAccount memory refereeRewardsAccount = _accounts[
                     userAccount.referee[i]
                 ];
 
@@ -256,96 +288,96 @@ contract MonthlyRewardsUpgradeable is
         }
     }
 
-    function getUserRewardQualified(
-        address _address
-    ) external view returns (uint8 rewardId) {
-        Account memory userAccount = IReferral(
-            IVariables(_variablesContract).referralContract()
-        ).getUserAccount(_address);
+    // function getUserRewardQualified(
+    //     address _address
+    // ) external view returns (uint8 rewardId) {
+    //     StructAccount memory userAccount = IReferral(
+    //         IVariables(_variablesContract).referralContract()
+    //     ).getUserAccount(_address);
 
-        StructAccountRewards memory userRewardsAccount = _accounts[_address];
+    //     StructAccountRewards memory userRewardsAccount = _accounts[_address];
 
-        for (uint8 i; i < 10; i++) {
-            StructMonthlyRewards memory rewardsAccount = _monthlyRewards[i];
+    //     for (uint8 i; i < 10; i++) {
+    //         StructMonthlyRewards memory rewardsAccount = _monthlyRewards[i];
 
-            if (i > 1 && rewardsAccount.selfBusinessLimit == 0) {
-                break;
-            }
-            if (
-                userRewardsAccount.selfBusiness >=
-                rewardsAccount.selfBusinessLimit &&
-                userRewardsAccount.directBusiness >=
-                rewardsAccount.directBusinessLimit &&
-                _isUserTeamBusinessForRewards(
-                    userAccount,
-                    rewardsAccount.teamBusinessLimit
-                )
-            ) {
-                rewardId = i;
-            }
-        }
-    }
+    //         if (i > 1 && rewardsAccount.selfBusinessLimit == 0) {
+    //             break;
+    //         }
+    //         if (
+    //             userRewardsAccount.selfBusiness >=
+    //             rewardsAccount.selfBusinessLimit &&
+    //             userRewardsAccount.directBusiness >=
+    //             rewardsAccount.directBusinessLimit &&
+    //             _isUserTeamBusinessForRewards(
+    //                 userAccount,
+    //                 rewardsAccount.teamBusinessLimit
+    //             )
+    //         ) {
+    //             rewardId = i;
+    //         }
+    //     }
+    // }
 
-    function _getRewardQualifiedUsers(
-        uint8 _rewardId,
-        uint16 _from,
-        uint16 _to
-    )
-        private
-        view
-        returns (address[] memory _usersList, uint16 _achieversListCount)
-    {
-        _usersList = new address[](_to - _from);
-        address[] memory users = _users;
+    // function _getRewardQualifiedUsers(
+    //     uint8 _rewardId,
+    //     uint16 _from,
+    //     uint16 _to
+    // )
+    //     private
+    //     view
+    //     returns (address[] memory _usersList, uint16 _achieversListCount)
+    // {
+    //     _usersList = new address[](_to - _from);
+    //     address[] memory users = _users;
 
-        for (_from; _from <= _to; _from++) {
-            StructAccountRewards memory userRewardsAccount = _accounts[
-                users[_from]
-            ];
-            StructMonthlyRewards memory rewardsAccount = _monthlyRewards[
-                _rewardId
-            ];
-            Account memory userAccount = IReferral(
-                IVariables(_variablesContract).referralContract()
-            ).getUserAccount(users[_from]);
+    //     for (_from; _from <= _to; _from++) {
+    //         StructAccount memory userRewardsAccount = _accounts[
+    //             users[_from]
+    //         ];
+    //         StructMonthlyRewards memory rewardsAccount = _monthlyRewards[
+    //             _rewardId
+    //         ];
+    //         StructAccount memory userAccount = IReferral(
+    //             IVariables(_variablesContract).referralContract()
+    //         ).getUserAccount(users[_from]);
 
-            if (
-                userRewardsAccount.selfBusiness >=
-                rewardsAccount.selfBusinessLimit &&
-                userRewardsAccount.directBusiness >=
-                rewardsAccount.directBusinessLimit &&
-                _isUserTeamBusinessForRewards(
-                    userAccount,
-                    rewardsAccount.teamBusinessLimit
-                )
-            ) {
-                _usersList[_achieversListCount] = users[_from];
-                _achieversListCount++;
-            }
-        }
-    }
+    //         if (
+    //             userRewardsAccount.selfBusiness >=
+    //             rewardsAccount.selfBusinessLimit &&
+    //             userRewardsAccount.directBusiness >=
+    //             rewardsAccount.directBusinessLimit &&
+    //             _isUserTeamBusinessForRewards(
+    //                 userAccount,
+    //                 rewardsAccount.teamBusinessLimit
+    //             )
+    //         ) {
+    //             _usersList[_achieversListCount] = users[_from];
+    //             _achieversListCount++;
+    //         }
+    //     }
+    // }
 
-    function getRewardQualifiedUsersList(
-        uint8 _rewardId,
-        uint16 _from,
-        uint16 _to
-    )
-        external
-        view
-        returns (address[] memory _userAddress, uint16 _achieversListCount)
-    {
-        (
-            address[] memory _usersList,
-            uint16 _usersCount
-        ) = _getRewardQualifiedUsers(_rewardId, _from, _to);
-        _achieversListCount = _usersCount;
+    // function getRewardQualifiedUsersList(
+    //     uint8 _rewardId,
+    //     uint16 _from,
+    //     uint16 _to
+    // )
+    //     external
+    //     view
+    //     returns (address[] memory _userAddress, uint16 _achieversListCount)
+    // {
+    //     (
+    //         address[] memory _usersList,
+    //         uint16 _usersCount
+    //     ) = _getRewardQualifiedUsers(_rewardId, _from, _to);
+    //     _achieversListCount = _usersCount;
 
-        _userAddress = new address[](_usersCount);
+    //     _userAddress = new address[](_usersCount);
 
-        for (uint16 i; i < _usersCount; i++) {
-            _userAddress[i] = _usersList[i];
-        }
-    }
+    //     for (uint16 i; i < _usersCount; i++) {
+    //         _userAddress[i] = _usersList[i];
+    //     }
+    // }
 
     function getUsersList()
         external
@@ -368,16 +400,8 @@ contract MonthlyRewardsUpgradeable is
     {
         startTime = _startDate;
         duration = _duration;
-        isPayRewards = _isPayRewards;
+        isPayRewards = _isMonthRewardActive();
         variablesContract = _variablesContract;
-    }
-
-    function setIsPayMonthlyRewards(bool _trueOrFalse) external {
-        require(
-            IVariables(_variablesContract).isAdmin(msg.sender),
-            "You are not admin"
-        );
-        _isPayRewards = _trueOrFalse;
     }
 
     function setVariablesContract(address _contractAddress) external onlyOwner {
