@@ -55,24 +55,30 @@ export const MonthlyRewards = ({ address }: { address: string }) => {
       heading: 'Team Business Main',
       target: targetTeamBusiness,
       value: userBusiness?.teamBusiness,
-      valuePercentage: (userBusiness?.teamBusiness / targetTeamBusiness) * 100,
+      valuePercentage:
+        (userBusiness?.teamBusinessMain / targetTeamBusiness) * 100,
       logo: ANUSDLogo,
     },
     {
       heading: 'Team Business Other',
       target: targetTeamBusiness,
       value: userBusiness?.teamBusiness,
-      valuePercentage: (userBusiness?.teamBusiness / targetTeamBusiness) * 100,
+      valuePercentage:
+        (userBusiness?.teamBusinessOther / targetTeamBusiness) * 100,
       logo: ANUSDLogo,
     },
+
     {
       heading: 'All Team Count',
       target: targetAllTeamCount,
       value: userAccount?.team?.length,
-      valuePercentage: (userAccount?.team?.length / targetAllTeamCount) * 100,
+      valuePercentage:
+        (userAccount?.team?.length / targetAllTeamCount) * 100 ?? 0,
       logo: ANUSDLogo,
     },
   ];
+
+  console.log(userAccount?.team?.length);
 
   return (
     <VStack maxW={700} w="full">

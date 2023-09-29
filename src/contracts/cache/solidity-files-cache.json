@@ -1224,8 +1224,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/MonthlyRewards.sol": {
-      "lastModificationDate": 1695117624547,
-      "contentHash": "aa6d29c50982da70815f292d494cc6e8",
+      "lastModificationDate": 1695991624025,
+      "contentHash": "e48417f6ec5b03b509566d5811226368",
       "sourceName": "contracts/MonthlyRewards.sol",
       "solcConfig": {
         "version": "0.8.17",

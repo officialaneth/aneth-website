@@ -25,10 +25,15 @@ const useCallHook = (methodName: string, arg: any[]) => {
 export const useGetUserMonthlyBusiness = (userAddress: string) => {
   const value = useCallHook('getUserBusiness', [userAddress]);
   const valueObject = {
-    directBusiness: value ? Number(formatEther(value?._directBusiness)) : 0,
-    selfBusiness: value ? Number(formatEther(value?._selfBusiness)) : 0,
-    teamBusiness: value ? Number(formatEther(value?._teamBusiness)) : 0,
+    directBusiness: value ? Number(formatEther(value?.directBusiness)) : 0,
+    selfBusiness: value ? Number(formatEther(value?.selfBusiness)) : 0,
+    teamBusinessMain: value ? Number(formatEther(value?.teamBusinessMain)) : 0,
+    teamBusinessOther: value
+      ? Number(formatEther(value?.teamBusinessOther))
+      : 0,
+    teamBusiness: value ? Number(formatEther(value?.totalTeamBusiness)) : 0,
   };
+
   return valueObject;
 };
 
@@ -58,22 +63,24 @@ export const useGetUserRewardQualified = (userAddress: string) => {
 };
 
 export const useGetMonthlyRewardsDefaults = () => {
-  const value = useCallHook("getDefaults", []);
+  const value = useCallHook('getDefaults', []);
   return value;
-}
+};
 
 export type TypeTeamStruct = {
   userAddress: string;
-  teamLevel: BigNumber
-}
+  teamLevel: BigNumber;
+};
 
 export type TypeMonthUser = {
   referrer: string;
   referee: string[];
-  team: TypeTeamStruct[]
-}
+  team: TypeTeamStruct[];
+};
 
-export const useGetMonthlyUserAccount = (userAddress: string): TypeMonthUser => {
+export const useGetMonthlyUserAccount = (
+  userAddress: string
+): TypeMonthUser => {
   const value = useCallHook('getUserAccount', [userAddress])?.[0];
-  return value ? value : {}
-}
+  return value ? value : {};
+};

@@ -140,19 +140,37 @@ contract MonthlyRewardsUpgradeable is
         external
         view
         returns (
-            uint256 _selfBusiness,
-            uint256 _directBusiness,
-            uint256 _teamBusinessMain,
-            uint256 _teamBusinessOther,
-            uint256  _totalTeamBusiness
+            uint256 selfBusiness,
+            uint256 directBusiness,
+            uint256 teamBusinessMain,
+            uint256 teamBusinessOther,
+            uint256 totalTeamBusiness
         )
     {
         StructAccount storage userRewardsAccount = _accounts[_userAddress];
-        _selfBusiness = userRewardsAccount.selfBusiness;
-        _directBusiness = userRewardsAccount.directBusiness;
-        // _teamBusiness =
-        //     userRewardsAccount.teamBusiness -
-        //     userRewardsAccount.directBusiness;
+        selfBusiness = userRewardsAccount.selfBusiness;
+        directBusiness = userRewardsAccount.directBusiness;
+        totalTeamBusiness =
+            userRewardsAccount.teamBusiness -
+            userRewardsAccount.directBusiness;
+
+        uint256 totalBusiness;
+
+        if (userRewardsAccount.referee.length >= 2) {
+            for (uint16 i; i < userRewardsAccount.referee.length; i++) {
+                StructAccount memory refereeAccount = _accounts[
+                    userRewardsAccount.referee[i]
+                ];
+
+                if (refereeAccount.teamBusiness > teamBusinessMain) {
+                    teamBusinessMain = refereeAccount.teamBusiness;
+                }
+
+                totalBusiness += refereeAccount.teamBusiness;
+            }
+
+            teamBusinessOther = totalBusiness - teamBusinessMain;
+        }
     }
 
     function updateSelfBusiness(
