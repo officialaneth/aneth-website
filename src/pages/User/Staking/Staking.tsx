@@ -17,19 +17,27 @@ import { StakingIDCard } from './StakingIDCard/StakingIDCard';
 export const Staking = () => {
   const { account, chainId } = useEthers();
   const { userAddress } = useParams();
+
   const currentNetwork = useSupportedNetworkInfo[chainId!];
-  const userAccountMapStaking = useStakingUserAccountMap(userAddress ?? account!);
-  const userTotalValueStaked = useGetUserTotalStakedValue(userAddress ?? account!);
-  const userTotalPendingRewards = useGetAllStakingRewards(userAddress ?? account!);
+  const userAccountMapStaking = useStakingUserAccountMap(
+    userAddress ?? account!
+  );
+  const userTotalValueStaked = useGetUserTotalStakedValue(
+    userAddress ?? account!
+  );
+  const userTotalPendingRewards = useGetAllStakingRewards(
+    userAddress ?? account!
+  );
   const userTotalRewardClaimedToken = useGetUserTotalRewardClaimedToken(
-    account!
+    userAddress ?? account!
   );
   const userTotalRewardClaimedANUSD = useGetUserTotalRewardClaimedANUSD(
-    account!
+    userAddress ?? account!
   );
   const userTotalPrincipalAmountClaimed = useGetUserTotalPrincipalClaimed(
-    account!
+    userAddress ?? account!
   );
+
   const navigate = useNavigate();
   return (
     <VStack w="full" spacing={10}>
@@ -59,7 +67,7 @@ export const Staking = () => {
                 currencyName={currentNetwork?.Token?.Symbol}
                 logo={currentNetwork?.Token?.Logo}
                 currencyValue={(
-                  userTotalValueStaked?.token - userTotalRewardClaimedToken
+                  userTotalValueStaked?.token - userTotalPrincipalAmountClaimed
                 ).toFixed(5)}
               ></BalancesCard>
             </CardContainer>

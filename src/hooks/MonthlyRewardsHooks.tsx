@@ -24,6 +24,7 @@ const useCallHook = (methodName: string, arg: any[]) => {
 
 export const useGetUserMonthlyBusiness = (userAddress: string) => {
   const value = useCallHook('getUserBusiness', [userAddress]);
+  
   const valueObject = {
     directBusiness: value ? Number(formatEther(value?.directBusiness)) : 0,
     selfBusiness: value ? Number(formatEther(value?.selfBusiness)) : 0,
