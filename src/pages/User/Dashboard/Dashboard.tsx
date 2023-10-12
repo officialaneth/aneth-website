@@ -13,6 +13,7 @@ import { UserTeam } from './UserTeam/UserTeam';
 export const Dashboard = () => {
   const { account, chainId } = useEthers();
   const { userAddress } = useParams();
+  // console.log(userAddress);
   const currentNetwork = useSupportedNetworkInfo;
   return (
     <VStack w="full" spacing={10}>

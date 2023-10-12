@@ -36,8 +36,6 @@ export const UserRefereeCard = ({
   const currentWebProtocol = window.location.protocol;
   const currentWebHost = window.location.host;
 
-  console.log(currentWebProtocol);
-
   return (
     <MotionCard
       p={5}
