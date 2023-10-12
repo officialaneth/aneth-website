@@ -34,6 +34,20 @@ interface IVariables {
     function isAdmin(address _address) external view returns (bool);
 }
 
+interface IReferral {
+    function getUserTeam(
+        address _address
+    )
+        external
+        view
+        returns (
+            address[] memory userReferee,
+            uint256 userRefereeCount,
+            address[] memory userTeamAddress,
+            uint256 userTeamCount
+        );
+}
+
 struct StructTeam {
     address userAddress;
     uint256 teamLevel;
@@ -156,10 +170,20 @@ contract MonthlyRewardsUpgradeable is
 
         uint256 totalBusiness;
 
-        if (userRewardsAccount.referee.length >= 2) {
-            for (uint16 i; i < userRewardsAccount.referee.length; i++) {
+        (
+            address[] memory userReferee,
+            uint256 userRefereeCount,
+            address[] memory userTeamAddress,
+            uint256 userTeamCount
+        ) = IReferral(IVariables(_variablesContract).referralContract())
+                .getUserTeam(_userAddress);
+
+        
+
+        if (userRefereeCount >= 2) {
+            for (uint16 i; i < userRefereeCount; i++) {
                 StructAccount memory refereeAccount = _accounts[
-                    userRewardsAccount.referee[i]
+                    userReferee[i]
                 ];
 
                 if (refereeAccount.teamBusiness > teamBusinessMain) {

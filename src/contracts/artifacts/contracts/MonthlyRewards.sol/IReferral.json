@@ -1,0 +1,45 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IReferral",
+  "sourceName": "contracts/MonthlyRewards.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "getUserTeam",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "userReferee",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "userRefereeCount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "userTeamAddress",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "userTeamCount",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

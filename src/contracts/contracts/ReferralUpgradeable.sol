@@ -716,6 +716,7 @@ contract ReferralUpgradeable is
                         );
                     }
                 }
+                
                 referrerAccount.totalBusiness += _valueInUSD;
 
                 if (monthlyRewardsInterface.isMonthRewardActive()) {

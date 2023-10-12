@@ -826,8 +826,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/ReferralUpgradeable.sol": {
-      "lastModificationDate": 1695118113296,
-      "contentHash": "e7d7742927aed177f39ab451c14b2333",
+      "lastModificationDate": 1697107610055,
+      "contentHash": "7144f556ad76d886ab44482a2045721e",
       "sourceName": "contracts/ReferralUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -1224,8 +1224,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/MonthlyRewards.sol": {
-      "lastModificationDate": 1695991624025,
-      "contentHash": "e48417f6ec5b03b509566d5811226368",
+      "lastModificationDate": 1697107992897,
+      "contentHash": "4f8672a0300a50a47848b3412b9e596c",
       "sourceName": "contracts/MonthlyRewards.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -1261,6 +1261,7 @@
         "^0.8.9"
       ],
       "artifacts": [
+        "IReferral",
         "IVariables",
         "MonthlyRewardsUpgradeable"
       ]

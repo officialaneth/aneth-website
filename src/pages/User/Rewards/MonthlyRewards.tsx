@@ -69,7 +69,6 @@ export const MonthlyRewards = ({ address }: { address: string }) => {
         (userBusiness?.teamBusinessOther / targetTeamBusiness) * 100,
       logo: ANUSDLogo,
     },
-
     {
       heading: 'All Team Count',
       target: targetAllTeamCount,
