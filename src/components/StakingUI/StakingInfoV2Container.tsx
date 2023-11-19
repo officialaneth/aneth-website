@@ -23,8 +23,8 @@ export const StakingInfoV2Container = ({
   tokenSymbol: string;
   anusdSymbol: string;
 }) => {
-  const stakeInfoMap = useStakeInfoMap(stakingID);
-  const getStakingRewardByID = useGetStakingReward(stakingID);
+  const stakeInfoMap = useStakeInfoMap(stakingID, true);
+  const getStakingRewardByID = useGetStakingReward(stakingID, true);
   const { chainId } = useEthers();
   const currentNetwork = useSupportedNetworkInfo[chainId!];
 
