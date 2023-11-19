@@ -23,6 +23,8 @@ export const Staking = () => {
   const userAccountMapStaking = useStakingUserAccountMap(
     userAddress ?? account!
   );
+
+  //V1
   const userTotalValueStaked = useGetUserTotalStakedValue(
     userAddress ?? account!
   );
@@ -37,6 +39,34 @@ export const Staking = () => {
   );
   const userTotalPrincipalAmountClaimed = useGetUserTotalPrincipalClaimed(
     userAddress ?? account!
+  );
+
+  //V2
+
+  const userAccountMapStakingV2 = useStakingUserAccountMap(
+    userAddress ?? account!,
+    true
+  );
+
+  const userTotalValueStakedV2 = useGetUserTotalStakedValue(
+    userAddress ?? account!,
+    true
+  );
+  const userTotalPendingRewardsV2 = useGetAllStakingRewards(
+    userAddress ?? account!,
+    true
+  );
+  const userTotalRewardClaimedTokenV2 = useGetUserTotalRewardClaimedToken(
+    userAddress ?? account!,
+    true
+  );
+  const userTotalRewardClaimedANUSDV2 = useGetUserTotalRewardClaimedANUSD(
+    userAddress ?? account!,
+    true
+  );
+  const userTotalPrincipalAmountClaimedV2 = useGetUserTotalPrincipalClaimed(
+    userAddress ?? account!,
+    true
   );
 
   const navigate = useNavigate();
@@ -143,7 +173,7 @@ export const Staking = () => {
       <Divider />
       <VStack w="full">
         <Heading>Staking V2</Heading>
-        {userAccountMapStaking?.stakingIDs?.length > 0 ? (
+        {userAccountMapStakingV2?.stakingIDs?.length > 0 ? (
           <VStack spacing={10}>
             <Heading>Mining Stats</Heading>
             <Wrap w="full" justify="center" spacing={10}>
@@ -152,7 +182,7 @@ export const Staking = () => {
                 <BalancesCard
                   currencyName={'No of mining'}
                   // logo={currentNetwork?.Token?.Logo}
-                  currencyValue={userAccountMapStaking?.stakingIDs?.length.toString()}
+                  currencyValue={userAccountMapStakingV2?.stakingIDs?.length.toString()}
                 ></BalancesCard>
               </CardContainer>
               {/* <CardContainer>
@@ -179,7 +209,7 @@ export const Staking = () => {
                 <BalancesCard
                   currencyName={currentNetwork?.ANUSD?.Symbol}
                   logo={currentNetwork?.ANUSD?.Logo}
-                  currencyValue={userTotalValueStaked.anusd?.toFixed(3)}
+                  currencyValue={userTotalValueStakedV2.anusd?.toFixed(3)}
                 ></BalancesCard>
               </CardContainer>
               <CardContainer>
@@ -187,7 +217,7 @@ export const Staking = () => {
                 <BalancesCard
                   currencyName={currentNetwork?.Token?.Symbol}
                   logo={currentNetwork?.Token?.Logo}
-                  currencyValue={userTotalRewardClaimedToken?.toFixed(5)}
+                  currencyValue={userTotalRewardClaimedTokenV2?.toFixed(5)}
                 ></BalancesCard>
               </CardContainer>
               <CardContainer>
@@ -196,7 +226,7 @@ export const Staking = () => {
                   currencyName={currentNetwork?.ANUSD?.Symbol}
                   logo={currentNetwork?.ANUSD?.Logo}
                   currencyValue={(
-                    userTotalValueStaked.anusd - userTotalRewardClaimedANUSD
+                    userTotalValueStakedV2.anusd - userTotalRewardClaimedANUSDV2
                   )?.toFixed(5)}
                 ></BalancesCard>
               </CardContainer>
@@ -205,7 +235,7 @@ export const Staking = () => {
                 <BalancesCard
                   currencyName={currentNetwork?.ANUSD?.Symbol}
                   logo={currentNetwork?.ANUSD?.Logo}
-                  currencyValue={userTotalPendingRewards?.toFixed(5)}
+                  currencyValue={userTotalPendingRewardsV2?.toFixed(5)}
                 ></BalancesCard>
               </CardContainer>
               {/* <CardContainer>
@@ -222,7 +252,7 @@ export const Staking = () => {
             <StakingIDCardV2
               tokenSymbol={currentNetwork?.Token?.Symbol}
               anusdSymbol={currentNetwork?.ANUSD?.Symbol}
-              stakingIDs={userAccountMapStaking?.stakingIDs}
+              stakingIDs={userAccountMapStakingV2?.stakingIDs}
             ></StakingIDCardV2>
           </VStack>
         ) : (

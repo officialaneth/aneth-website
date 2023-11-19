@@ -1,35 +1,40 @@
-import { useCall, useEthers } from "@usedapp/core";
-import { BigNumber } from "ethers";
-import { formatEther } from "ethers/lib/utils";
-import { AddressZero, useSupportedNetworkInfo } from "../constants";
+import { useCall, useEthers } from '@usedapp/core';
+import { BigNumber } from 'ethers';
+import { formatEther } from 'ethers/lib/utils';
+import { AddressZero, useSupportedNetworkInfo } from '../constants';
 
-const useCallHook = (methodName: string, arg: any[]) => {
+const useCallHook = (methodName: string, arg: any[], isV2?: boolean) => {
   const { chainId } = useEthers();
   const currentNetwork = useSupportedNetworkInfo[chainId!];
   const { value, error } =
     useCall(
-      currentNetwork?.stakingV2ContractAddress && {
-        contract: currentNetwork?.stakingV2ContractInterface,
+      (isV2
+        ? currentNetwork?.stakingV2ContractAddress
+        : currentNetwork?.stakingContractAddress) && {
+        contract: isV2
+          ? currentNetwork?.stakingV2ContractInterface
+          : currentNetwork?.stakingContractInterface,
         method: methodName,
         args: arg,
       }
     ) ?? {};
 
   if (error) {
-    console.error("Staking Hooks", error.message);
+    console.error('Staking Hooks', error.message);
     return undefined;
   }
   return value;
 };
 
 export const useStakingUserAccountMap = (
-  account: string
+  account: string,
+  isV2?: boolean
 ): {
   isDisabled: boolean;
   stakingIDs: BigNumber[] | [];
   blockNumbers: BigNumber[] | [];
 } => {
-  const value = useCallHook("userAccountMap", [account]);
+  const value = useCallHook('userAccountMap', [account], isV2);
   const valueObject = {
     isDisabled: value ? value?.[0]?.isDisabled : false,
     stakingIDs: value ? value?.[0]?.stakingID : [],
@@ -39,7 +44,8 @@ export const useStakingUserAccountMap = (
 };
 
 export const useStakeInfoMap = (
-  stakingID: string
+  stakingID: string,
+  isV2?: boolean
 ): {
   isStaked: boolean;
   owner: string;
@@ -53,7 +59,7 @@ export const useStakeInfoMap = (
   principalClaimed: number;
   lastTimeRewardClaimed: number;
 } => {
-  const value = useCallHook("stakeInfoMap", [stakingID]);
+  const value = useCallHook('stakeInfoMap', [stakingID], isV2);
   const valueObject = {
     isStaked: value ? value?.[0]?.isStaked : false,
     owner: value ? value?.[0]?.owner : AddressZero,
@@ -79,20 +85,23 @@ export const useStakeInfoMap = (
   return valueObject;
 };
 
-export const useGetStakingReward = (stakingID: string | number) => {
-  const value = useCallHook("getStakingReward", [stakingID]);
+export const useGetStakingReward = (
+  stakingID: string | number,
+  isV2?: boolean
+) => {
+  const value = useCallHook('getStakingReward', [stakingID], isV2);
   const valueFormatted = value ? Number(formatEther(value?.[0])) : 0;
   return valueFormatted;
 };
 
-export const useGetAllStakingRewards = (address: string) => {
-  const value = useCallHook("getUserAllStakingsRewards", [address]);
+export const useGetAllStakingRewards = (address: string, isV2?: boolean) => {
+  const value = useCallHook('getUserAllStakingsRewards', [address], isV2);
   const valueFormatted = value ? Number(formatEther(value?.[0])) : 0;
   return valueFormatted;
 };
 
-export const useGetUserTotalStakedValue = (address: string) => {
-  const value = useCallHook("getUserTotalValueStaked", [address]);
+export const useGetUserTotalStakedValue = (address: string, isV2?: boolean) => {
+  const value = useCallHook('getUserTotalValueStaked', [address], isV2);
 
   const valueObject = {
     token: value ? Number(formatEther(value?.token)) : 0,
@@ -102,20 +111,29 @@ export const useGetUserTotalStakedValue = (address: string) => {
   return valueObject;
 };
 
-export const useGetUserTotalRewardClaimedANUSD = (address: string) => {
-  const value = useCallHook("getUserTotalRewardClaimedANUSD", [address]);
+export const useGetUserTotalRewardClaimedANUSD = (
+  address: string,
+  isV2?: boolean
+) => {
+  const value = useCallHook('getUserTotalRewardClaimedANUSD', [address], isV2);
   const valueFormatted = value ? Number(formatEther(value?.[0])) : 0;
   return valueFormatted;
 };
 
-export const useGetUserTotalRewardClaimedToken = (address: string) => {
-  const value = useCallHook("getUserTotalRewardClaimedToken", [address]);
+export const useGetUserTotalRewardClaimedToken = (
+  address: string,
+  isV2?: boolean
+) => {
+  const value = useCallHook('getUserTotalRewardClaimedToken', [address], isV2);
   const valueFormatted = value ? Number(formatEther(value?.[0])) : 0;
   return valueFormatted;
 };
 
-export const useGetUserTotalPrincipalClaimed = (address: string) => {
-  const value = useCallHook("getUserTotalPrincipalClaimed", [address]);
+export const useGetUserTotalPrincipalClaimed = (
+  address: string,
+  isV2?: boolean
+) => {
+  const value = useCallHook('getUserTotalPrincipalClaimed', [address], isV2);
   const valueFormatted = value ? Number(formatEther(value?.[0])) : 0;
   return valueFormatted;
 };
