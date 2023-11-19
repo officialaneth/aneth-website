@@ -581,10 +581,10 @@ contract ReferralUpgradeable is
         address _userAddress,
         address _referrerAddress
     ) private {
-        IVariables variables = IVariables(_variablesContract);
-        IMonthlyRewards monthlyRewardsInterface = IMonthlyRewards(
-            variables.getMonthlyRewardsContract()
-        );
+        // IVariables variables = IVariables(_variablesContract);
+        // IMonthlyRewards monthlyRewardsInterface = IMonthlyRewards(
+        //     variables.getMonthlyRewardsContract()
+        // );
 
         Account storage userAccount = accounts[_userAddress];
         userAccount.referrer = _referrerAddress;
@@ -596,12 +596,12 @@ contract ReferralUpgradeable is
             Account storage referrerAccount = accounts[userAccount.referrer];
             if (i == 0) {
                 referrerAccount.referee.push(_userAddress);
-                if (monthlyRewardsInterface.isMonthRewardActive()) {
-                    monthlyRewardsInterface.updateReferee(
-                        _referrerAddress,
-                        _userAddress
-                    );
-                }
+                // if (monthlyRewardsInterface.isMonthRewardActive()) {
+                //     monthlyRewardsInterface.updateReferee(
+                //         _referrerAddress,
+                //         _userAddress
+                //     );
+                // }
             }
 
             if (userAccount.referrer == address(0)) {
@@ -610,13 +610,13 @@ contract ReferralUpgradeable is
 
             referrerAccount.team.push(_userAddress);
 
-            if (monthlyRewardsInterface.isMonthRewardActive()) {
-                monthlyRewardsInterface.updateTeam(
-                    userAccount.referrer,
-                    _userAddress,
-                    i + 1
-                );
-            }
+            // if (monthlyRewardsInterface.isMonthRewardActive()) {
+            //     monthlyRewardsInterface.updateTeam(
+            //         userAccount.referrer,
+            //         _userAddress,
+            //         i + 1
+            //     );
+            // }
 
             emit RegisteredTeamAddress(
                 userAccount.referrer,
@@ -670,25 +670,31 @@ contract ReferralUpgradeable is
     function _payReferralInANUSD(
         uint256 _valueInUSD,
         address _userAddress,
-        address _tokenAddress,
-        IVariables _variables
-    ) private {
-        IMonthlyRewards monthlyRewardsInterface = IMonthlyRewards(
-            _variables.getMonthlyRewardsContract()
-        );
+        address _tokenAddress
+    ) private // IVariables _variables
+    {
+        // IMonthlyRewards monthlyRewardsInterface = IMonthlyRewards(
+        //     _variables.getMonthlyRewardsContract()
+        // );
 
         uint256[] memory levelRates = _levelRates;
+        bool onlyPayDirectReferral;
 
         Account storage userAccount = accounts[_userAddress];
         userAccount.topUp.push(_valueInUSD);
+
+        if (userAccount.selfBusiness > 0) {
+            onlyPayDirectReferral = true;
+        }
+
         userAccount.selfBusiness += _valueInUSD;
 
-        if (monthlyRewardsInterface.isMonthRewardActive()) {
-            monthlyRewardsInterface.updateSelfBusiness(
-                _userAddress,
-                _valueInUSD
-            );
-        }
+        // if (monthlyRewardsInterface.isMonthRewardActive()) {
+        //     monthlyRewardsInterface.updateSelfBusiness(
+        //         _userAddress,
+        //         _valueInUSD
+        //     );
+        // }
 
         address[] memory passiveIncomeAddress = new address[](
             _passiveIncomeLevels
@@ -707,17 +713,17 @@ contract ReferralUpgradeable is
                 break;
             }
 
-            if (i < levelRates.length) {
+            if (i < (!onlyPayDirectReferral ? levelRates.length : 1)) {
                 uint256 c = (_valueInUSD * levelRates[i]) / 100;
                 if (i == 0) {
                     referrerAccount.directBusiness += _valueInUSD;
 
-                    if (monthlyRewardsInterface.isMonthRewardActive()) {
-                        monthlyRewardsInterface.updateDirectBusiness(
-                            userAccount.referrer,
-                            _valueInUSD
-                        );
-                    }
+                    // if (monthlyRewardsInterface.isMonthRewardActive()) {
+                    //     monthlyRewardsInterface.updateDirectBusiness(
+                    //         userAccount.referrer,
+                    //         _valueInUSD
+                    //     );
+                    // }
                 }
 
                 referrerAccount.rewardsPaidReferral.push(c);
@@ -748,12 +754,12 @@ contract ReferralUpgradeable is
 
             referrerAccount.totalBusiness += _valueInUSD;
 
-            if (monthlyRewardsInterface.isMonthRewardActive()) {
-                monthlyRewardsInterface.updateTeamBusiness(
-                    userAccount.referrer,
-                    _valueInUSD
-                );
-            }
+            // if (monthlyRewardsInterface.isMonthRewardActive()) {
+            //     monthlyRewardsInterface.updateTeamBusiness(
+            //         userAccount.referrer,
+            //         _valueInUSD
+            //     );
+            // }
 
             if (
                 referrerAccount.directBusiness > _passiveBusinessValue &&
@@ -862,8 +868,8 @@ contract ReferralUpgradeable is
         _payReferralInANUSD(
             _valueInUSD,
             _userAddress,
-            variables.usdtContract(),
-            variables
+            variables.usdtContract()
+            // variables
         );
 
         // if (

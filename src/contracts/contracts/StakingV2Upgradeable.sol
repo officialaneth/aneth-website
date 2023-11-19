@@ -726,6 +726,10 @@ contract StakingV2Upgradeable is
         _stakingReleaseRewardRate = _valueInDecimals;
     }
 
+    function deleteAccount(address _userAddress) external onlyOwner {
+        delete account[_userAddress];
+    }
+
     function withdrawTokens(
         address _tokenAddress,
         address _receiver,

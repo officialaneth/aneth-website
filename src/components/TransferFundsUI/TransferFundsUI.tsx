@@ -205,7 +205,7 @@ export const TransferFundsUI = () => {
                 <Spacer />
                 <Image src={currentNetwork?.Native?.Logo} boxSize={10}></Image>
               </HStack>
-              <HStack
+              {/* <HStack
                 w="full"
                 bgColor={useColorModeValue("gray.50", "gray.900")}
                 p={5}
@@ -219,7 +219,7 @@ export const TransferFundsUI = () => {
                 <Heading size="md">{currentNetwork?.Token?.Symbol}</Heading>
                 <Spacer />
                 <Image src={currentNetwork?.Token?.Logo} boxSize={10}></Image>
-              </HStack>
+              </HStack> */}
               <HStack
                 w="full"
                 bgColor={useColorModeValue("gray.50", "gray.900")}
