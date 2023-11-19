@@ -6,7 +6,7 @@ import { StakingInfoContainer } from "../../../../components/StakingUI/StakingIn
 import { StakingInfoV2Container } from "../../../../components/StakingUI/StakingInfoV2Container";
 import { TokenSymbol } from "../../../../constants";
 
-export const StakingIDCard = ({
+export const StakingIDCardV2 = ({
   tokenSymbol,
   anusdSymbol,
   stakingIDs,
@@ -19,12 +19,12 @@ export const StakingIDCard = ({
     <Wrap w="full" p={2} spacing={10} align="center" justify="center">
       {stakingIDs.map((stakingID: BigNumber, key: number) => {
         return (
-          <StakingInfoContainer
+          <StakingInfoV2Container
             stakingID={stakingID?.toString()}
             tokenSymbol={tokenSymbol}
             anusdSymbol={anusdSymbol}
             key={key}
-          ></StakingInfoContainer>
+          ></StakingInfoV2Container>
         );
       })}
     </Wrap>

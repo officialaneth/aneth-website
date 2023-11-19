@@ -8,8 +8,8 @@ const useCallHook = (methodName: string, arg: any[]) => {
   const currentNetwork = useSupportedNetworkInfo[chainId!];
   const { value, error } =
     useCall(
-      currentNetwork?.stakingContractAddress && {
-        contract: currentNetwork?.stakingContractInterface,
+      currentNetwork?.stakingV2ContractAddress && {
+        contract: currentNetwork?.stakingV2ContractInterface,
         method: methodName,
         args: arg,
       }

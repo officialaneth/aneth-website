@@ -65,6 +65,11 @@ export const useSupportedNetworkInfo = {
       '0x44D0818CF7029c022D1558B556BbfB353572Bb26',
       StakingInterface?.abi
     ),
+    stakingV2ContractAddress: '0xB8dEA95FFC442e1eDc6E9c5353E1C3EBcB6D3750',
+    stakingV2ContractInterface: new Contract(
+      '0xB8dEA95FFC442e1eDc6E9c5353E1C3EBcB6D3750',
+      StakingInterface?.abi
+    ),
     contactDetailsContractAddress: '0xbcC00f99D29Df2A281F14FDB6342F9E73B4802D1',
     contactDetailsContractInterface: new Contract(
       '0xbcC00f99D29Df2A281F14FDB6342F9E73B4802D1',

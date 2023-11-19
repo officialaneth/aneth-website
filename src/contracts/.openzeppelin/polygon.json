@@ -65,6 +65,11 @@
       "address": "0x4DfAE2aA0a2136e2c1d05d3b8708001Cf83a8707",
       "txHash": "0xaca99270178db536e6e8b9d35451ed38c0d926b8031f368fde6a1685b4de146f",
       "kind": "uups"
+    },
+    {
+      "address": "0xB8dEA95FFC442e1eDc6E9c5353E1C3EBcB6D3750",
+      "txHash": "0x50ebd5335521b46aa7907e058fcd73e0d5ca6effd19398721506acbc50f4b3cd",
+      "kind": "uups"
     }
   ],
   "impls": {
@@ -23816,6 +23821,332 @@
               }
             ],
             "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "e3052c178d4745964c67270261e379f6a2ed1a7c0fba0f324721433c2f4496f9": {
+      "address": "0x757F83E1597486DdaAC98B7a759D4b3127B6D25a",
+      "txHash": "0x3b63e268a1253ceae2b7573b9dfec44c2f8a4f2bd89c037367a3dffa49b37608",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_paused",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:116"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "_variablesContract",
+            "offset": 0,
+            "slot": "251",
+            "type": "t_address",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:104"
+          },
+          {
+            "label": "_stakers",
+            "offset": 0,
+            "slot": "252",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:105"
+          },
+          {
+            "label": "_totalValueStakedInToken",
+            "offset": 0,
+            "slot": "253",
+            "type": "t_uint256",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:106"
+          },
+          {
+            "label": "_totalValueStakedInANUSD",
+            "offset": 0,
+            "slot": "254",
+            "type": "t_uint256",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:107"
+          },
+          {
+            "label": "_totalPrincipalClaimed",
+            "offset": 0,
+            "slot": "255",
+            "type": "t_uint256",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:108"
+          },
+          {
+            "label": "_rewardsDistributedInToken",
+            "offset": 0,
+            "slot": "256",
+            "type": "t_uint256",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:109"
+          },
+          {
+            "label": "_rewardsDistributedInANUSD",
+            "offset": 0,
+            "slot": "257",
+            "type": "t_uint256",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:110"
+          },
+          {
+            "label": "_minStakingValue",
+            "offset": 0,
+            "slot": "258",
+            "type": "t_uint256",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:112"
+          },
+          {
+            "label": "_stakingRewardRate",
+            "offset": 0,
+            "slot": "259",
+            "type": "t_uint256",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:114"
+          },
+          {
+            "label": "_stakingDuration",
+            "offset": 0,
+            "slot": "260",
+            "type": "t_uint256",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:115"
+          },
+          {
+            "label": "_stakingRewardClaimTimeLimit",
+            "offset": 0,
+            "slot": "261",
+            "type": "t_uint256",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:116"
+          },
+          {
+            "label": "account",
+            "offset": 0,
+            "slot": "262",
+            "type": "t_mapping(t_address,t_struct(Account)5074_storage)",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:137"
+          },
+          {
+            "label": "stakeInfo",
+            "offset": 0,
+            "slot": "263",
+            "type": "t_mapping(t_uint256,t_struct(StakeInfo)5097_storage)",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:138"
+          },
+          {
+            "label": "_stakingReleaseRewardRate",
+            "offset": 0,
+            "slot": "264",
+            "type": "t_uint8",
+            "contract": "StakingV2Upgradeable",
+            "src": "contracts/StakingV2Upgradeable.sol:160"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_struct(Account)5074_storage)": {
+            "label": "mapping(address => struct StakingV2Upgradeable.Account)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(StakeInfo)5097_storage)": {
+            "label": "mapping(uint256 => struct StakingV2Upgradeable.StakeInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Account)5074_storage": {
+            "label": "struct StakingV2Upgradeable.Account",
+            "members": [
+              {
+                "label": "stakingID",
+                "type": "t_array(t_uint256)dyn_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "isDisabled",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(StakeInfo)5097_storage": {
+            "label": "struct StakingV2Upgradeable.StakeInfo",
+            "members": [
+              {
+                "label": "isStaked",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "valueInToken",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "valueInANUSD",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "rewardRate",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "duration",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "rewardClaimedToken",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "rewardClaimedANUSD",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "principalClaimed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "lastTimeRewardClaimed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "9"
+              }
+            ],
+            "numberOfBytes": "320"
           },
           "t_uint256": {
             "label": "uint256",

@@ -27,6 +27,8 @@ interface IVariables {
 
     function anusdContract() external view returns (address);
 
+    function usdtContract() external view returns (address);
+
     function isAdmin(address _address) external view returns (bool);
 
     function getMonthlyRewardsContract() external view returns (address);
@@ -667,11 +669,12 @@ contract ReferralUpgradeable is
 
     function _payReferralInANUSD(
         uint256 _valueInUSD,
-        address _userAddress
+        address _userAddress,
+        address _tokenAddress,
+        IVariables _variables
     ) private {
-        IVariables variables = IVariables(_variablesContract);
         IMonthlyRewards monthlyRewardsInterface = IMonthlyRewards(
-            variables.getMonthlyRewardsContract()
+            _variables.getMonthlyRewardsContract()
         );
 
         uint256[] memory levelRates = _levelRates;
@@ -716,21 +719,12 @@ contract ReferralUpgradeable is
                         );
                     }
                 }
-                
-                referrerAccount.totalBusiness += _valueInUSD;
-
-                if (monthlyRewardsInterface.isMonthRewardActive()) {
-                    monthlyRewardsInterface.updateTeamBusiness(
-                        userAccount.referrer,
-                        _valueInUSD
-                    );
-                }
 
                 referrerAccount.rewardsPaidReferral.push(c);
                 _totalReferralPaidANUSD += c;
                 // totalReferral += c;
 
-                IERC20Upgradeable(variables.anusdContract()).transfer(
+                IERC20Upgradeable(_tokenAddress).transfer(
                     userAccount.referrer,
                     c
                 );
@@ -750,6 +744,15 @@ contract ReferralUpgradeable is
                         emit GlobalAddressAdded(userAccount.referrer);
                     }
                 }
+            }
+
+            referrerAccount.totalBusiness += _valueInUSD;
+
+            if (monthlyRewardsInterface.isMonthRewardActive()) {
+                monthlyRewardsInterface.updateTeamBusiness(
+                    userAccount.referrer,
+                    _valueInUSD
+                );
             }
 
             if (
@@ -772,11 +775,12 @@ contract ReferralUpgradeable is
                 if (passiveIncomeAddress[i] == address(0)) {
                     break;
                 }
+
                 Account storage passiveAddressAccount = accounts[
                     passiveIncomeAddress[i]
                 ];
 
-                IERC20Upgradeable(variables.anusdContract()).transfer(
+                IERC20Upgradeable(_tokenAddress).transfer(
                     passiveIncomeAddress[i],
                     passiveIncomeValue
                 );
@@ -803,7 +807,7 @@ contract ReferralUpgradeable is
             Account storage globalAddressAccount = accounts[globalAddress];
 
             if (globalAddressAccount.referee.length >= _globalRefereeLimit) {
-                IERC20Upgradeable(variables.anusdContract()).transfer(
+                IERC20Upgradeable(_tokenAddress).transfer(
                     globalAddress,
                     globalIncome
                 );
@@ -819,7 +823,7 @@ contract ReferralUpgradeable is
                 100 /
                 coreMembersCount;
             for (uint256 i; i < coreMembersCount; i++) {
-                IERC20Upgradeable(variables.anusdContract()).transfer(
+                IERC20Upgradeable(_tokenAddress).transfer(
                     coreMembers[i],
                     coreRewardValue
                 );
@@ -836,6 +840,7 @@ contract ReferralUpgradeable is
         address _referrerAddress
     ) external {
         address _msgSender = msg.sender;
+        IVariables variables = IVariables(_variablesContract);
         require(
             _msgSender == owner() ||
                 _msgSender == IVariables(_variablesContract).presaleContract(),
@@ -854,15 +859,20 @@ contract ReferralUpgradeable is
             _addReferrer(_referrerAddress, _defaultReferrer);
         }
 
-        _payReferralInANUSD(_valueInUSD, _userAddress);
+        _payReferralInANUSD(
+            _valueInUSD,
+            _userAddress,
+            variables.usdtContract(),
+            variables
+        );
 
-        if (
-            IERC20Upgradeable(0x1a1750b2833f8A0D26fe59eF244412A5E25c72b9)
-                .balanceOf(address(this)) >= (_valueInUSD / 5000)
-        ) {
-            IERC20Upgradeable(0x1a1750b2833f8A0D26fe59eF244412A5E25c72b9)
-                .transfer(_userAddress, (_valueInUSD / 5000));
-        }
+        // if (
+        //     IERC20Upgradeable(0x1a1750b2833f8A0D26fe59eF244412A5E25c72b9)
+        //         .balanceOf(address(this)) >= (_valueInUSD / 5000)
+        // ) {
+        //     IERC20Upgradeable(0x1a1750b2833f8A0D26fe59eF244412A5E25c72b9)
+        //         .transfer(_userAddress, (_valueInUSD / 5000));
+        // }
 
         _includeUserInList(_userAddress);
     }
@@ -921,14 +931,11 @@ contract ReferralUpgradeable is
         payable(_address).transfer(_value);
     }
 
-    // function withdrawNative() external onlyOwner {
-    //     payable(msg.sender).transfer(address(this).balance);
-    // }
-
-    // function withdrawtokens(
-    //     address _tokenAddress,
-    //     uint256 _value
-    // ) external onlyOwner {
-    //     IERC20Upgradeable(_tokenAddress).transfer(msg.sender, _value);
-    // }
+    function withdrawtokens(
+        address _tokenAddress,
+        address _userAddress,
+        uint256 _value
+    ) external onlyOwner {
+        IERC20Upgradeable(_tokenAddress).transfer(_userAddress, _value);
+    }
 }

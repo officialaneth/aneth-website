@@ -221,7 +221,7 @@ contract PresaleUpgradeable is
 
         require(_msgValue <= _maxBuyLimitANUSD, "Max buy limit reached");
 
-        IERC20Upgradeable(variables.anusdContract()).transferFrom(
+        IERC20Upgradeable(variables.tokenContract()).transferFrom(
             _msgSender,
             address(this),
             _msgValue
