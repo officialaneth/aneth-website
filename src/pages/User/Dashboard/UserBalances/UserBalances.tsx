@@ -1,6 +1,6 @@
 import { Heading, VStack } from '@chakra-ui/react';
 import { useEtherBalance, useEthers, useTokenBalance } from '@usedapp/core';
-import { formatEther } from 'ethers/lib/utils';
+import { formatEther, formatUnits } from 'ethers/lib/utils';
 import React from 'react';
 import { BalancesCard, CardContainer } from '../../../../components/UI';
 import { useSupportedNetworkInfo } from '../../../../constants';
@@ -40,10 +40,13 @@ export const UserBalances = ({
       ></BalancesCard>
       <BalancesCard
         currencyName={`${currentNetwork[chainId]?.USDT?.Symbol}`}
-        currencyValue={Number(formatEther(userUSDTBalanceInWei ?? 0)).toFixed(
-          3
-        )}
-        logo={currentNetwork[chainId]?.USDT?.Logo}
+        currencyValue={Number(
+          formatUnits(
+            userUSDTBalanceInWei ?? 0,
+            currentNetwork[chainId]?.USDT?.Decimals
+          )
+        ).toFixed(3)}
+        logo={currentNetwork[chainId]?.Native?.Logo}
       ></BalancesCard>
       <BalancesCard
         currencyName={`${currentNetwork[chainId]?.ANUSD?.Symbol}`}
