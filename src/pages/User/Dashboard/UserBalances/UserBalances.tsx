@@ -46,7 +46,7 @@ export const UserBalances = ({
             currentNetwork[chainId]?.USDT?.Decimals
           )
         ).toFixed(3)}
-        logo={currentNetwork[chainId]?.Native?.Logo}
+        logo={currentNetwork[chainId]?.USDT?.Logo}
       ></BalancesCard>
       <BalancesCard
         currencyName={`${currentNetwork[chainId]?.ANUSD?.Symbol}`}
