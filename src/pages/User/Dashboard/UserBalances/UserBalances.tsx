@@ -1,9 +1,9 @@
-import { Heading, VStack } from "@chakra-ui/react";
-import { useEtherBalance, useEthers, useTokenBalance } from "@usedapp/core";
-import { formatEther } from "ethers/lib/utils";
-import React from "react";
-import { BalancesCard, CardContainer } from "../../../../components/UI";
-import { useSupportedNetworkInfo } from "../../../../constants";
+import { Heading, VStack } from '@chakra-ui/react';
+import { useEtherBalance, useEthers, useTokenBalance } from '@usedapp/core';
+import { formatEther } from 'ethers/lib/utils';
+import React from 'react';
+import { BalancesCard, CardContainer } from '../../../../components/UI';
+import { useSupportedNetworkInfo } from '../../../../constants';
 
 export const UserBalances = ({
   account,
@@ -23,6 +23,11 @@ export const UserBalances = ({
     currentNetwork[chainId]?.ANUSD?.ContractAddress,
     account
   );
+
+  const userUSDTBalanceInWei = useTokenBalance(
+    currentNetwork[chainId]?.USDT?.ContractAddress,
+    account
+  );
   return (
     <CardContainer>
       <Heading size="sm">Balances</Heading>
@@ -32,6 +37,13 @@ export const UserBalances = ({
           5
         )}
         logo={currentNetwork[chainId]?.Native?.Logo}
+      ></BalancesCard>
+      <BalancesCard
+        currencyName={`${currentNetwork[chainId]?.USDT?.Symbol}`}
+        currencyValue={Number(formatEther(userUSDTBalanceInWei ?? 0)).toFixed(
+          3
+        )}
+        logo={currentNetwork[chainId]?.USDT?.Logo}
       ></BalancesCard>
       <BalancesCard
         currencyName={`${currentNetwork[chainId]?.ANUSD?.Symbol}`}

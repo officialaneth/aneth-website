@@ -182,6 +182,7 @@ contract ReferralUpgradeable is
 
     uint8 private _globalRefereeLimit;
     uint8 private _selfIncomePoolRefereeLimit;
+    uint256 private _globalTeamBusinessValue;
 
     function initialize() public initializer {
         _variablesContract = 0x77daaFc7411C911b869C71bf70FE36cCE507845d;
@@ -670,9 +671,8 @@ contract ReferralUpgradeable is
     function _payReferralInANUSD(
         uint256 _valueInUSD,
         address _userAddress,
-        address _tokenAddress
-    ) private // IVariables _variables
-    {
+        address _tokenAddress // IVariables _variables
+    ) private {
         // IMonthlyRewards monthlyRewardsInterface = IMonthlyRewards(
         //     _variables.getMonthlyRewardsContract()
         // );
@@ -702,8 +702,8 @@ contract ReferralUpgradeable is
 
         uint256 passiveIncomeAddressCount;
 
-        address[] memory coreMembers = _coreMembers;
-        uint256 coreMembersCount = coreMembers.length;
+        // address[] memory coreMembers = _coreMembers;
+        // uint256 coreMembersCount = coreMembers.length;
 
         // uint256 totalReferral;
 
@@ -732,7 +732,7 @@ contract ReferralUpgradeable is
 
                 IERC20Upgradeable(_tokenAddress).transfer(
                     userAccount.referrer,
-                    c
+                    _toTokens(c, _tokenAddress)
                 );
 
                 emit ReferralRewardPaid(
@@ -744,7 +744,10 @@ contract ReferralUpgradeable is
                 );
 
                 if (!referrerAccount.isInGlobalID) {
-                    if (referrerAccount.directBusiness > _globalBusinessValue) {
+                    if (
+                        referrerAccount.directBusiness > _globalBusinessValue &&
+                        referrerAccount.totalBusiness > _globalTeamBusinessValue
+                    ) {
                         _globalAddress.push(userAccount.referrer);
                         referrerAccount.isInGlobalID = true;
                         emit GlobalAddressAdded(userAccount.referrer);
@@ -788,7 +791,7 @@ contract ReferralUpgradeable is
 
                 IERC20Upgradeable(_tokenAddress).transfer(
                     passiveIncomeAddress[i],
-                    passiveIncomeValue
+                    _toTokens(passiveIncomeValue, _tokenAddress)
                 );
 
                 emit PassiveRewardPaid(
@@ -815,7 +818,7 @@ contract ReferralUpgradeable is
             if (globalAddressAccount.referee.length >= _globalRefereeLimit) {
                 IERC20Upgradeable(_tokenAddress).transfer(
                     globalAddress,
-                    globalIncome
+                    _toTokens(globalIncome, _tokenAddress)
                 );
 
                 globalAddressAccount.rewardsPaidGlobal.push(globalIncome);
@@ -824,18 +827,18 @@ contract ReferralUpgradeable is
             }
         }
 
-        if (coreMembersCount > 0) {
-            uint256 coreRewardValue = (_valueInUSD * _coreRewardRate) /
-                100 /
-                coreMembersCount;
-            for (uint256 i; i < coreMembersCount; i++) {
-                IERC20Upgradeable(_tokenAddress).transfer(
-                    coreMembers[i],
-                    coreRewardValue
-                );
-                emit CoreMemberRewardPaid(coreRewardValue, coreMembers[i]);
-            }
-        }
+        // if (coreMembersCount > 0) {
+        //     uint256 coreRewardValue = (_valueInUSD * _coreRewardRate) /
+        //         100 /
+        //         coreMembersCount;
+        //     for (uint256 i; i < coreMembersCount; i++) {
+        //         IERC20Upgradeable(_tokenAddress).transfer(
+        //             coreMembers[i],
+        //             _toTokens(coreRewardValue, _tokenAddress)
+        //         );
+        //         emit CoreMemberRewardPaid(coreRewardValue, coreMembers[i]);
+        //     }
+        // }
 
         // _totalReferralPaidANUSD += totalReferral;
     }
@@ -902,6 +905,37 @@ contract ReferralUpgradeable is
 
     function getSelfIncomePoolRefereeLimit() external view returns (uint8) {
         return _selfIncomePoolRefereeLimit;
+    }
+
+    function setGlobalPushCondition(
+        uint256 _directBusiness,
+        uint256 _teamBusiness
+    ) external {
+        require(
+            IVariables(_variablesContract).isAdmin(msg.sender),
+            "You are not admin"
+        );
+
+        _globalBusinessValue = _directBusiness;
+        _globalTeamBusinessValue = _teamBusiness;
+    }
+
+    function _toTokens(
+        uint256 _valueInWei,
+        address _tokenAddress
+    ) private view returns (uint256 valueInTokens) {
+        valueInTokens =
+            (_valueInWei * 10 ** IERC20_EXTENDED(_tokenAddress).decimals()) /
+            1 ether;
+    }
+
+    function _tokensToWei(
+        uint256 _valueInTokens,
+        address _tokenAddress
+    ) private view returns (uint256 valueInWei) {
+        valueInWei =
+            (_valueInTokens * 1 ether) /
+            10 ** IERC20_EXTENDED(_tokenAddress).decimals();
     }
 
     // function setSelfIncomePoolRefereeLimit(uint8 _valueInDecimals) external {

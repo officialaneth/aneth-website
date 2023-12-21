@@ -24,24 +24,24 @@ export const UserBusiness = ({
       <BalancesCard
         currencyName={'Self Business'}
         currencyValue={referralAccountMap?.selfBusiness?.toFixed(3)}
-        logo={currentNetwork[chainId]?.ANUSD?.Logo}
+        logo={currentNetwork[chainId]?.USDT?.Logo}
       ></BalancesCard>
       <BalancesCard
         currencyName={'Direct Business'}
         currencyValue={userTotalBusiness?.directBusiness.toFixed(3)}
-        logo={currentNetwork[chainId]?.ANUSD?.Logo}
+        logo={currentNetwork[chainId]?.USDT?.Logo}
       ></BalancesCard>
       <BalancesCard
         currencyName={'Team Business'}
         currencyValue={(
           userTotalBusiness?.totalBusiness - userTotalBusiness?.directBusiness
         ).toFixed(3)}
-        logo={currentNetwork[chainId]?.ANUSD?.Logo}
+        logo={currentNetwork[chainId]?.USDT?.Logo}
       ></BalancesCard>
       <BalancesCard
         currencyName={'Total Business'}
         currencyValue={(userTotalBusiness?.totalBusiness).toFixed(3)}
-        logo={currentNetwork[chainId]?.ANUSD?.Logo}
+        logo={currentNetwork[chainId]?.USDT?.Logo}
       ></BalancesCard>
     </CardContainer>
   );
