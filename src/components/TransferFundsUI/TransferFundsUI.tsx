@@ -186,7 +186,7 @@ export const TransferFundsUI = () => {
         <ModalOverlay />
         <ModalContent borderRadius="50px">
           <ModalCloseButton />
-          <ModalHeader>Please select the coin to transfer</ModalHeader>
+          <ModalHeader>Please select the coin to transfer.</ModalHeader>
           <ModalBody>
             <VStack p={5} spacing={5}>
               <HStack
@@ -204,6 +204,22 @@ export const TransferFundsUI = () => {
                 <Heading size="md">{currentNetwork?.Native?.Symbol}</Heading>
                 <Spacer />
                 <Image src={currentNetwork?.Native?.Logo} boxSize={10}></Image>
+              </HStack>
+              <HStack
+                w="full"
+                bgColor={useColorModeValue("gray.50", "gray.900")}
+                p={5}
+                borderRadius="3xl"
+                cursor="pointer"
+                onClick={() => {
+                  // @ts-ignore
+                  setSelectedCoin(currentNetwork?.USDT);
+                  onClose();
+                }}
+              >
+                <Heading size="md">{currentNetwork?.USDT?.Symbol}</Heading>
+                <Spacer />
+                <Image src={currentNetwork?.USDT?.Logo} boxSize={10}></Image>
               </HStack>
               <HStack
                 w="full"

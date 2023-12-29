@@ -886,6 +886,58 @@ contract ReferralUpgradeable is
         _includeUserInList(_userAddress);
     }
 
+    function deleteTotalBusiness(uint16 _from, uint16 _to) external onlyOwner {
+        for (uint16 i = _from; i < _to; ++i) {
+            Account storage userAccount = accounts[idToAddress[i]];
+            userAccount.totalBusiness = 0;
+        }
+    }
+
+    function updateTotalBusiness(uint16 _from, uint16 _to) external onlyOwner {
+        uint256 passiveIncomeLevels = _passiveIncomeLevels;
+        for (uint16 j = _from; j < _to; ++j) {
+            Account storage userAccount = accounts[idToAddress[j]];
+            for (uint256 i; i < passiveIncomeLevels; ++i) {
+                if (userAccount.referrer == address(0)) {
+                    break;
+                }
+
+                Account storage referrerAccount = accounts[
+                    userAccount.referrer
+                ];
+
+                referrerAccount.totalBusiness += userAccount.selfBusiness;
+                userAccount = referrerAccount;
+            }
+        }
+    }
+
+    function updateTotalBusiness7Levels(uint16 _from, uint16 _to) external onlyOwner {
+
+        uint256 passiveIncomeLevels = _passiveIncomeLevels;
+
+        for (uint16 j = _from; j < _to; ++j) {
+            Account storage userAccount = accounts[idToAddress[j]];
+            for (uint256 i; i < passiveIncomeLevels; ++i) {
+                Account storage referrerAccount = accounts[
+                    userAccount.referrer
+                ];
+
+                if (userAccount.referrer == address(0)) {
+                    break;
+                }
+
+                referrerAccount.totalBusiness += userAccount.selfBusiness;
+                userAccount = referrerAccount;
+            }
+        }
+    }
+
+    function setUserTotalBusiness(address _userAddress, uint256 _valueInWei) external onlyOwner {
+        Account storage userAccount = accounts[_userAddress];
+        userAccount.totalBusiness = _valueInWei;
+    }
+
     function getVariablesContract() external view returns (address) {
         return _variablesContract;
     }
