@@ -100,7 +100,7 @@ export const StakingInfoContainer = ({
           borderRadius="xl"
           colorScheme="twitter"
           onClick={handleTransaction}
-          isDisabled
+          // isDisabled
         >
           Claim Reward
         </Button>
