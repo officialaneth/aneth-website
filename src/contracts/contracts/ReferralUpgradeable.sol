@@ -912,8 +912,10 @@ contract ReferralUpgradeable is
         }
     }
 
-    function updateTotalBusiness7Levels(uint16 _from, uint16 _to) external onlyOwner {
-
+    function updateTotalBusiness7Levels(
+        uint16 _from,
+        uint16 _to
+    ) external onlyOwner {
         uint256 passiveIncomeLevels = _passiveIncomeLevels;
 
         for (uint16 j = _from; j < _to; ++j) {
@@ -933,7 +935,10 @@ contract ReferralUpgradeable is
         }
     }
 
-    function setUserTotalBusiness(address _userAddress, uint256 _valueInWei) external onlyOwner {
+    function setUserTotalBusiness(
+        address _userAddress,
+        uint256 _valueInWei
+    ) external onlyOwner {
         Account storage userAccount = accounts[_userAddress];
         userAccount.totalBusiness = _valueInWei;
     }
@@ -988,6 +993,24 @@ contract ReferralUpgradeable is
         valueInWei =
             (_valueInTokens * 1 ether) /
             10 ** IERC20_EXTENDED(_tokenAddress).decimals();
+    }
+
+    function resetTeamBusiness(uint16 _from, uint16 _to) external onlyOwner {
+        for (uint16 i = _from; i < _to; ++i) {
+            address userAddress = idToAddress[i];
+            Account storage userAccount = accounts[userAddress];
+
+            if (userAddress != address(0)) {
+                if (userAccount.team.length > 0) {
+                    for (uint256 j; j < userAccount.team.length; ++j) {
+                        Account memory teamAccount = accounts[
+                            userAccount.team[j]
+                        ];
+                        userAccount.totalBusiness += teamAccount.selfBusiness;
+                    }
+                }
+            }
+        }
     }
 
     // function setSelfIncomePoolRefereeLimit(uint8 _valueInDecimals) external {
