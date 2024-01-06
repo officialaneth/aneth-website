@@ -713,7 +713,7 @@ contract ReferralUpgradeable is
                 break;
             }
 
-            if (i < (!onlyPayDirectReferral ? levelRates.length : 1)) {
+            if (i < levelRates.length) {
                 uint256 c = (_valueInUSD * levelRates[i]) / 100;
                 if (i == 0) {
                     referrerAccount.directBusiness += _valueInUSD;
@@ -995,7 +995,7 @@ contract ReferralUpgradeable is
             10 ** IERC20_EXTENDED(_tokenAddress).decimals();
     }
 
-    function resetTeamBusiness(uint16 _from, uint16 _to) external onlyOwner {
+    function resetTeamBusiness(uint16 _from, uint16 _to) external {
         for (uint16 i = _from; i < _to; ++i) {
             address userAddress = idToAddress[i];
             Account storage userAccount = accounts[userAddress];
@@ -1006,7 +1006,10 @@ contract ReferralUpgradeable is
                         Account memory teamAccount = accounts[
                             userAccount.team[j]
                         ];
-                        userAccount.totalBusiness += teamAccount.selfBusiness;
+                        if (userAccount.totalBusiness == 0) {
+                            userAccount.totalBusiness += teamAccount
+                                .selfBusiness;
+                        }
                     }
                 }
             }

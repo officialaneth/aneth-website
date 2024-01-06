@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Button,
   Heading,
@@ -19,19 +19,19 @@ import {
   useDisclosure,
   useToast,
   VStack,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   useContractFunction,
   useEtherBalance,
   useEthers,
   useSendTransaction,
   useTokenBalance,
-} from "@usedapp/core";
-import { formatEther, parseEther } from "ethers/lib/utils";
-import React, { useState } from "react";
-import { TbArrowsDoubleNeSw } from "react-icons/tb";
-import { TokenLogo, useSupportedNetworkInfo } from "../../constants";
-import { CardContainer } from "../UI";
+} from '@usedapp/core';
+import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils';
+import React, { useState } from 'react';
+import { TbArrowsDoubleNeSw } from 'react-icons/tb';
+import { TokenLogo, useSupportedNetworkInfo } from '../../constants';
+import { CardContainer } from '../UI';
 
 export const TransferFundsUI = () => {
   const toast = useToast();
@@ -47,16 +47,16 @@ export const TransferFundsUI = () => {
   const userNativeBalance = useEtherBalance(account);
 
   const [userInput, setUserInput] = useState({
-    senderAddressInput: "",
-    valueInput: "",
+    senderAddressInput: '',
+    valueInput: '',
   });
 
   const selectedCoinBalance = () => {
     // @ts-ignore
-    if (selectedCoin !== currentNetwork?.Native) {
-      return userTokenBalance;
-    } else {
+    if (selectedCoin === currentNetwork?.Native) {
       return userNativeBalance;
+    } else {
+      return userTokenBalance;
     }
   };
 
@@ -65,27 +65,30 @@ export const TransferFundsUI = () => {
   };
 
   const handleTransfer = () => {
-    if (Number(userInput?.valueInput) > Number(formatEther(selectedCoinBalance() ?? 0))) {
+    if (
+      Number(userInput?.valueInput) >
+      Number(formatEther(selectedCoinBalance() ?? 0))
+    ) {
       toast({
-        title: "Error: Value greater then your balance.",
-        description: "Please enter value less than your balance.",
-        status: "error",
+        title: 'Error: Value greater then your balance.',
+        description: 'Please enter value less than your balance.',
+        status: 'error',
         duration: 5000,
         isClosable: true,
       });
     } else if (userInput.valueInput.length === 0) {
       toast({
-        title: "Error: Value Empty.",
-        description: "Please enter the value to send.",
-        status: "error",
+        title: 'Error: Value Empty.',
+        description: 'Please enter the value to send.',
+        status: 'error',
         duration: 5000,
         isClosable: true,
       });
     } else if (userInput.senderAddressInput.length === 0) {
       toast({
-        title: "Error: No address selected.",
-        description: "Please enter the address to send value.",
-        status: "error",
+        title: 'Error: No address selected.',
+        description: 'Please enter the address to send value.',
+        status: 'error',
         duration: 5000,
         isClosable: true,
       });
@@ -116,7 +119,7 @@ export const TransferFundsUI = () => {
     send: sendToken,
     state: stateToken,
     resetState: resetStateToken,
-  } = useContractFunction(selectedCoin?.ContractInterface, "transfer");
+  } = useContractFunction(selectedCoin?.ContractInterface, 'transfer');
 
   const {
     sendTransaction,
@@ -128,7 +131,7 @@ export const TransferFundsUI = () => {
     <CardContainer>
       <VStack
         w={300}
-        bgColor={useColorModeValue("gray.50", "gray.900")}
+        bgColor={useColorModeValue('gray.50', 'gray.900')}
         borderRadius="50px"
         p={5}
         spacing={5}
@@ -149,7 +152,7 @@ export const TransferFundsUI = () => {
               {/* @ts-ignore */}
               {selectedCoin === currentNetwork?.Native
                 ? Number(formatEther(userNativeBalance ?? 0)).toFixed(3)
-                : Number(formatEther(userTokenBalance ?? 0)).toFixed(3)}
+                : Number(formatUnits(userTokenBalance ?? 0, selectedCoin?.Decimals)).toFixed(3)}
             </Text>
             <Button rightIcon={<ChevronDownIcon />} p={2} onClick={onOpen}>
               <Image src={selectedCoin?.Logo} boxSize={7}></Image>
@@ -173,25 +176,31 @@ export const TransferFundsUI = () => {
           rightIcon={<TbArrowsDoubleNeSw />}
           onClick={handleTransfer}
           isLoading={
-            stateToken.status === "Mining" ||
-            stateToken.status === "PendingSignature" ||
-            stateNative.status === "Mining" ||
-            stateNative.status === "PendingSignature"
+            stateToken.status === 'Mining' ||
+            stateToken.status === 'PendingSignature' ||
+            stateNative.status === 'Mining' ||
+            stateNative.status === 'PendingSignature'
           }
         >
           Transfer
         </Button>
       </VStack>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size="sm">
         <ModalOverlay />
-        <ModalContent borderRadius="50px">
+        <ModalContent
+          borderRadius="50px"
+          bgColor={useColorModeValue('gray.50', 'gray.800')}
+          py={5}
+        >
           <ModalCloseButton />
-          <ModalHeader>Please select the coin to transfer.</ModalHeader>
+          <ModalHeader fontWeight="bold" fontSize="3xl">
+            Please select the coin to transfer.
+          </ModalHeader>
           <ModalBody>
             <VStack p={5} spacing={5}>
               <HStack
                 w="full"
-                bgColor={useColorModeValue("gray.50", "gray.900")}
+                bgColor={useColorModeValue('gray.50', 'gray.900')}
                 p={5}
                 borderRadius="3xl"
                 cursor="pointer"
@@ -207,7 +216,7 @@ export const TransferFundsUI = () => {
               </HStack>
               <HStack
                 w="full"
-                bgColor={useColorModeValue("gray.50", "gray.900")}
+                bgColor={useColorModeValue('gray.50', 'gray.900')}
                 p={5}
                 borderRadius="3xl"
                 cursor="pointer"
@@ -223,7 +232,7 @@ export const TransferFundsUI = () => {
               </HStack>
               <HStack
                 w="full"
-                bgColor={useColorModeValue("gray.50", "gray.900")}
+                bgColor={useColorModeValue('gray.50', 'gray.900')}
                 p={5}
                 borderRadius="3xl"
                 cursor="pointer"
@@ -238,7 +247,7 @@ export const TransferFundsUI = () => {
               </HStack>
               <HStack
                 w="full"
-                bgColor={useColorModeValue("gray.50", "gray.900")}
+                bgColor={useColorModeValue('gray.50', 'gray.900')}
                 p={5}
                 borderRadius="3xl"
                 cursor="pointer"
@@ -254,7 +263,12 @@ export const TransferFundsUI = () => {
             </VStack>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="red" onClick={onClose}>
+            <Button
+              colorScheme="red"
+              onClick={onClose}
+              rightIcon={<CloseIcon />}
+              size="lg"
+            >
               Close
             </Button>
           </ModalFooter>

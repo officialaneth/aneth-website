@@ -9,11 +9,11 @@ import {
   Spacer,
   useColorModeValue,
   VStack,
-} from "@chakra-ui/react";
-import { useEthers, useTokenBalance } from "@usedapp/core";
-import { motion } from "framer-motion";
-import { IconType } from "react-icons";
-import { useSupportedNetworkInfo } from "../../constants";
+} from '@chakra-ui/react';
+import { useEthers, useTokenBalance } from '@usedapp/core';
+import { motion } from 'framer-motion';
+import { IconType } from 'react-icons';
+import { useSupportedNetworkInfo } from '../../constants';
 
 const MotionCard = motion(Card);
 
@@ -45,12 +45,12 @@ export const BalancesCard = ({
         w="full"
         p={3}
         whileHover={{
-          scale: 1.2,
+          scale: 1.1,
         }}
         whileTap={{
-          scale: 0.98,
+          scale: 1,
         }}
-        bgColor={useColorModeValue("gray.50", "gray.900")}
+        bgColor={useColorModeValue('gray.50', 'gray.900')}
       >
         <HStack justify="space-around" w="full">
           <VStack w="full">

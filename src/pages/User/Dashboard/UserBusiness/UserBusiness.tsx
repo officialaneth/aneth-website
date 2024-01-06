@@ -1,4 +1,4 @@
-import { Heading } from '@chakra-ui/react';
+import { Button, Heading } from '@chakra-ui/react';
 import React from 'react';
 import { BalancesCard, CardContainer } from '../../../../components/UI';
 import { useSupportedNetworkInfo } from '../../../../constants';
@@ -43,6 +43,10 @@ export const UserBusiness = ({
         currencyValue={(userTotalBusiness?.totalBusiness).toFixed(3)}
         logo={currentNetwork[chainId]?.USDT?.Logo}
       ></BalancesCard>
+      {userTotalBusiness?.totalBusiness === 0 &&
+      userTotalBusiness.selfBusiness > 0
+        ? <Button size="sm" colorScheme="green">Update Total Business</Button>
+        : null}
     </CardContainer>
   );
 };

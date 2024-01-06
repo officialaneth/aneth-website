@@ -13,19 +13,19 @@ export const CardContainer = ({ children }: { children: ReactNode }) => {
       minW={[300, 200]}
       bgColor={useColorModeValue("gray.200", "whiteAlpha.50")}
       boxShadow="base"
-      whileHover={{
-        borderRadius: "75px",
-        scale: 0.98,
-      }}
-      whileTap={{
-        borderRadius: "75px",
-        scale: 0.98,
-      }}
-      transition={{
-        duration: 0.3,
-        type: "spring",
-        stiffness: 700,
-      }}
+      // whileHover={{
+      //   borderRadius: "75px",
+      //   scale: 0.98,
+      // }}
+      // whileTap={{
+      //   borderRadius: "75px",
+      //   scale: 0.98,
+      // }}
+      // transition={{
+      //   duration: 0.3,
+      //   type: "spring",
+      //   stiffness: 700,
+      // }}
     >
       <VStack spacing={5} w="full">
         {children}
