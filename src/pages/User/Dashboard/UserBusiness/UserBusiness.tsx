@@ -39,9 +39,7 @@ export const UserBusiness = ({
   };
 
   useEffect(() => {
-    if (
-      state?.status === 'Success'
-    ) {
+    if (state?.status === 'Success') {
       resetState();
     }
   }, [state?.status, resetState]);
@@ -71,19 +69,17 @@ export const UserBusiness = ({
         currencyValue={(userTotalBusiness?.totalBusiness).toFixed(3)}
         logo={currentNetwork[chainId]?.USDT?.Logo}
       ></BalancesCard>
-      {userTotalBusiness?.totalBusiness === 0 &&
-      userTotalBusiness.selfBusiness > 0 ? (
-        <Button
-          size="lg"
-          colorScheme="green"
-          onClick={proceedTransaction}
-          isLoading={isLoading}
-          fontWeight="extrabold"
-          loadingText={state?.status}
-        >
-          Update Total Business
-        </Button>
-      ) : null}
+
+      <Button
+        size="lg"
+        colorScheme="green"
+        onClick={proceedTransaction}
+        isLoading={isLoading}
+        fontWeight="extrabold"
+        loadingText={state?.status}
+      >
+        Update Total Business
+      </Button>
     </CardContainer>
   );
 };
