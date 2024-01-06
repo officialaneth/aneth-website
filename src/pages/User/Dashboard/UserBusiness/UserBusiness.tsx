@@ -25,6 +25,9 @@ export const UserBusiness = ({
     'resetSelfTeamBusiness'
   );
 
+  const isLoading =
+    state?.status === 'PendingSignature' ?? state?.status === 'Mining';
+
   const proceedTransaction = async () => {
     try {
       await send(account, {
@@ -36,7 +39,9 @@ export const UserBusiness = ({
   };
 
   useEffect(() => {
-    if (state?.status === 'Success') {
+    if (
+      state?.status === 'Success'
+    ) {
       resetState();
     }
   }, [state?.status, resetState]);
@@ -72,8 +77,9 @@ export const UserBusiness = ({
           size="lg"
           colorScheme="green"
           onClick={proceedTransaction}
-          isLoading={state?.status === 'Mining'}
+          isLoading={isLoading}
           fontWeight="extrabold"
+          loadingText={state?.status}
         >
           Update Total Business
         </Button>

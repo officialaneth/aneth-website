@@ -995,26 +995,26 @@ contract ReferralUpgradeable is
             10 ** IERC20_EXTENDED(_tokenAddress).decimals();
     }
 
-    function resetTeamBusiness(uint16 _from, uint16 _to) external {
-        for (uint16 i = _from; i < _to; ++i) {
-            address userAddress = idToAddress[i];
-            Account storage userAccount = accounts[userAddress];
+    // function resetTeamBusiness(uint16 _from, uint16 _to) external {
+    //     for (uint16 i = _from; i < _to; ++i) {
+    //         address userAddress = idToAddress[i];
+    //         Account storage userAccount = accounts[userAddress];
 
-            if (userAddress != address(0)) {
-                if (userAccount.team.length > 0) {
-                    for (uint256 j; j < userAccount.team.length; ++j) {
-                        Account memory teamAccount = accounts[
-                            userAccount.team[j]
-                        ];
-                        if (userAccount.totalBusiness == 0) {
-                            userAccount.totalBusiness += teamAccount
-                                .selfBusiness;
-                        }
-                    }
-                }
-            }
-        }
-    }
+    //         if (userAddress != address(0)) {
+    //             if (userAccount.team.length > 0) {
+    //                 for (uint256 j; j < userAccount.team.length; ++j) {
+    //                     Account memory teamAccount = accounts[
+    //                         userAccount.team[j]
+    //                     ];
+    //                     if (userAccount.totalBusiness == 0) {
+    //                         userAccount.totalBusiness += teamAccount
+    //                             .selfBusiness;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     function resetSelfTeamBusiness(address _userAddress) external {
         Account storage userAccount = accounts[_userAddress];
