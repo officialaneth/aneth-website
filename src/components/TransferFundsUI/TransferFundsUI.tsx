@@ -27,7 +27,12 @@ import {
   useSendTransaction,
   useTokenBalance,
 } from '@usedapp/core';
-import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils';
+import {
+  formatEther,
+  formatUnits,
+  parseEther,
+  parseUnits,
+} from 'ethers/lib/utils';
 import React, { useState } from 'react';
 import { TbArrowsDoubleNeSw } from 'react-icons/tb';
 import { TokenLogo, useSupportedNetworkInfo } from '../../constants';
@@ -67,7 +72,7 @@ export const TransferFundsUI = () => {
   const handleTransfer = () => {
     if (
       Number(userInput?.valueInput) >
-      Number(formatEther(selectedCoinBalance() ?? 0))
+      Number(formatUnits(selectedCoinBalance() ?? 0, selectedCoin?.Decimals))
     ) {
       toast({
         title: 'Error: Value greater then your balance.',
@@ -107,7 +112,7 @@ export const TransferFundsUI = () => {
     } else {
       sendToken(
         userInput.senderAddressInput,
-        parseEther(userInput.valueInput),
+        parseUnits(userInput.valueInput, selectedCoin?.Decimals),
         {
           value: 0,
         }
@@ -152,7 +157,9 @@ export const TransferFundsUI = () => {
               {/* @ts-ignore */}
               {selectedCoin === currentNetwork?.Native
                 ? Number(formatEther(userNativeBalance ?? 0)).toFixed(3)
-                : Number(formatUnits(userTokenBalance ?? 0, selectedCoin?.Decimals)).toFixed(3)}
+                : Number(
+                    formatUnits(userTokenBalance ?? 0, selectedCoin?.Decimals)
+                  ).toFixed(3)}
             </Text>
             <Button rightIcon={<ChevronDownIcon />} p={2} onClick={onOpen}>
               <Image src={selectedCoin?.Logo} boxSize={7}></Image>
