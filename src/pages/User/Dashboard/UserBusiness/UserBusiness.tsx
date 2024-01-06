@@ -1,5 +1,6 @@
 import { Button, Heading } from '@chakra-ui/react';
-import React from 'react';
+import { useContractFunction, useEthers } from '@usedapp/core';
+import React, { useEffect } from 'react';
 import { BalancesCard, CardContainer } from '../../../../components/UI';
 import { useSupportedNetworkInfo } from '../../../../constants';
 import {
@@ -18,6 +19,28 @@ export const UserBusiness = ({
 }) => {
   const userTotalBusiness = useUserTotalBusiness(account!);
   const referralAccountMap = useReferralUserAccount(account!);
+
+  const { send, state, resetState, events } = useContractFunction(
+    currentNetwork[chainId]?.referralContractInterface,
+    'resetSelfTeamBusiness'
+  );
+
+  const proceedTransaction = async () => {
+    try {
+      await send(account, {
+        value: 0,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (state?.status === 'Success') {
+      resetState();
+    }
+  }, [state?.status, resetState]);
+
   return (
     <CardContainer>
       <Heading size="sm">Your Business</Heading>
@@ -44,9 +67,17 @@ export const UserBusiness = ({
         logo={currentNetwork[chainId]?.USDT?.Logo}
       ></BalancesCard>
       {userTotalBusiness?.totalBusiness === 0 &&
-      userTotalBusiness.selfBusiness > 0
-        ? <Button size="sm" colorScheme="green">Update Total Business</Button>
-        : null}
+      userTotalBusiness.selfBusiness > 0 ? (
+        <Button
+          size="lg"
+          colorScheme="green"
+          onClick={proceedTransaction}
+          isLoading={state?.status === 'Mining'}
+          fontWeight="extrabold"
+        >
+          Update Total Business
+        </Button>
+      ) : null}
     </CardContainer>
   );
 };

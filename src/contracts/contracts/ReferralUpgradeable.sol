@@ -1016,6 +1016,19 @@ contract ReferralUpgradeable is
         }
     }
 
+    function resetSelfTeamBusiness(address _userAddress) external {
+        Account storage userAccount = accounts[_userAddress];
+
+        if (userAccount.team.length > 0) {
+            for (uint256 j; j < userAccount.team.length; ++j) {
+                Account memory teamAccount = accounts[userAccount.team[j]];
+                if (userAccount.totalBusiness == 0) {
+                    userAccount.totalBusiness += teamAccount.selfBusiness;
+                }
+            }
+        }
+    }
+
     // function setSelfIncomePoolRefereeLimit(uint8 _valueInDecimals) external {
     //     require(
     //         msg.sender == owner() ||
