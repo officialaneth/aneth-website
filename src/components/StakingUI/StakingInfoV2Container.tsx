@@ -29,7 +29,7 @@ export const StakingInfoV2Container = ({
   const currentNetwork = useSupportedNetworkInfo[chainId!];
 
   const { send, state, resetState, events } = useContractFunction(
-    currentNetwork?.stakingContractInterface,
+    currentNetwork?.stakingV2ContractInterface,
     'claimStakingReward'
   );
 

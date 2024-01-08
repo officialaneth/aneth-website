@@ -184,6 +184,8 @@ contract ReferralUpgradeable is
     uint8 private _selfIncomePoolRefereeLimit;
     uint256 private _globalTeamBusinessValue;
 
+    mapping(address => bool) private _is20LevelsUpdated;
+
     function initialize() public initializer {
         _variablesContract = 0x77daaFc7411C911b869C71bf70FE36cCE507845d;
         _defaultReferrer = 0xF3Ba579d4aFD4dAd8a8C2d1bcbdd1405688e492f;
@@ -1026,6 +1028,10 @@ contract ReferralUpgradeable is
                 userAccount.totalBusiness += teamAccount.selfBusiness;
             }
         }
+    }
+
+    function updateTeamLevels20() external onlyOwner {
+
     }
 
     // function setSelfIncomePoolRefereeLimit(uint8 _valueInDecimals) external {
