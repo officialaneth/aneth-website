@@ -132,3 +132,8 @@ export const useUserTeamBusinessForRewards = (address: string) => {
   };
   return valueObject;
 };
+
+export const useIs20LevelsBusinessUpdated = (address: string) => {
+  const value = useCallHook('is20LevelsBusinessUpdated', [address])?.[0];
+  return value;
+};

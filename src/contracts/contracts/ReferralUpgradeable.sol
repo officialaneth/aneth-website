@@ -888,54 +888,12 @@ contract ReferralUpgradeable is
         _includeUserInList(_userAddress);
     }
 
-    function deleteTotalBusiness(uint16 _from, uint16 _to) external onlyOwner {
-        for (uint16 i = _from; i < _to; ++i) {
-            Account storage userAccount = accounts[idToAddress[i]];
-            userAccount.totalBusiness = 0;
-        }
-    }
-
-    function updateTotalBusiness(uint16 _from, uint16 _to) external onlyOwner {
-        uint256 passiveIncomeLevels = _passiveIncomeLevels;
-        for (uint16 j = _from; j < _to; ++j) {
-            Account storage userAccount = accounts[idToAddress[j]];
-            for (uint256 i; i < passiveIncomeLevels; ++i) {
-                if (userAccount.referrer == address(0)) {
-                    break;
-                }
-
-                Account storage referrerAccount = accounts[
-                    userAccount.referrer
-                ];
-
-                referrerAccount.totalBusiness += userAccount.selfBusiness;
-                userAccount = referrerAccount;
-            }
-        }
-    }
-
-    function updateTotalBusiness7Levels(
-        uint16 _from,
-        uint16 _to
-    ) external onlyOwner {
-        uint256 passiveIncomeLevels = _passiveIncomeLevels;
-
-        for (uint16 j = _from; j < _to; ++j) {
-            Account storage userAccount = accounts[idToAddress[j]];
-            for (uint256 i; i < passiveIncomeLevels; ++i) {
-                Account storage referrerAccount = accounts[
-                    userAccount.referrer
-                ];
-
-                if (userAccount.referrer == address(0)) {
-                    break;
-                }
-
-                referrerAccount.totalBusiness += userAccount.selfBusiness;
-                userAccount = referrerAccount;
-            }
-        }
-    }
+    // function deleteTotalBusiness(uint16 _from, uint16 _to) external onlyOwner {
+    //     for (uint16 i = _from; i < _to; ++i) {
+    //         Account storage userAccount = accounts[idToAddress[i]];
+    //         userAccount.totalBusiness = 0;
+    //     }
+    // }
 
     function setUserTotalBusiness(
         address _userAddress,
@@ -1030,8 +988,47 @@ contract ReferralUpgradeable is
         }
     }
 
-    function updateTeamLevels20() external onlyOwner {
+    function updateUplineTeamLevels20(address _userAddress) external {
+        if (msg.sender != owner()) {
+            require(
+                !_is20LevelsUpdated[_userAddress],
+                "updateUplineTeamLevels20(): Levels already updated."
+            );
+        }
 
+        Account storage userAccount = accounts[_userAddress];
+
+        uint256 userIntialBusiness = userAccount.selfBusiness;
+
+        require(
+            userAccount.selfBusiness > 0,
+            "updateUplineTeamLevels20(): You have no business or zero."
+        );
+
+        uint256 passiveIncomeLevels = _passiveIncomeLevels;
+
+        uint256[] memory levelRates = _levelRates;
+
+        for (uint8 i; i < passiveIncomeLevels; ++i) {
+            Account storage referrerAccount = accounts[userAccount.referrer];
+            if (userAccount.referrer == address(0)) {
+                break;
+            }
+
+            if (i >= levelRates.length) {
+                referrerAccount.totalBusiness += (userIntialBusiness / 2);
+            }
+
+            userAccount = referrerAccount;
+        }
+
+        _is20LevelsUpdated[_userAddress] = true;
+    }
+
+    function is20LevelsBusinessUpdated(
+        address _userAddress
+    ) external view returns (bool) {
+        return _is20LevelsUpdated[_userAddress];
     }
 
     // function setSelfIncomePoolRefereeLimit(uint8 _valueInDecimals) external {
