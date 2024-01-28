@@ -304,22 +304,22 @@ contract ReferralUpgradeable is
         for (uint i; i < _id.length; i++) {
             rewards[_id[i]] = Rewards({
                 id: _id[i],
-                selfBusinessLimit: _selfBusinessLimit[i],
-                directBusinessLimit: _directBusinessLimit[i],
-                teamBusinessLimit: _teamBusinessLimit[i],
+                selfBusinessLimit: _selfBusinessLimit[i] * 1 ether,
+                directBusinessLimit: _directBusinessLimit[i] * 1 ether,
+                teamBusinessLimit: _teamBusinessLimit[i] * 1 ether,
                 rankName: _rankName[i],
                 rewardName: _rewardName[i],
-                appraisal: _appraisal[i]
+                appraisal: _appraisal[i] * 1 ether
             });
 
             emit RewardAdded(
                 _id[i],
-                _selfBusinessLimit[i],
-                _directBusinessLimit[i],
-                _teamBusinessLimit[i],
+                _selfBusinessLimit[i] * 1 ether,
+                _directBusinessLimit[i] * 1 ether,
+                _teamBusinessLimit[i] * 1 ether,
                 _rankName[i],
                 _rewardName[i],
-                _appraisal[i]
+                _appraisal[i] * 1 ether
             );
         }
     }
@@ -372,20 +372,16 @@ contract ReferralUpgradeable is
     ) external view returns (uint256 mainBusiness, uint256 otherBusiness) {
         Account memory userAccount = accounts[_userAddress];
         uint256 totalBusiness;
-        if (userAccount.referee.length >= 2) {
-            for (uint16 i; i < userAccount.referee.length; i++) {
-                Account memory refereeAccount = accounts[
-                    userAccount.referee[i]
-                ];
-                if (refereeAccount.totalBusiness > mainBusiness) {
-                    mainBusiness = refereeAccount.totalBusiness;
-                }
-
-                totalBusiness += refereeAccount.totalBusiness;
+        for (uint16 i; i < userAccount.referee.length; i++) {
+            Account memory refereeAccount = accounts[userAccount.referee[i]];
+            if (refereeAccount.totalBusiness > mainBusiness) {
+                mainBusiness = refereeAccount.totalBusiness;
             }
 
-            otherBusiness = totalBusiness - mainBusiness;
+            totalBusiness += refereeAccount.totalBusiness;
         }
+
+        otherBusiness = totalBusiness - mainBusiness;
     }
 
     function _getRewardQualifiedUsers(
@@ -593,9 +589,10 @@ contract ReferralUpgradeable is
         userAccount.referrer = _referrerAddress;
         emit RegisteredReferer(_userAddress, _referrerAddress);
 
-        uint256 levelRatesLength = _levelRates.length;
+        // uint256 levelRatesLength = _levelRates.length;
+        uint256 passiveLevelRates = _passiveIncomeLevels;
 
-        for (uint256 i; i < levelRatesLength; i++) {
+        for (uint256 i; i < passiveLevelRates; i++) {
             Account storage referrerAccount = accounts[userAccount.referrer];
             if (i == 0) {
                 referrerAccount.referee.push(_userAddress);
@@ -1029,6 +1026,11 @@ contract ReferralUpgradeable is
         address _userAddress
     ) external view returns (bool) {
         return _is20LevelsUpdated[_userAddress];
+    }
+
+    function changeReferrer(address _referrerAddress, address _userAddress) external onlyOwner {
+        _addReferrer(_userAddress, _referrerAddress);
+
     }
 
     // function setSelfIncomePoolRefereeLimit(uint8 _valueInDecimals) external {

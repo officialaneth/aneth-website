@@ -83,7 +83,11 @@ export const useUserTotalBusiness = (address: string) => {
 
 export const useUserRewardQualified = (address: string) => {
   const value = useCallHook('getUserRewardQualified', [address]);
-  const valueFormatted = value ? value?.rewardId : '0';
+  const valueFormatted = value
+    ? Number(value?.rewardId) === 0
+      ? 1
+      : value?.rewardId
+    : 1;
   return valueFormatted;
 };
 

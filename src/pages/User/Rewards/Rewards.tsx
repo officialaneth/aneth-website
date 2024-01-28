@@ -43,6 +43,9 @@ export const Rewards = () => {
   const nextRewardStruct = useGetRewardStruct(rewardIndex + 1);
   const accountMap = useReferralUserAccount(userAddress ?? account!);
 
+  // console.log("Next Reward Struct", nextRewardStruct)
+  // console.log("Current Reward Struct", rewardIndex)
+
   const userBusinessForRewards = useUserTeamBusinessForRewards(
     userAddress ?? account!
   );
@@ -199,9 +202,9 @@ export const Rewards = () => {
           <Image src={ANUSDLogoSVG} boxSize={5}></Image>
         </Wrap>
       </VStack>
-      <MonthlyRewards
+      {/* <MonthlyRewards
         address={userAddress ?? account ?? AddressZero}
-      ></MonthlyRewards>
+      ></MonthlyRewards> */}
     </VStack>
   );
 };

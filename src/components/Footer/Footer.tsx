@@ -84,13 +84,13 @@ export function Footer() {
               © 2022-2023 {ProjectName}. All rights reserved
             </Text>
             <Stack direction={'row'} spacing={6}>
-              <SocialButton label={'Twitter'} href={'#'}>
+              <SocialButton label={'Twitter'} href={'https://x.com/AnethGroup'}>
                 <FaTwitter />
               </SocialButton>
-              <SocialButton label={'YouTube'} href={'#'}>
+              <SocialButton label={'YouTube'} href={'https://youtube.com/@AnEthCoin83?si=RySBQlRgbfqOhKzq'}>
                 <FaYoutube />
               </SocialButton>
-              <SocialButton label={'Instagram'} href={'#'}>
+              <SocialButton label={'Instagram'} href={' https://instagram.com/anethgoup_ofiicial'}>
                 <FaInstagram />
               </SocialButton>
             </Stack>
