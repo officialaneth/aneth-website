@@ -24,6 +24,7 @@ import { ProjectName, useSupportedNetworkInfo } from '../../constants';
 import { PolygonLogoSVG } from '../../assets';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import { Polygon } from '@usedapp/core';
+import { Link as RouterLink } from 'react-router-dom';
 
 const SocialButton = ({
   children,
@@ -43,6 +44,7 @@ const SocialButton = ({
       cursor={'pointer'}
       as={'a'}
       href={href}
+      target="_blank"
       display={'inline-flex'}
       alignItems={'center'}
       justifyContent={'center'}
@@ -87,29 +89,47 @@ export function Footer() {
               <SocialButton label={'Twitter'} href={'https://x.com/AnethGroup'}>
                 <FaTwitter />
               </SocialButton>
-              <SocialButton label={'YouTube'} href={'https://youtube.com/@AnEthCoin83?si=RySBQlRgbfqOhKzq'}>
+              <SocialButton
+                label={'YouTube'}
+                href={'https://youtube.com/@AnEthCoin83?si=RySBQlRgbfqOhKzq'}
+              >
                 <FaYoutube />
               </SocialButton>
-              <SocialButton label={'Instagram'} href={' https://instagram.com/anethgoup_ofiicial'}>
+              <SocialButton
+                label={'Instagram'}
+                href={' https://instagram.com/anethgroup_ofiicial'}
+              >
                 <FaInstagram />
               </SocialButton>
             </Stack>
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Company</ListHeader>
-            <Link href={'#'}>About us</Link>
-            <Link href={'#'}>Exchange</Link>
-            <Link href={'#'}>Staking</Link>
-            <Link href={'#'}>Testimonials</Link>
-            <Link href={'#'}>Contact us</Link>
+            <Link as={RouterLink} to="/about-us">
+              About us
+            </Link>
+            <Link as={RouterLink} to="/exchange-listings">
+              Exchange
+            </Link>
+            <Link as={RouterLink} to="/swap">
+              Staking
+            </Link>
+            <Link as={RouterLink} to="/testimonials">
+              Testimonials
+            </Link>
+            {/* <Link href={'#'}>Contact us</Link> */}
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Support</ListHeader>
-            <Link href={'#'}>Help Center</Link>
-            <Link href={'#'}>Terms of Service</Link>
-            <Link href={'#'}>Legal</Link>
-            <Link href={'#'}>Privacy Policy</Link>
-            <Link href={'#'}>Satus</Link>
+            {/* <Link href={'#'}>Help Center</Link> */}
+            <Link as={RouterLink} to="/term-of-service">
+              Terms of Service
+            </Link>
+            {/* <Link href={'#'}>Legal</Link> */}
+            <Link as={RouterLink} to="/privacy-policy">
+              Privacy Policy
+            </Link>
+            <Link as={RouterLink} to="/status">Status</Link>
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Stay up to date</ListHeader>

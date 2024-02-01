@@ -1,6 +1,9 @@
 import { createHashRouter } from 'react-router-dom';
 import { App } from '../App';
+import { TermOfUse } from '../pages/TermOfUse/TermOfUse';
 import { HomePage, SwapPage } from '../pages';
+import { AboutUs } from '../pages/AboutUs/AboutUs';
+import { ExchangeListing } from '../pages/ExchangeListings/ExchangeListing';
 import {
   Dashboard,
   Staking,
@@ -10,7 +13,10 @@ import {
   User,
 } from '../pages/User';
 import { Rewards } from '../pages/User/Rewards/Rewards';
+import Testimonials from '../pages/User/Testimonials/Testimonials';
 import { ProtectedRoutes } from './ProtectedRoutes';
+import { PrivacyPolicy } from '../pages/PrivacyPolicy/PrivacyPolicy';
+import { Status } from '../pages/Status/Status';
 
 export const router = createHashRouter([
   {
@@ -20,6 +26,30 @@ export const router = createHashRouter([
       {
         index: true,
         element: <HomePage />,
+      },
+      {
+        path: 'about-us',
+        element: <AboutUs />,
+      },
+      {
+        path: 'exchange-listings',
+        element: <ExchangeListing />,
+      },
+      {
+        path: 'testimonials',
+        element: <Testimonials />,
+      },
+      {
+        path: 'term-of-service',
+        element: <TermOfUse />,
+      },
+      {
+        path: 'privacy-policy',
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: 'status',
+        element: <Status />,
       },
       {
         path: 'swap',

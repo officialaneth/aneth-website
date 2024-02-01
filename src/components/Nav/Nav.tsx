@@ -22,7 +22,7 @@ export const Nav = () => {
     <HStack
       w="full"
       p={5}
-      position="fixed"
+      position="sticky"
       top={0}
       zIndex={11111}
       backdropFilter="blur(20px)"

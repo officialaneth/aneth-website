@@ -21,7 +21,7 @@ export const User = () => {
   const rewardStruct = useGetRewardStruct(rewardIndex);
 
   return (
-    <Flex w="full" px={5} gap={5} pt={100}>
+    <Flex w="full" px={5} gap={5}>
       <Hide below="md">
         <NavUser />
       </Hide>
