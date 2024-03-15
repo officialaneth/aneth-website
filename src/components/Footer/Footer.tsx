@@ -213,7 +213,7 @@ export function Footer() {
               >
                 Staking Smart Contracts
               </Button>
-              <Button
+              {/* <Button
                 leftIcon={<Image src={PolygonLogoSVG} boxSize={5} />}
                 rightIcon={<Icon as={ExternalLinkIcon} color="pink.500"></Icon>}
                 as="a"
@@ -223,8 +223,8 @@ export function Footer() {
                 target="_blank"
               >
                 Variables Smart Contracts
-              </Button>
-              <Button
+              </Button> */}
+              {/* <Button
                 leftIcon={<Image src={PolygonLogoSVG} boxSize={5} />}
                 rightIcon={<Icon as={ExternalLinkIcon} color="pink.500"></Icon>}
                 as="a"
@@ -235,7 +235,7 @@ export function Footer() {
                 w="full"
               >
                 Contact Details Contract
-              </Button>
+              </Button> */}
               {/* <Button
                 leftIcon={<Image src={PolygonLogoSVG} boxSize={5} />}
                 rightIcon={<Icon as={ExternalLinkIcon} color="pink.500"></Icon>}
