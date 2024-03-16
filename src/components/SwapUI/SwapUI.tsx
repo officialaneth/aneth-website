@@ -121,6 +121,7 @@ export const SwapUI = () => {
       anusd: e ? e * tokenPrice : undefined,
     }));
   };
+
   const handleSwap = () => {
     if (errors.valueLessThenMinContribution) {
       toast({
