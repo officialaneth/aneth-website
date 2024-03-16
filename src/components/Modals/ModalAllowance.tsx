@@ -1,4 +1,4 @@
-import { ChevronRightIcon, WarningIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon, WarningIcon } from '@chakra-ui/icons';
 import {
   Button,
   Center,
@@ -14,12 +14,12 @@ import {
   Text,
   useToast,
   VStack,
-} from "@chakra-ui/react";
-import { useContractFunction, useEthers } from "@usedapp/core";
-import { Contract, utils } from "ethers";
-import { useEffect, useState } from "react";
-import { FaLongArrowAltRight } from "react-icons/fa";
-import { useSupportedNetworkInfo } from "../../constants";
+} from '@chakra-ui/react';
+import { useContractFunction, useEthers } from '@usedapp/core';
+import { Contract, utils } from 'ethers';
+import { useEffect, useState } from 'react';
+import { FaLongArrowAltRight } from 'react-icons/fa';
+import { useSupportedNetworkInfo } from '../../constants';
 
 interface tokenObject {
   ContractAddress: string;
@@ -43,26 +43,30 @@ export const ModalAllowance = ({
 }) => {
   const toast = useToast();
   const [transactionStatus, setTransactionStatus] = useState<
-    "Mining" | "Success" | "Loading" | "No" | "Error"
-  >("No");
+    'Mining' | 'Success' | 'Loading' | 'No' | 'Error'
+  >('No');
   const { send, state, resetState } = useContractFunction(
     tokenObject.ContractInterface,
-    "approve"
+    'approve'
   );
 
   const handleApprove = async () => {
     try {
-      setTransactionStatus("Loading");
-      await send(spenderAddress, utils.parseEther(valueToApprove), {
-        value: 0,
-      });
+      setTransactionStatus('Loading');
+      await send(
+        spenderAddress,
+        utils.parseUnits(valueToApprove, tokenObject?.Decimals),
+        {
+          value: 0,
+        }
+      );
     } catch (err: any) {
       console.log(err);
-      setTransactionStatus("No");
+      setTransactionStatus('No');
       toast({
-        title: "Error in Approving the transaction.",
+        title: 'Error in Approving the transaction.',
         description: err.message,
-        status: "error",
+        status: 'error',
         duration: 5000,
         isClosable: true,
       });
@@ -70,27 +74,27 @@ export const ModalAllowance = ({
   };
 
   useEffect(() => {
-    if (state.status === "Exception") {
+    if (state.status === 'Exception') {
       toast({
         title: state.errorMessage,
-        description: "",
-        status: "error",
+        description: '',
+        status: 'error',
         duration: 5000,
         isClosable: true,
       });
       onClose!();
       resetState();
-    } else if (state.status === "Mining") {
-      setTransactionStatus("Loading");
-    } else if (state.status === "Success") {
+    } else if (state.status === 'Mining') {
+      setTransactionStatus('Loading');
+    } else if (state.status === 'Success') {
       toast({
-        title: "Transaction Approved.",
-        description: "",
-        status: "success",
+        title: 'Transaction Approved.',
+        description: '',
+        status: 'success',
         duration: 5000,
         isClosable: true,
       });
-      setTransactionStatus("No");
+      setTransactionStatus('No');
       resetState();
     }
   }, [state.status, resetState]);
@@ -137,7 +141,7 @@ export const ModalAllowance = ({
             w={200}
             onClick={handleApprove}
             rightIcon={<ChevronRightIcon />}
-            isLoading={transactionStatus === "Loading"}
+            isLoading={transactionStatus === 'Loading'}
           >
             Proceed
           </Button>

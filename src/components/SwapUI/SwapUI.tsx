@@ -28,7 +28,7 @@ import {
   useTokenBalance,
 } from '@usedapp/core';
 import { utils } from 'ethers';
-import { formatEther, parseEther } from 'ethers/lib/utils';
+import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
@@ -98,10 +98,10 @@ export const SwapUI = () => {
   );
 
   const [userInput, setUserInput] = useState<{
-    anusd: number | undefined;
+    selectedCurrency: number | undefined;
     token: number | undefined;
   }>({
-    anusd: undefined,
+    selectedCurrency: undefined,
     token: undefined,
   });
 
@@ -117,9 +117,10 @@ export const SwapUI = () => {
 
   const errors = {
     valueLessThenMinContribution:
-      userInput?.anusd! < presaleCapping?.minConUSD ? true : false,
+      userInput?.selectedCurrency! < presaleCapping?.minConUSD ? true : false,
     valueGreaterThenBalance:
-      userInput?.anusd! > Number(formatEther(userCurrencyBalance ?? 0))
+      userInput?.selectedCurrency! >
+      Number(formatUnits(userCurrencyBalance ?? 0, selectedCurrrency?.Decimals))
         ? true
         : false,
   };
@@ -127,7 +128,7 @@ export const SwapUI = () => {
   const HandleanusdInput = (e: number) => {
     setUserInput((prev) => ({
       ...prev,
-      anusd: e,
+      selectedCurrency: e,
       token: e ? e / tokenPrice : undefined,
     }));
   };
@@ -136,7 +137,7 @@ export const SwapUI = () => {
     setUserInput((prev) => ({
       ...prev,
       token: e,
-      anusd: e ? e * tokenPrice : undefined,
+      selectedCurrency: e ? e * tokenPrice : undefined,
     }));
   };
 
@@ -153,7 +154,7 @@ export const SwapUI = () => {
       toast({
         title: 'Insufficient Balance.',
         description: `Please enter the value equal to or less then your balance ${Number(
-          formatEther(userCurrencyBalance ?? 0)
+          formatUnits(userCurrencyBalance ?? 0, selectedCurrrency?.Decimals)
         ).toFixed(5)}.`,
         status: 'error',
         duration: 5000,
@@ -168,7 +169,7 @@ export const SwapUI = () => {
       await send(
         getUserReferrerAddress(),
         account,
-        parseEther(`${userInput?.anusd!}`),
+        parseEther(`${userInput?.selectedCurrency!}`),
         selectedCurrrency.ContractAddress,
         {
           value: 0,
@@ -192,7 +193,7 @@ export const SwapUI = () => {
       resetState();
     } else if (state.status === 'Success') {
       setUserInput(() => ({
-        anusd: undefined,
+        selectedCurrency: undefined,
         token: undefined,
         referrer: '',
       }));
@@ -261,21 +262,22 @@ export const SwapUI = () => {
             )}
             placeholder={`Please enter the ${selectedCurrrency?.Symbol} value.`}
             onChange={HandleanusdInput}
-            inputValue={userInput?.anusd}
+            inputValue={userInput?.selectedCurrency}
             style={{
               w: 'full',
               isDisabled: !account,
-              isInvalid: userInput.anusd!
-                ? userInput.anusd < presaleCapping?.minConUSD
+              isInvalid: userInput.selectedCurrency!
+                ? userInput.selectedCurrency < presaleCapping?.minConUSD
                 : false,
               color:
-                userInput.anusd! && userInput.anusd < presaleCapping?.minConUSD
+                userInput.selectedCurrency! &&
+                userInput.selectedCurrency < presaleCapping?.minConUSD
                   ? 'red'
                   : 'inherit',
             }}
           />
-          {userInput?.anusd! &&
-            userInput?.anusd! < presaleCapping?.minConUSD && (
+          {userInput?.selectedCurrency! &&
+            userInput?.selectedCurrency! < presaleCapping?.minConUSD && (
               <Text color="red" w="full" px={5}>
                 * Min buying value is {presaleCapping?.minConUSD}{' '}
                 {selectedCurrrency?.Symbol}
@@ -293,21 +295,49 @@ export const SwapUI = () => {
             }}
             onClick25={() =>
               HandleanusdInput(
-                (Number(formatEther(userCurrencyBalance ?? 0)) * 25) / 100
+                (Number(
+                  formatUnits(
+                    userCurrencyBalance ?? 0,
+                    selectedCurrrency?.Decimals
+                  )
+                ) *
+                  25) /
+                  100
               )
             }
             onClick50={() =>
               HandleanusdInput(
-                (Number(formatEther(userCurrencyBalance ?? 0)) * 50) / 100
+                (Number(
+                  formatUnits(
+                    userCurrencyBalance ?? 0,
+                    selectedCurrrency?.Decimals
+                  )
+                ) *
+                  50) /
+                  100
               )
             }
             onClick75={() =>
               HandleanusdInput(
-                (Number(formatEther(userCurrencyBalance ?? 0)) * 75) / 100
+                (Number(
+                  formatUnits(
+                    userCurrencyBalance ?? 0,
+                    selectedCurrrency?.Decimals
+                  )
+                ) *
+                  75) /
+                  100
               )
             }
             onClickMax={() =>
-              HandleanusdInput(Number(formatEther(userCurrencyBalance ?? 0)))
+              HandleanusdInput(
+                Number(
+                  formatUnits(
+                    userCurrencyBalance ?? 0,
+                    selectedCurrrency?.Decimals
+                  )
+                )
+              )
             }
           />
         </VStack>
@@ -342,12 +372,12 @@ export const SwapUI = () => {
             bg: 'twitter.600',
           }}
           opacity={0.75}
-          isDisabled={!account || !userInput?.anusd}
+          isDisabled={!account || !userInput?.selectedCurrency}
           onClick={handleSwap}
         >
           {!account
             ? 'Please connect wallet'
-            : !userInput?.anusd
+            : !userInput?.selectedCurrency
             ? 'Please enter amount'
             : 'Swap'}
         </Button>
@@ -376,12 +406,16 @@ export const SwapUI = () => {
           )}
           {state?.status === 'Mining' && <ModalTransactionInProgress />}
           {(state?.status === 'None' || state?.status === 'PendingSignature') &&
-            (Number(formatEther(userCurrencyAllowance ?? 0)) <
-            userInput.anusd! ? (
+            (Number(
+              formatUnits(
+                userCurrencyAllowance ?? 0,
+                selectedCurrrency?.Decimals
+              )
+            ) < userInput.selectedCurrency! ? (
               <ModalAllowance
-                tokenObject={currentNetwork?.ANUSD}
+                tokenObject={selectedCurrrency}
                 spenderAddress={currentNetwork?.presaleContract}
-                valueToApprove={`${userInput?.anusd! ?? 0}`}
+                valueToApprove={`${userInput?.selectedCurrency! ?? 0}`}
                 onClose={onClose}
               ></ModalAllowance>
             ) : (
