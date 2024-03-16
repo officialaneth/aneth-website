@@ -14,33 +14,33 @@ import {
   useDisclosure,
   useToast,
   VStack,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   useContractFunction,
   useEthers,
   useTokenAllowance,
   useTokenBalance,
-} from "@usedapp/core";
-import { utils } from "ethers";
-import { formatEther, parseEther } from "ethers/lib/utils";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+} from '@usedapp/core';
+import { utils } from 'ethers';
+import { formatEther, parseEther } from 'ethers/lib/utils';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   AddressZero,
   DefaultReferrer,
   TokenSymbol,
   useSupportedNetworkInfo,
-} from "../../constants";
-import { usePresaleCapping } from "../../hooks/PresaleHooks";
-import { useReferralUserAccount } from "../../hooks/ReferralHooks";
-import { useUniswapTokenOut } from "../../hooks/UniswapV2Hooks";
-import { Logo } from "../Logo/Logo";
-import { ModalAllowance } from "../Modals/ModalAllowance";
-import { ModalConfirmTransactionSwap } from "../Modals/ModalConfirmTransactionSwap";
-import { ModalTransactionInProgress } from "../Modals/ModalTransactionInProgress/ModalTransactionInProgress";
-import { ModalTransactionSuccess } from "../Modals/ModalTransactionSuccess/ModalTransactionSuccess";
-import { ValueSelectButtons } from "../ValueSelectButtons";
-import { CurrencyInput } from "./CurrencyInput";
+} from '../../constants';
+import { usePresaleCapping } from '../../hooks/PresaleHooks';
+import { useReferralUserAccount } from '../../hooks/ReferralHooks';
+import { useUniswapTokenOut } from '../../hooks/UniswapV2Hooks';
+import { Logo } from '../Logo/Logo';
+import { ModalAllowance } from '../Modals/ModalAllowance';
+import { ModalConfirmTransactionSwap } from '../Modals/ModalConfirmTransactionSwap';
+import { ModalTransactionInProgress } from '../Modals/ModalTransactionInProgress/ModalTransactionInProgress';
+import { ModalTransactionSuccess } from '../Modals/ModalTransactionSuccess/ModalTransactionSuccess';
+import { ValueSelectButtons } from '../ValueSelectButtons';
+import { CurrencyInput } from './CurrencyInput';
 
 export const SwapUI = () => {
   const { referrerAddress } = useParams();
@@ -76,7 +76,7 @@ export const SwapUI = () => {
 
   const { send, state, resetState } = useContractFunction(
     currentNetwork?.presaleContractInterface,
-    "BuyWithANUSD"
+    'BuyWithANUSD'
   );
 
   const [userInput, setUserInput] = useState<{
@@ -98,9 +98,13 @@ export const SwapUI = () => {
   };
 
   const errors = {
-    valueLessThenMinContribution: userInput?.anusd! < presaleCapping?.minConUSD ? true : false,
-    valueGreaterThenBalance: userInput?.anusd! > Number(formatEther(userANUSDBalance ?? 0)) ? true : false
-  }
+    valueLessThenMinContribution:
+      userInput?.anusd! < presaleCapping?.minConUSD ? true : false,
+    valueGreaterThenBalance:
+      userInput?.anusd! > Number(formatEther(userANUSDBalance ?? 0))
+        ? true
+        : false,
+  };
 
   const HandleanusdInput = (e: number) => {
     setUserInput((prev) => ({
@@ -120,19 +124,19 @@ export const SwapUI = () => {
   const handleSwap = () => {
     if (errors.valueLessThenMinContribution) {
       toast({
-        title: "Value less then min contribution.",
+        title: 'Value less then min contribution.',
         description: `Please enter the value equal to or greater ${presaleCapping?.minConUSD} ${currentNetwork?.ANUSD?.Symbol}.`,
-        status: "error",
+        status: 'error',
         duration: 5000,
         isClosable: true,
       });
     } else if (errors.valueGreaterThenBalance) {
       toast({
-        title: "Insufficient Balance.",
+        title: 'Insufficient Balance.',
         description: `Please enter the value equal to or less then your balance ${Number(
           formatEther(userANUSDBalance ?? 0)
         ).toFixed(5)}.`,
-        status: "error",
+        status: 'error',
         duration: 5000,
         isClosable: true,
       });
@@ -142,30 +146,36 @@ export const SwapUI = () => {
   };
   const proceedSwap = async () => {
     try {
-      await send(getUserReferrerAddress(), parseEther(`${userInput?.anusd!}`), {
-        value: 0,
-      });
+      await send(
+        getUserReferrerAddress(),
+        account,
+        parseEther(`${userInput?.anusd!}`),
+        currentNetwork?.ANUSD?.ContractAddress,
+        {
+          value: 0,
+        }
+      );
     } catch (err) {
       console.log(err);
     }
   };
 
   useEffect(() => {
-    if (state.status === "Exception") {
+    if (state.status === 'Exception') {
       toast({
         title: state.errorMessage,
-        description: "",
-        status: "error",
+        description: '',
+        status: 'error',
         duration: 5000,
         isClosable: true,
       });
       onClose();
       resetState();
-    } else if (state.status === "Success") {
+    } else if (state.status === 'Success') {
       setUserInput(() => ({
         anusd: undefined,
         token: undefined,
-        referrer: "",
+        referrer: '',
       }));
       setTimeout(() => {
         onClose();
@@ -179,7 +189,7 @@ export const SwapUI = () => {
       w="full"
       maxW={400}
       minW={300}
-      bgColor={useColorModeValue("gray.50", "gray.900")}
+      bgColor={useColorModeValue('gray.50', 'gray.900')}
       borderRadius="3xl"
       boxShadow="sm"
       p={5}
@@ -222,31 +232,31 @@ export const SwapUI = () => {
             onChange={HandleanusdInput}
             inputValue={userInput?.anusd}
             style={{
-              w: "full",
+              w: 'full',
               isDisabled: !account,
               isInvalid: userInput.anusd!
                 ? userInput.anusd < presaleCapping?.minConUSD
                 : false,
               color:
                 userInput.anusd! && userInput.anusd < presaleCapping?.minConUSD
-                  ? "red"
-                  : "inherit",
+                  ? 'red'
+                  : 'inherit',
             }}
           />
           {userInput?.anusd! &&
             userInput?.anusd! < presaleCapping?.minConUSD && (
               <Text color="red" w="full" px={5}>
-                * Min buying value is {presaleCapping?.minConUSD}{" "}
+                * Min buying value is {presaleCapping?.minConUSD}{' '}
                 {currentNetwork?.ANUSD?.Symbol}
               </Text>
             )}
 
           <ValueSelectButtons
             style={{
-              w: "full",
+              w: 'full',
               h: 14,
-              borderRadius: "2xl",
-              colorScheme: "twitter",
+              borderRadius: '2xl',
+              colorScheme: 'twitter',
               opacity: 0.75,
               isDisabled: !account,
             }}
@@ -284,12 +294,12 @@ export const SwapUI = () => {
           onChange={handleTokenInput}
           inputValue={userInput?.token}
           style={{
-            w: "full",
+            w: 'full',
             isDisabled: !account,
           }}
         />
         <Tag p={3} borderRadius="xl" fontWeight={900} colorScheme="twitter">
-          1 {TokenSymbol} = {tokenPrice.toFixed(5)}{" "}
+          1 {TokenSymbol} = {tokenPrice.toFixed(5)}{' '}
           {currentNetwork?.ANUSD.Symbol}
         </Tag>
         <Button
@@ -299,24 +309,24 @@ export const SwapUI = () => {
           colorScheme="twitter"
           bg="twitter.500"
           _hover={{
-            bg: "twitter.600",
+            bg: 'twitter.600',
           }}
           opacity={0.75}
           isDisabled={!account || !userInput?.anusd}
           onClick={handleSwap}
         >
           {!account
-            ? "Please connect wallet"
+            ? 'Please connect wallet'
             : !userInput?.anusd
-            ? "Please enter amount"
-            : "Swap"}
+            ? 'Please enter amount'
+            : 'Swap'}
         </Button>
       </VStack>
       <Modal
         isOpen={isOpen}
         onClose={() => {
           onClose();
-          if (state.status === "Success") {
+          if (state.status === 'Success') {
             resetState();
           }
         }}
@@ -325,7 +335,7 @@ export const SwapUI = () => {
         <ModalOverlay></ModalOverlay>
         <ModalContent borderRadius="3xl">
           <ModalCloseButton />
-          {state?.status === "Success" && (
+          {state?.status === 'Success' && (
             <ModalTransactionSuccess
               onClose={() => {
                 resetState();
@@ -334,8 +344,8 @@ export const SwapUI = () => {
               transactionHash={state.receipt?.transactionHash!}
             />
           )}
-          {state?.status === "Mining" && <ModalTransactionInProgress />}
-          {(state?.status === "None" || state?.status === "PendingSignature") &&
+          {state?.status === 'Mining' && <ModalTransactionInProgress />}
+          {(state?.status === 'None' || state?.status === 'PendingSignature') &&
             (Number(formatEther(userANUSDAllowance ?? 0)) < userInput.anusd! ? (
               <ModalAllowance
                 tokenObject={currentNetwork?.ANUSD}

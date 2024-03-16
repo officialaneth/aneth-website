@@ -205,10 +205,12 @@ contract PresaleUpgradeable is
         return amounts;
     }
 
-    function BuyWithANUSD(
+    function _buyFromStableCoin(
         address _referrerAddress,
-        uint256 _valueInWei
-    ) external whenNotPaused {
+        address _userAddress,
+        uint256 _valueInWei,
+        address _tokenAddress
+    ) private {
         IVariables variables = IVariables(_variableContract);
         address _msgSender = msg.sender;
         uint256 _adminFees = variables.adminFees();
@@ -220,11 +222,10 @@ contract PresaleUpgradeable is
         );
 
         require(_msgValue <= _maxBuyLimitANUSD, "Max buy limit reached");
-
-        IERC20Upgradeable(variables.tokenContract()).transferFrom(
-            _msgSender,
-            address(this),
-            _msgValue
+        require(
+            _tokenAddress == variables.anusdContract() ||
+                _tokenAddress == variables.usdtContract(),
+            "BuyWithANUSD(): Base currency not supported."
         );
 
         uint256[] memory amounts = _buyFromUniswap(
@@ -236,7 +237,7 @@ contract PresaleUpgradeable is
 
         if (_isBuyNStake) {
             IStaking(variables.stakingContract()).stakeByAdmin(
-                _msgSender,
+                _userAddress,
                 amounts[1],
                 amounts[0]
             );
@@ -250,7 +251,7 @@ contract PresaleUpgradeable is
         if (_isPayReferral) {
             IReferral(variables.referralContract()).payReferralANUSDAdmin(
                 amounts[0],
-                _msgSender,
+                _userAddress,
                 _referrerAddress
             );
         }
@@ -258,105 +259,110 @@ contract PresaleUpgradeable is
         emit RegistrationFees(variables.adminFees());
     }
 
+    function BuyWithANUSD(
+        address _referrerAddress,
+        address _userAddress,
+        uint256 _valueInWei,
+        address _tokenAddress
+    ) external whenNotPaused {
+        address msgSender = msg.sender;
+        IERC20Upgradeable(_tokenAddress).transferFrom(
+            msgSender,
+            address(this),
+            _weiToTokens(_valueInWei, _tokenAddress)
+        );
+
+        _buyFromStableCoin(
+            _referrerAddress,
+            _userAddress,
+            _valueInWei,
+            _tokenAddress
+        );
+    }
+
     function BuyWithANUSDAdmin(
-        address[] calldata _userAddress,
         address[] calldata _referrerAddress,
-        uint256[] calldata _valueInUSDDecimals
+        address[] calldata _userAddress,
+        uint256[] calldata _valueInUSDDecimals,
+        address _tokenAddress
     ) external {
         require(
             IVariables(_variableContract).isAdmin(msg.sender),
             "You are not admin"
         );
+
         uint256 length = _userAddress.length;
-        IVariables variables = IVariables(_variableContract);
 
         for (uint256 i; i < length; i++) {
-            uint256 _adminFees = variables.adminFees();
             uint256 _msgValue = _valueInUSDDecimals[i] * 10 ** 18;
 
-            uint256[] memory amounts = _buyFromUniswap(
-                variables.anusdContract(),
-                _msgValue - _adminFees,
-                variables.tokenContract(),
-                variables.uniswapV2RouterContract()
+            _buyFromStableCoin(
+                _referrerAddress[i],
+                _userAddress[i],
+                _msgValue,
+                _tokenAddress
             );
-
-            if (_isBuyNStake) {
-                IStaking(variables.stakingContract()).stakeByAdmin(
-                    _userAddress[i],
-                    amounts[1],
-                    amounts[0]
-                );
-            }
-
-            if (_isPayReferral) {
-                IReferral(variables.referralContract()).payReferralANUSDAdmin(
-                    amounts[0],
-                    _userAddress[i],
-                    _referrerAddress[i]
-                );
-            }
         }
     }
 
-    function BuyWithANUSDManager(
-        address _userAddress,
-        address _referrerAddress,
-        uint256 _valueInDecimals
-    ) external whenNotPaused {
-        IVariables variables = IVariables(_variableContract);
-        address _msgSender = msg.sender;
-        uint256 _adminFees = variables.adminFees();
-        uint256 _msgValue = _valueInDecimals * 10 ** 18;
+    // function BuyWithANUSDManager(
+    //     address _userAddress,
+    //     address _referrerAddress,
+    //     uint256 _valueInDecimals
+    // ) external whenNotPaused {
+    //     IVariables variables = IVariables(_variableContract);
+    //     address _msgSender = msg.sender;
+    //     uint256 _adminFees = variables.adminFees();
+    //     uint256 _msgValue = _valueInDecimals * 10 ** 18;
 
-        require(
-            variables.isManager(_msgSender),
-            "Only managers can call this function."
-        );
+    //     require(
+    //         variables.isManager(_msgSender),
+    //         "Only managers can call this function."
+    //     );
 
-        require(
-            _msgValue >= _minContributionUSD,
-            "ANUSD value less then min buy value."
-        );
+    //     require(
+    //         _msgValue >= _minContributionUSD,
+    //         "ANUSD value less then min buy value."
+    //     );
 
-        require(_msgValue <= _maxBuyLimitANUSD, "Max buy limit reached");
+    //     require(_msgValue <= _maxBuyLimitANUSD, "Max buy limit reached");
 
-        IERC20Upgradeable(variables.anusdContract()).transferFrom(
-            _msgSender,
-            address(this),
-            _msgValue
-        );
+    //     IERC20Upgradeable(variables.anusdContract()).transferFrom(
+    //         _msgSender,
+    //         address(this),
+    //         _msgValue
+    //     );
 
-        uint256[] memory amounts = _buyFromUniswap(
-            variables.anusdContract(),
-            _msgValue - _adminFees,
-            variables.tokenContract(),
-            variables.uniswapV2RouterContract()
-        );
+    //     uint256[] memory amounts = _buyFromUniswap(
+    //         variables.anusdContract(),
+    //         _msgValue - _adminFees,
+    //         variables.tokenContract(),
+    //         variables.uniswapV2RouterContract()
+    //     );
 
-        if (_isBuyNStake) {
-            IStaking(variables.stakingContract()).stakeByAdmin(
-                _userAddress,
-                amounts[1],
-                amounts[0]
-            );
-        } else {
-            IERC20Upgradeable(variables.tokenContract()).transfer(
-                _userAddress,
-                amounts[1]
-            );
-        }
+    //     if (_isBuyNStake) {
+    //         IStaking(variables.stakingContract()).stakeByAdmin(
+    //             _userAddress,
+    //             amounts[1],
+    //             amounts[0]
+    //         );
+    //     } else {
+    //         IERC20Upgradeable(variables.tokenContract()).transfer(
+    //             _userAddress,
+    //             amounts[1]
+    //         );
+    //     }
 
-        if (_isPayReferral) {
-            IReferral(variables.referralContract()).payReferralANUSDAdmin(
-                amounts[0],
-                _userAddress,
-                _referrerAddress
-            );
-        }
+    //     if (_isPayReferral) {
+    //         IReferral(variables.referralContract()).payReferralANUSDAdmin(
+    //             amounts[0],
+    //             _userAddress,
+    //             _referrerAddress
+    //         );
+    //     }
 
-        emit RegistrationFees(variables.adminFees());
-    }
+    //     emit RegistrationFees(variables.adminFees());
+    // }
 
     function getCapping()
         external
@@ -388,6 +394,24 @@ contract PresaleUpgradeable is
         _isPayReferral = isPayReferral;
         _isPayRewardTokens = isPayRewardTokens;
         _maxBuyLimitANUSD = maxBuyLimitANUSD;
+    }
+
+    function _tokensToWei(
+        uint256 _valueInTokens,
+        address _tokenAddress
+    ) private view returns (uint256 valueInWei) {
+        valueInWei =
+            (_valueInTokens * 1 ether) /
+            10 ** IERC20_EXTENDED(_tokenAddress).decimals();
+    }
+
+    function _weiToTokens(
+        uint256 _valueInWei,
+        address _tokenAddress
+    ) private view returns (uint256 valueInTokens) {
+        valueInTokens =
+            (_valueInWei * 10 ** IERC20_EXTENDED(_tokenAddress).decimals()) /
+            1 ether;
     }
 
     function pauseAdmin() external onlyOwner {

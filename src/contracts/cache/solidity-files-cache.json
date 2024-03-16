@@ -908,8 +908,8 @@
       ]
     },
     "/Users/suru.martian/Documents/Projects/aneth-protocol/src/contracts/contracts/PresaleUpgradeable.sol": {
-      "lastModificationDate": 1700122972163,
-      "contentHash": "d591bf90e06b575d44b04e8b799b72aa",
+      "lastModificationDate": 1710571394984,
+      "contentHash": "7bd909ef3eaaa60c396087cc01188d38",
       "sourceName": "contracts/PresaleUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.17",
