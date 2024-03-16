@@ -3,11 +3,17 @@ import {
   Divider,
   Heading,
   HStack,
+  Image,
   Input,
   Modal,
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Tag,
   Text,
   useColorModeValue,
@@ -50,6 +56,10 @@ export const SwapUI = () => {
   const currentNetwork = useSupportedNetworkInfo[chainId!];
   const userReferrerAddress = useReferralUserAccount(account ?? AddressZero);
 
+  const [selectedCurrrency, setSelectedCurrrency] = useState(
+    currentNetwork?.ANUSD
+  );
+
   const tokenPrice = useUniswapTokenOut(
     1,
     currentNetwork?.Token?.ContractAddress,
@@ -59,17 +69,25 @@ export const SwapUI = () => {
 
   const presaleCapping = usePresaleCapping();
 
-  const userANUSDBalance = useTokenBalance(
-    currentNetwork?.ANUSD?.ContractAddress,
-    account
+  const useGetSelectedCoinBalance = (address: string) => {
+    return useTokenBalance(address, account);
+  };
+
+  const userCurrencyBalance = useGetSelectedCoinBalance(
+    selectedCurrrency?.ContractAddress
   );
+
+  // const userANUSDBalance = useTokenBalance(
+  //   currentNetwork?.ANUSD?.ContractAddress,
+  //   account
+  // );
 
   const userTokenBalance = useTokenBalance(
     currentNetwork?.Token?.ContractAddress,
     account
   );
-  const userANUSDAllowance = useTokenAllowance(
-    currentNetwork?.ANUSD?.ContractAddress,
+  const userCurrencyAllowance = useTokenAllowance(
+    selectedCurrrency.ContractAddress,
     account,
     currentNetwork?.presaleContract
   );
@@ -101,7 +119,7 @@ export const SwapUI = () => {
     valueLessThenMinContribution:
       userInput?.anusd! < presaleCapping?.minConUSD ? true : false,
     valueGreaterThenBalance:
-      userInput?.anusd! > Number(formatEther(userANUSDBalance ?? 0))
+      userInput?.anusd! > Number(formatEther(userCurrencyBalance ?? 0))
         ? true
         : false,
   };
@@ -135,7 +153,7 @@ export const SwapUI = () => {
       toast({
         title: 'Insufficient Balance.',
         description: `Please enter the value equal to or less then your balance ${Number(
-          formatEther(userANUSDBalance ?? 0)
+          formatEther(userCurrencyBalance ?? 0)
         ).toFixed(5)}.`,
         status: 'error',
         duration: 5000,
@@ -151,7 +169,7 @@ export const SwapUI = () => {
         getUserReferrerAddress(),
         account,
         parseEther(`${userInput?.anusd!}`),
-        currentNetwork?.ANUSD?.ContractAddress,
+        selectedCurrrency.ContractAddress,
         {
           value: 0,
         }
@@ -204,7 +222,7 @@ export const SwapUI = () => {
       <Divider />
 
       <VStack w="full" py={5} spacing={5}>
-        <VStack w="full">
+        <VStack w="full" spacing={5}>
           {referrerAddress && (
             <VStack w="full">
               <Heading size="sm">Referrer Address</Heading>
@@ -218,18 +236,30 @@ export const SwapUI = () => {
               ></Input>
             </VStack>
           )}
+          <Heading size="lg">Select Currency</Heading>
+          <Tabs>
+            <TabList>
+              <Tab onClick={() => setSelectedCurrrency(currentNetwork?.ANUSD)}>
+                {currentNetwork?.ANUSD?.Symbol}
+              </Tab>
+              <Tab onClick={() => setSelectedCurrrency(currentNetwork?.USDT)}>
+                {currentNetwork?.USDT?.Symbol}
+              </Tab>
+            </TabList>
+          </Tabs>
+          <Image boxSize={10} src={selectedCurrrency?.Logo}></Image>
 
           <CurrencyInput
-            symbol={currentNetwork?.ANUSD.Symbol}
+            symbol={selectedCurrrency?.Symbol}
             balance={Number(
               Number(
                 utils.formatUnits(
-                  userANUSDBalance ?? 0,
-                  currentNetwork?.ANUSD.Decimals
+                  userCurrencyBalance ?? 0,
+                  selectedCurrrency?.Decimals
                 )
               ).toFixed(3)
             )}
-            placeholder={`Please enter the ${currentNetwork?.ANUSD.Symbol} value.`}
+            placeholder={`Please enter the ${selectedCurrrency?.Symbol} value.`}
             onChange={HandleanusdInput}
             inputValue={userInput?.anusd}
             style={{
@@ -248,7 +278,7 @@ export const SwapUI = () => {
             userInput?.anusd! < presaleCapping?.minConUSD && (
               <Text color="red" w="full" px={5}>
                 * Min buying value is {presaleCapping?.minConUSD}{' '}
-                {currentNetwork?.ANUSD?.Symbol}
+                {selectedCurrrency?.Symbol}
               </Text>
             )}
 
@@ -263,21 +293,21 @@ export const SwapUI = () => {
             }}
             onClick25={() =>
               HandleanusdInput(
-                (Number(formatEther(userANUSDBalance ?? 0)) * 25) / 100
+                (Number(formatEther(userCurrencyBalance ?? 0)) * 25) / 100
               )
             }
             onClick50={() =>
               HandleanusdInput(
-                (Number(formatEther(userANUSDBalance ?? 0)) * 50) / 100
+                (Number(formatEther(userCurrencyBalance ?? 0)) * 50) / 100
               )
             }
             onClick75={() =>
               HandleanusdInput(
-                (Number(formatEther(userANUSDBalance ?? 0)) * 75) / 100
+                (Number(formatEther(userCurrencyBalance ?? 0)) * 75) / 100
               )
             }
             onClickMax={() =>
-              HandleanusdInput(Number(formatEther(userANUSDBalance ?? 0)))
+              HandleanusdInput(Number(formatEther(userCurrencyBalance ?? 0)))
             }
           />
         </VStack>
@@ -300,8 +330,7 @@ export const SwapUI = () => {
           }}
         />
         <Tag p={3} borderRadius="xl" fontWeight={900} colorScheme="twitter">
-          1 {TokenSymbol} = {tokenPrice.toFixed(5)}{' '}
-          {currentNetwork?.ANUSD.Symbol}
+          1 {TokenSymbol} = {tokenPrice.toFixed(5)} {selectedCurrrency?.Symbol}
         </Tag>
         <Button
           w="full"
@@ -347,7 +376,8 @@ export const SwapUI = () => {
           )}
           {state?.status === 'Mining' && <ModalTransactionInProgress />}
           {(state?.status === 'None' || state?.status === 'PendingSignature') &&
-            (Number(formatEther(userANUSDAllowance ?? 0)) < userInput.anusd! ? (
+            (Number(formatEther(userCurrencyAllowance ?? 0)) <
+            userInput.anusd! ? (
               <ModalAllowance
                 tokenObject={currentNetwork?.ANUSD}
                 spenderAddress={currentNetwork?.presaleContract}
