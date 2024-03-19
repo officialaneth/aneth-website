@@ -285,7 +285,7 @@ contract PresaleUpgradeable is
         address[] calldata _userAddress,
         uint256[] calldata _valueInUSDDecimals,
         address _tokenAddress
-    ) external {
+    ) external whenNotPaused {
         require(
             IVariables(_variableContract).isAdmin(msg.sender),
             "You are not admin"
@@ -303,6 +303,40 @@ contract PresaleUpgradeable is
                 _tokenAddress
             );
         }
+    }
+
+    function BuyWithANUSDManager(
+        address[] calldata _referrerAddress,
+        address[] calldata _userAddress,
+        uint256[] calldata _valueInUSDDecimals
+    ) external whenNotPaused {
+        address _msgSender = msg.sender;
+        IVariables variablesContract = IVariables(_variableContract);
+
+        // require(variablesContract.isAdmin(_msgSender), "You are not admin");
+
+        uint256 length = _userAddress.length;
+
+        uint256 totalMsgValue;
+
+        for (uint256 i; i < length; i++) {
+            uint256 _msgValue = _valueInUSDDecimals[i] * 10 ** 18;
+
+            _buyFromStableCoin(
+                _referrerAddress[i],
+                _userAddress[i],
+                _msgValue,
+                variablesContract.anusdContract()
+            );
+
+            totalMsgValue += _msgValue;
+        }
+
+        IERC20Upgradeable(variablesContract.anusdContract()).transferFrom(
+            _msgSender,
+            address(this),
+            _weiToTokens(totalMsgValue, variablesContract.anusdContract())
+        );
     }
 
     // function BuyWithANUSDManager(
